@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN"
+                            "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Menu">
+        <folder name="Window">
+            <file name="cif-mllearning-MLLearningTopComponent.shadow">
+                <!--cif.mllearning.MLLearningTopComponent-->
+                <attr name="originalFile" stringvalue="Actions/Window/cif-mllearning-MLLearningTopComponent.instance"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Windows2">
+        <folder name="Components">
+            <file name="MLLearningTopComponent.settings">
+                <!--cif.mllearning.MLLearningTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+  <instance class="cif.mllearning.MLLearningTopComponent"/>
+</settings>
+]]></file>
+        </folder>
+        <folder name="Modes">
+            <folder name="editor">
+                <file name="MLLearningTopComponent.wstcref">
+                    <!--cif.mllearning.MLLearningTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tc-ref PUBLIC "-//NetBeans//DTD Top Component in Mode Properties 2.0//EN" "http://www.netbeans.org/dtds/tc-ref2_0.dtd">
+<tc-ref version="2.0">
+  <tc-id id="MLLearningTopComponent"/>
+  <state opened="false"/>
+</tc-ref>
+]]></file>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="Actions">
+        <folder name="Window">
+            <file name="cif-mllearning-MLLearningTopComponent.instance">
+                <!--cif.mllearning.MLLearningTopComponent-->
+                <attr
+                    methodvalue="org.openide.windows.TopComponent.openAction" name="instanceCreate"/>
+                <attr name="component" newvalue="cif.mllearning.MLLearningTopComponent"/>
+                <attr name="preferredID" stringvalue="MLLearningTopComponent"/>
+                <attr
+                    bundlevalue="cif.mllearning.Bundle#CTL_MLLearningAction" name="displayName"/>
+                <attr name="iconBase" stringvalue="cif/mllearning/icons/learning16.png"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="xml">
+        <folder name="entities">
+            <folder name="cif_mllearning">
+                <file name="MLLearning" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
+                    <!--cif.mllearning.MLLearningTopComponent-->
+                    <attr name="hint.originalPublicID" stringvalue="-//cif.mllearning//MLLearning//EN"/>
+                </file>
+            </folder>
+        </folder>
+        <folder name="memory">
+            <folder name="cif">
+                <folder name="mllearning">
+                    <file name="MLLearningTopComponent">
+                        <!--cif.mllearning.MLLearningTopComponent-->
+                        <attr name="settings.providerPath" stringvalue="xml/lookups//cif_mllearning/MLLearning.instance"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
+        <folder name="lookups">
+            <folder name="cif_mllearning">
+                <file name="MLLearning.instance">
+                    <!--cif.mllearning.MLLearningTopComponent-->
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.create" name="instanceCreate"/>
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.properties" name="settings.convertor"/>
+                    <attr name="settings.instanceClass" stringvalue="cif.mllearning.MLLearningTopComponent"/>
+                    <attr name="settings.instanceOf" stringvalue="cif.mllearning.MLLearningTopComponent"/>
+                    <attr boolvalue="true" name="xmlproperties.preventStoring"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

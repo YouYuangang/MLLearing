@@ -1,0 +1,256 @@
+-------------------------------------------------------------------------------
+>Log Session: Wednesday, September 9, 2020 5:29:26 PM CST
+>System Info: 
+  Product Version         = CIFLog 2.0
+  Operating System        = Windows 7 version 6.1 running on amd64
+  Java; VM; Vendor        = 1.8.0_151; Java HotSpot(TM) 64-Bit Server VM 25.151-b12; Oracle Corporation
+  Runtime                 = Java(TM) SE Runtime Environment 1.8.0_151-b12
+  Java Home               = C:\Program Files\Java\jdk1.8.0_151\jre
+  System Locale; Encoding = zh_CN (ciflog); GBK
+  Home Directory          = C:\Users\Administrator
+  Current Directory       = E:\CIFLogClusterModule\MLLearning
+  User Directory          = E:\CIFLogClusterModule\MLLearning\build\testuserdir
+  Cache Directory         = E:\CIFLogClusterModule\MLLearning\build\testuserdir\var\cache
+  Installation            = E:\CIFLogClusterModule\MLLearning\build\cluster
+                            D:\ciflog\ciflog
+                            D:\ciflog\platform
+                            D:\ciflog\platform
+  Boot & Ext. Classpath   = C:\Program Files\Java\jdk1.8.0_151\jre\lib\resources.jar;C:\Program Files\Java\jdk1.8.0_151\jre\lib\rt.jar;C:\Program Files\Java\jdk1.8.0_151\jre\lib\sunrsasign.jar;C:\Program Files\Java\jdk1.8.0_151\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.8.0_151\jre\lib\jce.jar;C:\Program Files\Java\jdk1.8.0_151\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.8.0_151\jre\lib\jfr.jar;C:\Program Files\Java\jdk1.8.0_151\jre\classes;C:\Program Files\Java\jdk1.8.0_151\jre\lib\ext\access-bridge-64.jar;C:\Program Files\Java\jdk1.8.0_151\jre\lib\ext\cldrdata.jar;C:\Program Files\Java\jdk1.8.0_151\jre\lib\ext\dnsns.jar;C:\Program Files\Java\jdk1.8.0_151\jre\lib\ext\jaccess.jar;C:\Program Files\Java\jdk1.8.0_151\jre\lib\ext\jfxrt.jar;C:\Program Files\Java\jdk1.8.0_151\jre\lib\ext\localedata.jar;C:\Program Files\Java\jdk1.8.0_151\jre\lib\ext\nashorn.jar;C:\Program Files\Java\jdk1.8.0_151\jre\lib\ext\sunec.jar;C:\Program Files\Java\jdk1.8.0_151\jre\lib\ext\sunjce_provider.jar;C:\Program Files\Java\jdk1.8.0_151\jre\lib\ext\sunmscapi.jar;C:\Program Files\Java\jdk1.8.0_151\jre\lib\ext\sunpkcs11.jar;C:\Program Files\Java\jdk1.8.0_151\jre\lib\ext\zipfs.jar
+  Application Classpath   = D:\ciflog\platform\lib\boot.jar;D:\ciflog\platform\lib\org-openide-modules.jar;D:\ciflog\platform\lib\org-openide-util-lookup.jar;D:\ciflog\platform\lib\org-openide-util-ui.jar;D:\ciflog\platform\lib\org-openide-util.jar;D:\ciflog\platform\lib\locale\boot_ja.jar;D:\ciflog\platform\lib\locale\boot_pt_BR.jar;D:\ciflog\platform\lib\locale\boot_ru.jar;D:\ciflog\platform\lib\locale\boot_zh_CN.jar;D:\ciflog\platform\lib\locale\org-openide-modules_ja.jar;D:\ciflog\platform\lib\locale\org-openide-modules_pt_BR.jar;D:\ciflog\platform\lib\locale\org-openide-modules_ru.jar;D:\ciflog\platform\lib\locale\org-openide-modules_zh_CN.jar;D:\ciflog\platform\lib\locale\org-openide-util-lookup_ja.jar;D:\ciflog\platform\lib\locale\org-openide-util-lookup_pt_BR.jar;D:\ciflog\platform\lib\locale\org-openide-util-lookup_ru.jar;D:\ciflog\platform\lib\locale\org-openide-util-lookup_zh_CN.jar;D:\ciflog\platform\lib\locale\org-openide-util-ui_ja.jar;D:\ciflog\platform\lib\locale\org-openide-util-ui_pt_BR.jar;D:\ciflog\platform\lib\locale\org-openide-util-ui_ru.jar;D:\ciflog\platform\lib\locale\org-openide-util-ui_zh_CN.jar;D:\ciflog\platform\lib\locale\org-openide-util_ja.jar;D:\ciflog\platform\lib\locale\org-openide-util_pt_BR.jar;D:\ciflog\platform\lib\locale\org-openide-util_ru.jar;D:\ciflog\platform\lib\locale\org-openide-util_zh_CN.jar;C:\Program Files\Java\jdk1.8.0_151\lib\dt.jar;C:\Program Files\Java\jdk1.8.0_151\lib\tools.jar
+  Startup Classpath       = D:\ciflog\platform\core\asm-all-5.0.1.jar;D:\ciflog\platform\core\core-base.jar;D:\ciflog\platform\core\core.jar;D:\ciflog\platform\core\org-netbeans-libs-asm.jar;D:\ciflog\platform\core\org-openide-filesystems-compat8.jar;D:\ciflog\platform\core\org-openide-filesystems.jar;D:\ciflog\platform\core\locale\core-base_ja.jar;D:\ciflog\platform\core\locale\core-base_pt_BR.jar;D:\ciflog\platform\core\locale\core-base_ru.jar;D:\ciflog\platform\core\locale\core-base_zh_CN.jar;D:\ciflog\platform\core\locale\core_ja.jar;D:\ciflog\platform\core\locale\core_pt_BR.jar;D:\ciflog\platform\core\locale\core_ru.jar;D:\ciflog\platform\core\locale\core_zh_CN.jar;D:\ciflog\platform\core\locale\org-netbeans-libs-asm_ja.jar;D:\ciflog\platform\core\locale\org-netbeans-libs-asm_pt_BR.jar;D:\ciflog\platform\core\locale\org-netbeans-libs-asm_ru.jar;D:\ciflog\platform\core\locale\org-netbeans-libs-asm_zh_CN.jar;D:\ciflog\platform\core\locale\org-openide-filesystems-compat8_ja.jar;D:\ciflog\platform\core\locale\org-openide-filesystems-compat8_pt_BR.jar;D:\ciflog\platform\core\locale\org-openide-filesystems-compat8_ru.jar;D:\ciflog\platform\core\locale\org-openide-filesystems-compat8_zh_CN.jar;D:\ciflog\platform\core\locale\org-openide-filesystems_ja.jar;D:\ciflog\platform\core\locale\org-openide-filesystems_pt_BR.jar;D:\ciflog\platform\core\locale\org-openide-filesystems_ru.jar;D:\ciflog\platform\core\locale\org-openide-filesystems_zh_CN.jar;D:\ciflog\ciflog\core\locale\core_ciflog.jar
+-------------------------------------------------------------------------------
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.appdesigner: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.appdeveloper: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.appmodule: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.basecontour: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.baseutil: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.chart.hist.app: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.chartutil: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.cifpackage: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.cifplotdata: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.cifplus: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.cifplusnode: added = [module org.openide.awt, module org.openide.util.lookup > 8.0, module org.openide.util.ui > 9.3] removed = []; details: [#170056: Separate module for Lookup API, #243100: Separate desktop-independent utilities, SaveCookie extends Savable. To compile you need to include openide.awt on classpath.]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.configuration: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.curveedit: added = [module org.openide.util.lookup > 8.0, module org.openide.util.ui > 9.3] removed = []; details: [#170056: Separate module for Lookup API, #243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.database: added = [module org.openide.util.lookup > 8.0, module org.openide.util.ui > 9.3] removed = []; details: [#170056: Separate module for Lookup API, #243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.dataeditor: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.dataengine: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.datalist: added = [module org.openide.util.lookup > 8.0, module org.openide.util.ui > 9.3] removed = []; details: [#170056: Separate module for Lookup API, #243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.datamanager: added = [module org.netbeans.api.progress.compat8 > 1.40, module org.netbeans.api.progress.nb > 1.40] removed = []; details: [Swing dependencies split away]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.dataservice: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.formatconversion: added = [module org.openide.util.lookup > 8.0] removed = []; details: [#170056: Separate module for Lookup API]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.graph: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.headmap: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.helpwrapper: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.iconeditor: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.startup.NbEvents]: The extension D:\ciflog\ciflog\modules\ext\ant.jar may be multiply loaded by modules: [D:\ciflog\ciflog\modules\cif-helpwrapper.jar, D:\ciflog\ciflog\modules\cif-lib.jar]; see: http://www.netbeans.org/download/dev/javadoc/org-openide-modules/org/openide/modules/doc-files/classpath.html#class-path
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.logchain: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.logsplice: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.methods: added = [module org.openide.execution.compat8 > 9.0, module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities, Removal of FileSystemCapability]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.normalization: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.paysummary: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.plotapp: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.projectmanager: added = [module org.netbeans.api.templates > 1.0, module org.openide.util.ui > 9.3, module org.openide.filesystems.nb, module org.openide.filesystems.compat8] removed = []; details: [#243100: Separate desktop-independent utilities, Separation of desktop and cleanup, Templates API has been separated into its own module.]
+WARNING [org.netbeans.core.startup.NbEvents]: The extension D:\ciflog\ciflog\modules\ext\LEAD20111116.jar may be multiply loaded by modules: [D:\ciflog\ciflog\modules\cif-dataengine.jar, D:\ciflog\ciflog\modules\cif-projectmanager.jar]; see: http://www.netbeans.org/download/dev/javadoc/org-openide-modules/org/openide/modules/doc-files/classpath.html#class-path
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.regionprocess: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.regression: added = [module org.openide.util.lookup > 8.0, module org.openide.util.ui > 9.3] removed = [module org.openide.util.lookup > 1]; details: [#170056: Separate module for Lookup API, #243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.resource: added = [module org.openide.util.lookup > 8.0, module org.openide.util.ui > 9.3] removed = []; details: [#170056: Separate module for Lookup API, #243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.smartbase: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.startup.NbEvents]: The extension D:\ciflog\ciflog\modules\ext\rsyntaxtextarea.jar may be multiply loaded by modules: [D:\ciflog\ciflog\modules\cif-stattable.jar, D:\ciflog\ciflog\modules\cif-lib.jar]; see: http://www.netbeans.org/download/dev/javadoc/org-openide-modules/org/openide/modules/doc-files/classpath.html#class-path
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.symboleditor: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.tabledrawing: added = [module org.openide.util.lookup > 8.0, module org.openide.util.ui > 9.3] removed = []; details: [#170056: Separate module for Lookup API, #243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.taskpane: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.tool: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.tvd2: added = [module org.netbeans.api.progress.compat8 > 1.40, module org.netbeans.api.progress.nb > 1.40, module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities, Swing dependencies split away]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cif.welcomepage: added = [module org.openide.util.lookup > 8.0, module org.openide.util.ui > 9.3] removed = []; details: [#170056: Separate module for Lookup API, #243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module com.flyfox.depthcor: added = [module org.openide.util.lookup > 8.0, module org.openide.util.ui > 9.3] removed = []; details: [#170056: Separate module for Lookup API, #243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module com.flyfox.plotutil: added = [module org.openide.util.lookup > 8.0, module org.openide.util.ui > 9.3, module org.openide.filesystems.nb, module org.openide.filesystems.compat8] removed = []; details: [#170056: Separate module for Lookup API, #243100: Separate desktop-independent utilities, Separation of desktop and cleanup]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module com.flyfox.print: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module com.flyfox.reservoirplot: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module com.flyfox.VerticalSectionPlot: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module com.flyfox: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module com.ml.classify: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module com.ml.predict: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module com.ml: added = [module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities]
+WARNING [org.netbeans.core.modules]: the modules [cif.curveedit, cif.datalist, cif.datamanager, cif.geo.wellsection, cif.normalization, cif.paysummary, cif.taskpane, com.flyfox.VerticalSectionPlot, com.flyfox.plotutil] use org.jdesktop.layout which is deprecated: 改用 javax.swing.GroupLayout。(在窗体编辑器的“检查器”中, 选择“窗体...”; 将“布局生成样式”更改为“标准 Java 6 代码”。)
+INFO [org.netbeans.core.startup.NbEvents]: 开启模块:
+	org.openide.util.lookup [8.32.1 201510222201]
+	org.openide.util [9.5.1 201510222201]
+	org.openide.util.ui [9.4.1 201510222201]
+	org.openide.modules [7.47.1 201510222201]
+	org.netbeans.api.annotations.common/1 [1.26.1 201510222201]
+	org.openide.filesystems [9.8.1 201510222201]
+	org.openide.awt [7.65.1 201510222201]
+	org.netbeans.api.progress/1 [1.46.1 201510222201]
+	org.netbeans.api.progress.nb [1.46.1 201510222201]
+	org.openide.dialogs [7.41.1 201510222201]
+	org.openide.nodes [7.42.1 201510222201]
+	org.openide.windows [6.74.1 201510222201]
+	org.netbeans.modules.editor.mimelookup/1 [1.39.1 201510222201]
+	org.openide.text [6.66.1 201510222201]
+	org.netbeans.swing.tabcontrol [1.54.1 201510222201]
+	org.netbeans.swing.outline [1.32.1 201510222201]
+	org.openide.explorer [6.61.1 201510222201]
+	org.openide.actions [6.38.1 201510222201]
+	org.netbeans.modules.queries/1 [1.42.1 201510222201]
+	org.netbeans.api.templates [1.6.1 201510222201]
+	org.openide.filesystems.nb [9.7.1 201510222201]
+	org.openide.loaders [7.63.1 201510222201]
+	org.netbeans.api.intent [1.1.1 201510222201]
+	org.netbeans.api.io [1.2.1 201510222201]
+	org.openide.io [1.48.1 201510222201]
+	org.openide.filesystems.compat8 [9.7.1 201510222201]
+	org.openide.execution [9.2.1 201510222201]
+	org.openide.execution.compat8 [9.1.1 201510222201]
+	org.netbeans.swing.plaf [1.40.1 201510222201]
+	org.netbeans.spi.quicksearch [1.26.1 201510222201]
+	org.netbeans.modules.templates/1 [1.6.1 201510222201]
+	org.netbeans.libs.asm [5.2.1 201510222201]
+	org.netbeans.bootstrap/1 [2.74.1 201510222201]
+	org.netbeans.core.startup.base [1.61.1.1 1 201510222201]
+	org.netbeans.core.startup/1 [1.61.1.1 201510222201]
+	org.netbeans.modules.settings/1 [1.48.1 201510222201]
+	org.netbeans.modules.sendopts/2 [2.34.1 201510222201]
+	org.netbeans.modules.sampler [1.13.1 201510222201]
+	org.netbeans.modules.progress.ui [1.32.1 201510222201]
+	org.netbeans.modules.print [7.25.1 201510222201]
+	org.netbeans.modules.keyring [1.23.1 201510222201]
+	org.netbeans.core/2 [3.49.1 201510222201]
+	org.netbeans.modules.options.api/1 [1.44.1 201510222201]
+	org.netbeans.modules.options.keymap [1.36.1 201510222201]
+	org.netbeans.libs.jna/1 [1.41.1 201510222201]
+	org.netbeans.modules.masterfs/2 [2.54.1.2 2 201510222201]
+	org.netbeans.modules.masterfs.windows [1.15.1 201510222201]
+	org.netbeans.modules.masterfs.ui [2.2.1.2 201510222201]
+	org.netbeans.modules.masterfs.nio2 [1.14.1 201510222201]
+	org.netbeans.modules.keyring.fallback [1.7.1 201510222201]
+	org.netbeans.modules.keyring.impl [1.23.1 201510222201]
+	org.netbeans.modules.favorites/1 [1.45.1 201510222201]
+	org.netbeans.modules.editor.mimelookup.impl/1 [1.31.1 201510222201]
+	org.netbeans.modules.autoupdate.services [1.51.1 201510222201]
+	org.netbeans.modules.autoupdate.cli [1.12.1 201510222201]
+	org.netbeans.core.windows/2 [2.80.1 201510222201]
+	org.netbeans.core.ui/1 [1.44.1 201510222201]
+	org.netbeans.libs.osgi [1.20.1 201510222201]
+	org.netbeans.libs.felix [2.14.1 201510222201]
+	org.netbeans.modules.autoupdate.ui [1.44.1 201510222201]
+	org.netbeans.modules.core.kit [1.29.1 201510222201]
+	org.netbeans.libs.jna.platform/1 [1.10.1 201510222201]
+	org.netbeans.core.output2/1 [1.40.1 201510222201]
+	org.netbeans.core.network [1.9.1 201510222201]
+	org.netbeans.core.netigso [1.30.1 201510222201]
+	org.netbeans.core.nativeaccess/1 [1.30.1 201510222201]
+	org.netbeans.core.multitabs/1 [1.11.1.1 1 201510222201]
+	org.netbeans.core.io.ui/1 [1.29.1 201510222201]
+	org.netbeans.core.execution/1 [1.40.1 201510222201]
+	org.netbeans.api.visual [2.46.1 201510222201]
+	org.netbeans.api.progress.compat8 [1.46.1 201510222201]
+	org.jdesktop.layout/1 [1.32.1 201510222201]
+	cif.base [1.0 190819]
+	cif.smartbase [1.0 190819]
+	cif.lib [1.0 190819]
+	cif.baseutil [1.0 190819]
+	cif.regulation [1.0 190819]
+	cif.dataengine [1.0 190819]
+	cif.communication [1.0 190819]
+	cif.database [1.0 190819]
+	cif.resource [1.0 190819]
+	cif.datautil [1.0 190819]
+	cif.configuration [1.0 190819]
+	com.flyfox.plotutil [2.0 190819]
+	com.flyfox [2.0 190819]
+	com.flyfox.logFrame [1.0 190819]
+	cif.cifplus [1.0 190819]
+	cif.mul.util [1.0 190819]
+	cif.cifplotdata [2.0 190819]
+	com.flyfox.logplot [1.0 190819]
+	cif.dataservice [1.0 190819]
+	cif.apputil [1.0 190819]
+	cif.basechart [1.0 190819]
+	cif.chartutil [1.0 190819]
+	com.ml [1.0 190819]
+	com.ml.predict [1.0 190819]
+	com.ml.classify [1.0 190819]
+	cif.graph [1.0 190819]
+	com.flyfox.reservoirplot [1.0 190819]
+	com.flyfox.print [1.0 190819]
+	com.flyfox.depthcor [1.0 190819]
+	com.flyfox.VerticalSectionPlot [1.0 190819]
+	cif.contour [1.0 190819]
+	cif.lib3d [1.0 190819]
+	cif.workspace3d [1.0 190819]
+	cif.chart.hist.app [1.0 190819]
+	cif.geo.map [1.0 190819]
+	cif.contourapp [1.0 190819]
+	cif.chartapp [1.0 190819]
+	cif.welllocations.app [1.0 190819]
+	cif.welcomepage [1.0 190819]
+	cif.tvd2 [1.0 190819]
+	cif.tool [1.0 190819]
+	cif.taskpane [1.0 190819]
+	cif.tabledrawing [1.0 190819]
+	cif.symboleditor [1.0 190819]
+	cif.stattable [1.0 190819]
+	cif.service [1.0 190819]
+	cif.regression [1.0 190819]
+	cif.geo.wellsection [1.0 190819]
+	cif.regionprocess [1.0 190819]
+	cif.projectmanager [1.0 190819]
+	cif.plotapp [1.0 190819]
+	cif.logchain [1.0 190819]
+	cif.paysummary [1.0 190819]
+	cif.normalization [1.0 190819]
+	cif.mulprocessor [1.0 190819]
+	cif.mllearning [1.0 200909]
+	cif.methods [1.0 190819]
+	cif.logsplice [1.0 190819]
+	cif.basemodule [1.0 190819]
+	cif.logesanalysis [1.0 190819]
+	cif.loges [1.0 190819]
+	cif.iconeditor [1.0 190819]
+	cif.helpwrapper [1.0 190819]
+	cif.headmap [1.0 190819]
+	cif.geo.dataengine [1.0 190819]
+	cif.formatconversion [1.0 190819]
+	cif.datamanager [1.0 190819]
+	cif.datalist [1.0 190819]
+	cif.dataeditor [1.0 190819]
+	cif.curveedit [1.0 190819]
+	cif.cifplusnode [1.0 190819]
+	cif.cifpackage [1.0 190819]
+	cif.basecontour [1.0 190819]
+	cif.appmodule [1.0 190819]
+	cif.appdeveloper [1.0 190819]
+	cif.appdesigner [1.0 190819]
+INFO [org.netbeans.core.network.proxy.NetworkProxyReloader]: System network proxy resolver: Windows
+INFO [org.netbeans.core.network.proxy.windows.WindowsNetworkProxy]: Windows system proxy resolver: auto detect
+INFO [org.netbeans.core.network.proxy.NetworkProxyReloader]: System network proxy reloading succeeded.
+INFO [org.netbeans.core.network.proxy.NetworkProxyReloader]: System network proxy - mode: direct
+INFO [org.netbeans.core.network.proxy.NetworkProxyReloader]: System network proxy: fell to default (correct if direct mode went before)
+INFO [org.netbeans.ui.metrics.laf]: USG_LOOK_AND_FEEL
+Diagnostic information
+Input arguments:
+	-Dnetbeans.logger.console=true
+	-ea
+	-Djdk.home=C:\Program Files\Java\jdk1.8.0_151
+	-splash:E:\CIFLogClusterModule\MLLearning\build\testuserdir\var\cache\splash.png
+	-Dnetbeans.home=D:\ciflog\platform
+	-Dnetbeans.user=E:\CIFLogClusterModule\MLLearning\build\testuserdir
+	-Dnetbeans.default_userdir_root=
+	-XX:+HeapDumpOnOutOfMemoryError
+	-XX:HeapDumpPath=E:\CIFLogClusterModule\MLLearning\build\testuserdir\var\log\heapdump.hprof
+	-Dsun.awt.keepWorkingSetOnMinimize=true
+	-Dnetbeans.dirs=E:\CIFLogClusterModule\MLLearning\build\cluster;D:\ciflog\ciflog;D:\ciflog\platform
+	exit
+Compiler: HotSpot 64-Bit Tiered Compilers
+Heap memory usage: initial 128.0MB maximum 1799.5MB
+Non heap memory usage: initial 2.4MB maximum -1b
+Garbage collector: PS Scavenge (Collections=8 Total time spent=0s)
+Garbage collector: PS MarkSweep (Collections=2 Total time spent=0s)
+Classes: loaded=5522 total loaded=5522 unloaded 0
+INFO [org.netbeans.core.ui.warmup.DiagnosticTask]: Total memory 8,485,453,824
+INFO [null]: 总物理内存8,485,453,824
+WARNING [org.openide.filesystems.Ordering]: Found same position 100 for both Menu/Tools/ResourceManage and Menu/Tools/org-openide-actions-ToolsAction.shadow
+WARNING [org.openide.filesystems.Ordering]: Not all children in Menu/Window/ marked with the position attribute: [cif-mllearning-MLLearningTopComponent.shadow, cif-stattable-StatTableTopComponent.shadow, com-sgt-modul3d-topcomponent-MainViewTopComponent.shadow], but some are: [TaskPaneAction.shadow, WelcomeAction.shadow, javax-swing-JSeparator.instance, org-netbeans-core-windows-actions-ToggleFullScreenAction.instance, Separator3.instance, ConfigureWindow, org-netbeans-core-windows-actions-ResetWindowsAction.shadow, Separator4.instance, CloseWindowAction.shadow, CloseAllDocumentsAction.shadow, CloseAllButThisAction.shadow, DocumentsAction.shadow]
+WARNING [org.openide.filesystems.Ordering]: Not all children in Menu/Help/ marked with the position attribute: [检查更新], but some are: [cif-helpwrapper-helper-HelperAction.shadow, cif-helpwrapper-helper-HelperAction-separatorAfter.instance, cif-helpwrapper-logger-PlatformLoggerAction.shadow, cif-projectmanager-LicenseAction-separatorBefore.instance, cif-projectmanager-LicenseAction.shadow, cif-helpwrapper-logger-PlatformLoggerAction-separatorAfter.instance, cif-helpwrapper-about-AboutAction.shadow]
+WARNING [org.openide.filesystems.Ordering]: Relative ordering attribute cif-helpwrapper-updater-UpdateAction1.shadow/cif-helpwrapper-updater-ImportPacket.shadow on Menu/Help/检查更新 is deprecated in favor of numeric position attributes

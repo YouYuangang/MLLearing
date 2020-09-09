@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?><module codename="cif.mllearning">
+    <module_version install_time="1599643765272" last="true" origin="installer" specification_version="1.0">
+        <file crc="1924208854" name="config/Modules/cif-mllearning.xml"/>
+        <file crc="9056507" name="modules/cif-mllearning.jar"/>
+        <file crc="4135575409" name="modules/ext/jcommon-1.0.23.jar"/>
+        <file crc="3721340431" name="modules/ext/jfreechart-1.0.19.jar"/>
+        <file crc="148271499" name="modules/ext/libsvm.jar"/>
+        <file crc="3978382310" name="modules/ext/neuroph-core-2.93.jar"/>
+        <file crc="1898328484" name="modules/ext/slf4j-api-1.7.5.jar"/>
+        <file crc="2167578927" name="modules/ext/slf4j-nop-1.7.6.jar"/>
+        <file crc="4258438236" name="modules/ext/weka.jar"/>
+    </module_version>
+</module>
