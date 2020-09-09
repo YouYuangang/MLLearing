@@ -130,7 +130,7 @@ public final class MLLearningTopComponent extends TopComponent {
         jScrollPane1 = new javax.swing.JScrollPane();
         variableTable = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
-        functionComboBox = new javax.swing.JComboBox<String>();
+        functionComboBox = new javax.swing.JComboBox<>();
         selectVariableButton = new javax.swing.JButton();
         yButton = new javax.swing.JButton();
         tabbedPaneSplitPane = new javax.swing.JSplitPane();
@@ -138,13 +138,14 @@ public final class MLLearningTopComponent extends TopComponent {
         jPanel2 = new javax.swing.JPanel();
         subTabbedPane = new javax.swing.JTabbedPane();
         mainToolBar = new javax.swing.JToolBar();
-        predictingToggleButton = new javax.swing.JToggleButton();
-        classificationToggleButton = new javax.swing.JToggleButton();
-        clusteringToggleButton = new javax.swing.JToggleButton();
-        jSeparator1 = new javax.swing.JToolBar.Separator();
         inputDataButton = new javax.swing.JButton();
         manageModelButton = new javax.swing.JButton();
         pagePaneSplitedToggleButton = new javax.swing.JToggleButton();
+        jSeparator1 = new javax.swing.JToolBar.Separator();
+        predictingToggleButton = new javax.swing.JToggleButton();
+        classificationToggleButton = new javax.swing.JToggleButton();
+        clusteringToggleButton = new javax.swing.JToggleButton();
+        jSeparator2 = new javax.swing.JToolBar.Separator();
         gnerateModel = new javax.swing.JButton();
         chooseModel = new javax.swing.JButton();
         runButton = new javax.swing.JButton();
@@ -246,6 +247,38 @@ public final class MLLearningTopComponent extends TopComponent {
         mainToolBar.setFloatable(false);
         mainToolBar.setRollover(true);
 
+        inputDataButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cif/mllearning/icons/openDataSource24.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(inputDataButton, org.openide.util.NbBundle.getMessage(MLLearningTopComponent.class, "MLLearningTopComponent.inputDataButton.text")); // NOI18N
+        inputDataButton.setFocusable(false);
+        inputDataButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        inputDataButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        inputDataButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inputDataButtonActionPerformed(evt);
+            }
+        });
+        mainToolBar.add(inputDataButton);
+
+        manageModelButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cif/mllearning/icons/model24.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(manageModelButton, org.openide.util.NbBundle.getMessage(MLLearningTopComponent.class, "MLLearningTopComponent.manageModelButton.text")); // NOI18N
+        manageModelButton.setFocusable(false);
+        manageModelButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        manageModelButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        mainToolBar.add(manageModelButton);
+
+        pagePaneSplitedToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cif/mllearning/icons/windowSplited24.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(pagePaneSplitedToggleButton, org.openide.util.NbBundle.getMessage(MLLearningTopComponent.class, "MLLearningTopComponent.pagePaneSplitedToggleButton.text")); // NOI18N
+        pagePaneSplitedToggleButton.setFocusable(false);
+        pagePaneSplitedToggleButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        pagePaneSplitedToggleButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        pagePaneSplitedToggleButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pagePaneSplitedToggleButtonActionPerformed(evt);
+            }
+        });
+        mainToolBar.add(pagePaneSplitedToggleButton);
+        mainToolBar.add(jSeparator1);
+
         topButtonGroup.add(predictingToggleButton);
         predictingToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cif/mllearning/icons/predict24.png"))); // NOI18N
         predictingToggleButton.setSelected(true);
@@ -282,38 +315,7 @@ public final class MLLearningTopComponent extends TopComponent {
             }
         });
         mainToolBar.add(clusteringToggleButton);
-        mainToolBar.add(jSeparator1);
-
-        inputDataButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cif/mllearning/icons/openDataSource24.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(inputDataButton, org.openide.util.NbBundle.getMessage(MLLearningTopComponent.class, "MLLearningTopComponent.inputDataButton.text")); // NOI18N
-        inputDataButton.setFocusable(false);
-        inputDataButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        inputDataButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        inputDataButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                inputDataButtonActionPerformed(evt);
-            }
-        });
-        mainToolBar.add(inputDataButton);
-
-        manageModelButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cif/mllearning/icons/model24.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(manageModelButton, org.openide.util.NbBundle.getMessage(MLLearningTopComponent.class, "MLLearningTopComponent.manageModelButton.text")); // NOI18N
-        manageModelButton.setFocusable(false);
-        manageModelButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        manageModelButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        mainToolBar.add(manageModelButton);
-
-        pagePaneSplitedToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cif/mllearning/icons/windowSplited24.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(pagePaneSplitedToggleButton, org.openide.util.NbBundle.getMessage(MLLearningTopComponent.class, "MLLearningTopComponent.pagePaneSplitedToggleButton.text")); // NOI18N
-        pagePaneSplitedToggleButton.setFocusable(false);
-        pagePaneSplitedToggleButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        pagePaneSplitedToggleButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        pagePaneSplitedToggleButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                pagePaneSplitedToggleButtonActionPerformed(evt);
-            }
-        });
-        mainToolBar.add(pagePaneSplitedToggleButton);
+        mainToolBar.add(jSeparator2);
 
         gnerateModel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cif/mllearning/icons/gneratemodel.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(gnerateModel, org.openide.util.NbBundle.getMessage(MLLearningTopComponent.class, "MLLearningTopComponent.gnerateModel.text")); // NOI18N
@@ -342,7 +344,7 @@ public final class MLLearningTopComponent extends TopComponent {
         });
         mainToolBar.add(runButton);
 
-        clearClusterBtn.setIcon(new javax.swing.ImageIcon("E:\\CIFLogClusterModule\\MLLearning\\src\\cif\\mllearning\\icons\\clearRes.png")); // NOI18N
+        clearClusterBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cif/mllearning/icons/CancelLabel.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(clearClusterBtn, org.openide.util.NbBundle.getMessage(MLLearningTopComponent.class, "MLLearningTopComponent.clearClusterBtn.text")); // NOI18N
         clearClusterBtn.setFocusable(false);
         clearClusterBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -684,6 +686,7 @@ public final class MLLearningTopComponent extends TopComponent {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToolBar.Separator jSeparator1;
+    private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JSplitPane mainSplitPane;
     private javax.swing.JTabbedPane mainTabbedPane;
     private javax.swing.JToolBar mainToolBar;

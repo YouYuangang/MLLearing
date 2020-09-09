@@ -10,6 +10,7 @@ import cif.mllearning.base.RawCurveDataHelper;
 import cif.mllearning.base.MLDataModel;
 import cif.mllearning.base.RawTableDataHelper;
 import cif.mllearning.base.RawTextDataHelper;
+import cif.mllearning.configure.LoadConfigure;
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -48,6 +49,13 @@ class DataPanelTableModel extends AbstractTableModel {
                 mlModel.dataRowSelectedFlags[i] = true;
             }
         }
+        if (mlModel.dataLabelAs == null || mlModel.dataLabelAs.length != this.getRowCount()) {
+            mlModel.dataLabelAs = new int[getRowCount()];
+            for (int i = 0; i < mlModel.dataLabelAs.length; i++) {
+                mlModel.dataLabelAs[i] = -1;
+            }
+        }
+        
 
     }
 
@@ -175,7 +183,13 @@ class DataPanelTableModel extends AbstractTableModel {
                         }
                         
                     }else if(columnIndex == 1){
-                        return "无";
+                        if(mlModel.dataLabelAs[rowIndex]==-1){
+                            return "无";  
+                        }else{
+                            int layerIndex = mlModel.dataLabelAs[rowIndex];
+                            return LoadConfigure.colorLayers.get(layerIndex).nameOfLayer;
+                        }
+                        
                     }else if(columnIndex == 2){
                         return Double.toString(curveHelper.getDepth(rowIndex));
                     }else if(columnIndex>=(0+3)&&columnIndex<(0+3+mlModel.getVariables().length)){

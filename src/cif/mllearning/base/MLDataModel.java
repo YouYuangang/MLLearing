@@ -38,6 +38,7 @@ public class MLDataModel {
     public DataGridModel dataGridModel;
     private Variable[] variables = null;
     public boolean[] dataRowSelectedFlags;
+    public int[] dataLabelAs;
 
     public int learningMode;
 

@@ -9,6 +9,7 @@ import cif.mllearning.MLGlobal;
 import cif.mllearning.base.MLDataModel;
 import cif.mllearning.base.UpdatePanelFlag;
 import cif.mllearning.base.Variable;
+import cif.mllearning.inputdata.ChooseLabelJDialog;
 import cif.mllearning.inputdata.FilterDataJDialog;
 import cif.mllearning.inputdata.FilterDataJDialog2;
 import java.awt.Frame;
@@ -181,6 +182,11 @@ public class DataPanel extends PagePanel {
         labelAs.setFocusable(false);
         labelAs.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         labelAs.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        labelAs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                labelAsActionPerformed(evt);
+            }
+        });
         jToolBar1.add(labelAs);
 
         cancelLabelBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cif/mllearning/icons/CancelLabel.png"))); // NOI18N
@@ -328,6 +334,22 @@ public class DataPanel extends PagePanel {
 
         }
     }//GEN-LAST:event_filterDataBtnActionPerformed
+
+    private void labelAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_labelAsActionPerformed
+        // TODO add your handling code here:
+        int[] rows = dataTable.getSelectedRows();
+        Frame parent = WindowManager.getDefault().getMainWindow();
+        ChooseLabelJDialog chooseLabelJDialog = new ChooseLabelJDialog(parent,true);
+        chooseLabelJDialog.setVisible(true);
+        if(chooseLabelJDialog.retStatu == ChooseLabelJDialog.OK){
+        for (int row : rows) {
+            mlModel.dataLabelAs[row]=chooseLabelJDialog.getChooseBoxIndex();
+            //tableModel.fireTableCellUpdated(row, 0);
+        }
+        }
+        
+        tableModel.fireTableDataChanged();
+    }//GEN-LAST:event_labelAsActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
