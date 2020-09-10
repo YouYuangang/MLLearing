@@ -83,6 +83,24 @@ public class DataHelper {
         }
         return count;
     }
+    public int getLabeledRowCount(){
+        int count = 0;
+        for (int label : mlModel.dataLabelAs) {
+            if (label>0) {
+                count++;
+            }
+        }
+        return count;
+    }
+    public void getLabeledY(int[] desiredY){
+        int count = 0;
+        for(int i = 0;i<mlModel.dataLabelAs.length;i++){
+            if(mlModel.dataLabelAs[i]>0){
+                desiredY[count++] = mlModel.dataLabelAs[i];
+            }
+        }
+    
+    }
 
     public int readRealXData(int realXVariableIndex, double[] buffer) {
         return readRealDataFromRawIndex(realXVariableColumnIndices[realXVariableIndex], buffer);

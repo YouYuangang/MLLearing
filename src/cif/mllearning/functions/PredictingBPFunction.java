@@ -23,7 +23,6 @@ import org.openide.windows.WindowManager;
  * @create 2019.3.30
  */
 public class PredictingBPFunction extends Function {
-
     private Normalization normalization;
     private int hiddenNeuronCount = 10;
     private double learningRate = 0.05;

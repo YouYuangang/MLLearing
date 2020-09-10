@@ -30,6 +30,20 @@ class VariableTableModel extends AbstractTableModel {
 
     public void setLearningMode(int mode) {
         learningMode = mode;
+        if (mode != MLGlobal.PREDICTING_MODE) {
+            for (VariableEx variableEx : usedVariables) {
+                if (variableEx.variable.flag > 0) {
+                    variableEx.variable.flag = MLDataModel.X_VARIABLE;
+                }
+            }
+            return;
+        }
+        if(mode == MLGlobal.PREDICTING_MODE){
+            if(usedVariables!=null&&usedVariables.size()>0){
+                usedVariables.get(usedVariables.size()-1).variable.flag = MLDataModel.Y_VARIABLE;
+            }
+        }
+
     }
 
     @Override
@@ -86,7 +100,23 @@ class VariableTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         Variable variable = usedVariables.get(rowIndex).variable;
-        switch (columnIndex) {
+        if (columnIndex == 0) {
+            switch (learningMode) {
+                case MLGlobal.PREDICTING_MODE:
+                    if(variable.flag == MLDataModel.X_VARIABLE){
+                        return "X"+(rowIndex+1);
+                    }else{
+                        return "Y";
+                    }
+                default:
+                    return "X"+(rowIndex+1);
+                    
+            }
+        } else {
+            return variable.name;
+        }
+        
+        /*switch (columnIndex) {
             case 0:
                 if (learningMode == MLGlobal.CLUSTERING_MODE) {
                     return rowIndex + 1;
@@ -97,7 +127,7 @@ class VariableTableModel extends AbstractTableModel {
                 return variable.name;
             default:
                 return "";
-        }
+        }*/
     }
 
     @Override

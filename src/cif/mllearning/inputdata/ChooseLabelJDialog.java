@@ -116,8 +116,6 @@ public class ChooseLabelJDialog extends javax.swing.JDialog {
     private void labelComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_labelComboBoxActionPerformed
         // TODO add your handling code here:
         chooseLabel = labelComboBox.getSelectedIndex()-1;
-        Frame parent = WindowManager.getDefault().getMainWindow();
-        JOptionPane.showMessageDialog(parent, chooseLabel+"");
     }//GEN-LAST:event_labelComboBoxActionPerformed
 
     private void okBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okBtnActionPerformed

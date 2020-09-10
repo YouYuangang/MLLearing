@@ -30,9 +30,8 @@ public class DataPanel extends PagePanel {
     /**
      * Creates new form DataPanel
      */
-    
     private final DataPanelTableModel tableModel = new DataPanelTableModel();
-    public  MLDataModel mlModel = null;
+    public MLDataModel mlModel = null;
 
     public DataPanel() {
         initComponents();
@@ -42,82 +41,80 @@ public class DataPanel extends PagePanel {
             public void mouseReleased(MouseEvent e) {
                 int col = header.columnAtPoint(e.getPoint());
                 Frame parent = WindowManager.getDefault().getMainWindow();
-                switch(mlModel.dataFrom){
+                switch (mlModel.dataFrom) {
                     case MLDataModel.FROM_CURVE:
-                         if (col >= 3) {
-                    
-                    int vIndex = col - 3;
-                    
-                    MLDataModel model = tableModel.getmlModel();
-                    String title = model.getVariables()[vIndex].name;
-                    FilterDataJDialog2 filterData = new FilterDataJDialog2(parent, title + "范围设置", true);
-                    filterData.setLocationRelativeTo(parent);
-                    filterData.setVisible(true);
-                    if (filterData.returnStatus == 1) {
-                        int count = 0;
-                        double minData = Double.valueOf(filterData.getMinData());
-                        double maxData = Double.valueOf(filterData.getMaxData());
+                        if (col >= 3) {
 
-                        boolean[] flag = model.dataRowSelectedFlags;
-                        for (int i = 0; i < flag.length; i++) {
-                            double cur = Double.valueOf((String) tableModel.getValueAt(i, col));
-                            if ((cur < minData || cur > maxData) && (flag[i] == true)) {
-                                flag[i] = false;
-                                count++;
+                            int vIndex = col - 3;
+
+                            MLDataModel model = tableModel.getmlModel();
+                            String title = model.getVariables()[vIndex].name;
+                            FilterDataJDialog2 filterData = new FilterDataJDialog2(parent, title + "范围设置", true);
+                            filterData.setLocationRelativeTo(parent);
+                            filterData.setVisible(true);
+                            if (filterData.returnStatus == 1) {
+                                int count = 0;
+                                double minData = Double.valueOf(filterData.getMinData());
+                                double maxData = Double.valueOf(filterData.getMaxData());
+
+                                boolean[] flag = model.dataRowSelectedFlags;
+                                for (int i = 0; i < flag.length; i++) {
+                                    double cur = Double.valueOf((String) tableModel.getValueAt(i, col));
+                                    if ((cur < minData || cur > maxData) && (flag[i] == true)) {
+                                        flag[i] = false;
+                                        count++;
+                                    }
+                                }
+                                tableModel.fireTableDataChanged();
+                                JOptionPane.showMessageDialog(parent, "共剔除" + count + "个数据");
                             }
+
                         }
-                        tableModel.fireTableDataChanged();
-                        JOptionPane.showMessageDialog(parent, "共剔除" + count + "个数据");
-                    }
-                    
-                }
-                break;    
-                 default: 
-                     JOptionPane.showMessageDialog(parent, "未实现该功能");
-                     break;     
-                
+                        break;
+                    default:
+                        JOptionPane.showMessageDialog(parent, "未实现该功能");
+                        break;
+
                 }
                 return;
-               
-               
+
                 /*if (col >= 2) {
                     
-                    if((col==tableModel.getColumnCount()-1)&&tableModel.getmlModel().clusterResult!=null){
-                        if(tableModel.getmlModel().learningMode == MLGlobal.CLUSTERING_MODE){
-                            Frame parent = WindowManager.getDefault().getMainWindow();
-                            ClusterToLayerJDialog clusterToLayerD = new ClusterToLayerJDialog(parent,true);
-                            clusterToLayerD.setLocationRelativeTo(parent);
-                            clusterToLayerD.setModel(tableModel.getmlModel());
-                            clusterToLayerD.setVisible(true);
+                 if((col==tableModel.getColumnCount()-1)&&tableModel.getmlModel().clusterResult!=null){
+                 if(tableModel.getmlModel().learningMode == MLGlobal.CLUSTERING_MODE){
+                 Frame parent = WindowManager.getDefault().getMainWindow();
+                 ClusterToLayerJDialog clusterToLayerD = new ClusterToLayerJDialog(parent,true);
+                 clusterToLayerD.setLocationRelativeTo(parent);
+                 clusterToLayerD.setModel(tableModel.getmlModel());
+                 clusterToLayerD.setVisible(true);
                             
-                            return;
-                        }
-                    }
-                    int vIndex = col - 2;
-                    Frame parent = WindowManager.getDefault().getMainWindow();
-                    MLDataModel model = tableModel.getmlModel();
-                    String title = model.getVariables()[vIndex].name;
-                    FilterDataJDialog2 filterData = new FilterDataJDialog2(parent, title + "范围设置", true);
-                    filterData.setLocationRelativeTo(parent);
-                    filterData.setVisible(true);
-                    if (filterData.returnStatus == 1) {
-                        int count = 0;
-                        double minData = Double.valueOf(filterData.getMinData());
-                        double maxData = Double.valueOf(filterData.getMaxData());
+                 return;
+                 }
+                 }
+                 int vIndex = col - 2;
+                 Frame parent = WindowManager.getDefault().getMainWindow();
+                 MLDataModel model = tableModel.getmlModel();
+                 String title = model.getVariables()[vIndex].name;
+                 FilterDataJDialog2 filterData = new FilterDataJDialog2(parent, title + "范围设置", true);
+                 filterData.setLocationRelativeTo(parent);
+                 filterData.setVisible(true);
+                 if (filterData.returnStatus == 1) {
+                 int count = 0;
+                 double minData = Double.valueOf(filterData.getMinData());
+                 double maxData = Double.valueOf(filterData.getMaxData());
 
-                        boolean[] flag = model.dataRowSelectedFlags;
-                        for (int i = 0; i < flag.length; i++) {
-                            double cur = Double.valueOf((String) tableModel.getValueAt(i, col));
-                            if ((cur < minData || cur > maxData) && (flag[i] == true)) {
-                                flag[i] = false;
-                                count++;
-                            }
-                        }
-                        tableModel.fireTableDataChanged();
-                        JOptionPane.showMessageDialog(parent, "共剔除" + count + "个数据");
-                    }
-                }*/
-
+                 boolean[] flag = model.dataRowSelectedFlags;
+                 for (int i = 0; i < flag.length; i++) {
+                 double cur = Double.valueOf((String) tableModel.getValueAt(i, col));
+                 if ((cur < minData || cur > maxData) && (flag[i] == true)) {
+                 flag[i] = false;
+                 count++;
+                 }
+                 }
+                 tableModel.fireTableDataChanged();
+                 JOptionPane.showMessageDialog(parent, "共剔除" + count + "个数据");
+                 }
+                 }*/
             }
         });
 
@@ -163,8 +160,8 @@ public class DataPanel extends PagePanel {
 
         jToolBar1 = new javax.swing.JToolBar();
         labelAs = new javax.swing.JButton();
-        cancelLabelBtn = new javax.swing.JButton();
         clearLabelBtn = new javax.swing.JButton();
+        jSeparator3 = new javax.swing.JToolBar.Separator();
         filterDataBtn = new javax.swing.JButton();
         enableButton = new javax.swing.JButton();
         disableButton = new javax.swing.JButton();
@@ -189,19 +186,18 @@ public class DataPanel extends PagePanel {
         });
         jToolBar1.add(labelAs);
 
-        cancelLabelBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cif/mllearning/icons/CancelLabel.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(cancelLabelBtn, org.openide.util.NbBundle.getMessage(DataPanel.class, "DataPanel.cancelLabelBtn.text")); // NOI18N
-        cancelLabelBtn.setFocusable(false);
-        cancelLabelBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        cancelLabelBtn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(cancelLabelBtn);
-
         clearLabelBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cif/mllearning/icons/clearLable.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(clearLabelBtn, org.openide.util.NbBundle.getMessage(DataPanel.class, "DataPanel.clearLabelBtn.text")); // NOI18N
         clearLabelBtn.setFocusable(false);
         clearLabelBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         clearLabelBtn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        clearLabelBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearLabelBtnActionPerformed(evt);
+            }
+        });
         jToolBar1.add(clearLabelBtn);
+        jToolBar1.add(jSeparator3);
 
         filterDataBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cif/mllearning/icons/filterData.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(filterDataBtn, org.openide.util.NbBundle.getMessage(DataPanel.class, "DataPanel.filterDataBtn.text")); // NOI18N
@@ -338,22 +334,35 @@ public class DataPanel extends PagePanel {
     private void labelAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_labelAsActionPerformed
         // TODO add your handling code here:
         int[] rows = dataTable.getSelectedRows();
-        Frame parent = WindowManager.getDefault().getMainWindow();
-        ChooseLabelJDialog chooseLabelJDialog = new ChooseLabelJDialog(parent,true);
-        chooseLabelJDialog.setVisible(true);
-        if(chooseLabelJDialog.retStatu == ChooseLabelJDialog.OK){
-        for (int row : rows) {
-            mlModel.dataLabelAs[row]=chooseLabelJDialog.getChooseBoxIndex();
-            //tableModel.fireTableCellUpdated(row, 0);
+        if (rows.length > 0) {
+            Frame parent = WindowManager.getDefault().getMainWindow();
+            ChooseLabelJDialog chooseLabelJDialog = new ChooseLabelJDialog(parent, true);
+            chooseLabelJDialog.setLocationRelativeTo(parent);
+            chooseLabelJDialog.setVisible(true);
+            if (chooseLabelJDialog.retStatu == ChooseLabelJDialog.OK) {
+                for (int row : rows) {
+                    mlModel.dataLabelAs[row] = chooseLabelJDialog.getChooseBoxIndex();
+                    //tableModel.fireTableCellUpdated(row, 0);
+                }
+            }
+
+            tableModel.fireTableDataChanged();
         }
-        }
-        
-        tableModel.fireTableDataChanged();
+
     }//GEN-LAST:event_labelAsActionPerformed
+
+    private void clearLabelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearLabelBtnActionPerformed
+        // TODO add your handling code here:
+        if(mlModel.dataLabelAs!=null){
+            for(int i = 0;i<mlModel.dataLabelAs.length;i++){
+                mlModel.dataLabelAs[i] = -1;
+            }
+            tableModel.fireTableDataChanged();
+        }
+    }//GEN-LAST:event_clearLabelBtnActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton cancelLabelBtn;
     private javax.swing.JButton clearLabelBtn;
     private javax.swing.JTable dataTable;
     private javax.swing.JButton disableButton;
@@ -361,6 +370,7 @@ public class DataPanel extends PagePanel {
     private javax.swing.JButton enableButton;
     private javax.swing.JButton filterDataBtn;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JButton labelAs;
     // End of variables declaration//GEN-END:variables

@@ -130,7 +130,7 @@ public final class MLLearningTopComponent extends TopComponent {
         jScrollPane1 = new javax.swing.JScrollPane();
         variableTable = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
-        functionComboBox = new javax.swing.JComboBox<>();
+        functionComboBox = new javax.swing.JComboBox<String>();
         selectVariableButton = new javax.swing.JButton();
         yButton = new javax.swing.JButton();
         tabbedPaneSplitPane = new javax.swing.JSplitPane();
@@ -148,6 +148,7 @@ public final class MLLearningTopComponent extends TopComponent {
         jSeparator2 = new javax.swing.JToolBar.Separator();
         gnerateModel = new javax.swing.JButton();
         chooseModel = new javax.swing.JButton();
+        jSeparator3 = new javax.swing.JToolBar.Separator();
         runButton = new javax.swing.JButton();
         clearClusterBtn = new javax.swing.JButton();
 
@@ -166,6 +167,12 @@ public final class MLLearningTopComponent extends TopComponent {
         jScrollPane1.setViewportView(variableTable);
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(MLLearningTopComponent.class, "MLLearningTopComponent.jLabel2.text")); // NOI18N
+
+        functionComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                functionComboBoxActionPerformed(evt);
+            }
+        });
 
         selectVariableButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cif/mllearning/icons/selectItem16.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(selectVariableButton, org.openide.util.NbBundle.getMessage(MLLearningTopComponent.class, "MLLearningTopComponent.selectVariableButton.text")); // NOI18N
@@ -330,6 +337,7 @@ public final class MLLearningTopComponent extends TopComponent {
         chooseModel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         chooseModel.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         mainToolBar.add(chooseModel);
+        mainToolBar.add(jSeparator3);
 
         runButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cif/mllearning/icons/run.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(runButton, org.openide.util.NbBundle.getMessage(MLLearningTopComponent.class, "MLLearningTopComponent.runButton.text")); // NOI18N
@@ -522,6 +530,12 @@ public final class MLLearningTopComponent extends TopComponent {
         }
     }//GEN-LAST:event_clearClusterBtnActionPerformed
 
+    private void functionComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_functionComboBoxActionPerformed
+        // TODO add your handling code here:
+      
+        
+    }//GEN-LAST:event_functionComboBoxActionPerformed
+
     private void executeFunction(Function function) {
         Frame parent = WindowManager.getDefault().getMainWindow();
         final ProgressDialog progressDialog = new ProgressDialog(parent, true);
@@ -687,6 +701,7 @@ public final class MLLearningTopComponent extends TopComponent {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
+    private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JSplitPane mainSplitPane;
     private javax.swing.JTabbedPane mainTabbedPane;
     private javax.swing.JToolBar mainToolBar;

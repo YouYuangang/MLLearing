@@ -6,6 +6,7 @@
 package cif.mllearning.functions;
 
 import cif.loglab.math.MathBase;
+import cif.mllearning.configure.LoadConfigure;
 import java.awt.Frame;
 import java.io.File;
 import java.util.HashMap;
@@ -127,12 +128,12 @@ public class ClassifyingBPFunction extends Function {
 
     private DataSet formDataSet() {
         int xCount = dataHelper.getRealXVariableCount();
-        int rowCount = dataHelper.getRealRowCount();
+        int rowCount = dataHelper.getLabeledRowCount();
         normalization = new Normalization(xCount, -1);
-        desiredY = new String[rowCount];
-        dataHelper.readRealYString(desiredY);
-        itemCodeTable = FunTools.createItemCodeTable(desiredY);
-        int yCount = itemCodeTable.size();
+        int[] desiredY = new int[rowCount];
+        dataHelper.getLabeledY(desiredY);
+        
+        int yCount = LoadConfigure.colorLayers.size();
         DataSet dataSet = new DataSet(xCount, yCount);
 
         for (int i = 0; i < rowCount; i++) {
@@ -150,7 +151,7 @@ public class ClassifyingBPFunction extends Function {
             }
         }
         for (int row = 0; row < desiredY.length; row++) {
-            int val = itemCodeTable.get(desiredY[row]);
+            int val = desiredY[row];
             dataSet.get(row).getDesiredOutput()[val] = 1;
         }
        
