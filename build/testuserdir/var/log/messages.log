@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
->Log Session: Thursday, September 10, 2020 5:35:32 PM CST
+>Log Session: Friday, September 11, 2020 11:19:21 AM CST
 >System Info: 
   Product Version         = CIFLog 2.0
   Operating System        = Windows 7 version 6.1 running on amd64
@@ -201,7 +201,7 @@ INFO [org.netbeans.core.startup.NbEvents]: 开启模块:
 	cif.paysummary [1.0 190819]
 	cif.normalization [1.0 190819]
 	cif.mulprocessor [1.0 190819]
-	cif.mllearning [1.0 200910]
+	cif.mllearning [1.0 200911]
 	cif.methods [1.0 190819]
 	cif.logsplice [1.0 190819]
 	cif.basemodule [1.0 190819]
@@ -245,9 +245,9 @@ Input arguments:
 Compiler: HotSpot 64-Bit Tiered Compilers
 Heap memory usage: initial 128.0MB maximum 1799.5MB
 Non heap memory usage: initial 2.4MB maximum -1b
-Garbage collector: PS Scavenge (Collections=6 Total time spent=0s)
+Garbage collector: PS Scavenge (Collections=7 Total time spent=0s)
 Garbage collector: PS MarkSweep (Collections=2 Total time spent=0s)
-Classes: loaded=5548 total loaded=5548 unloaded 0
+Classes: loaded=5715 total loaded=5715 unloaded 0
 INFO [org.netbeans.core.ui.warmup.DiagnosticTask]: Total memory 8,485,453,824
 INFO [null]: 总物理内存8,485,453,824
 WARNING [org.openide.filesystems.Ordering]: Found same position 100 for both Menu/Tools/ResourceManage and Menu/Tools/org-openide-actions-ToolsAction.shadow

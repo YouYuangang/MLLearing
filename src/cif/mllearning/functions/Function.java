@@ -17,11 +17,19 @@ import javax.swing.SwingWorker;
  * @create 2019.3.18
  */
 public abstract class Function extends SwingWorker<Integer, Integer> {
-
+    public static final int GENERATE_MODEL = 0;
+    public static final int RUN_MODEL = 1;
+    public int flag = 0;
+    public String modelPath = "";
+    
     protected MLDataModel mlModel;
     protected MLDataModelHelper mlModelHelper;
     protected DataHelper dataHelper;
 
+    public void setRunModel(int RunMode){
+        flag = RunMode;
+    }
+    
     public void setMLModel(MLDataModel mlModel) {
         this.mlModel = mlModel;
         mlModelHelper = new MLDataModelHelper(mlModel);

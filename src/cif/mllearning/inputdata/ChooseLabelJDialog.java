@@ -27,7 +27,6 @@ public class ChooseLabelJDialog extends javax.swing.JDialog {
     public ChooseLabelJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        labelComboBox.addItem("无");
         for(ColorLayer layer : LoadConfigure.colorLayers){
             labelComboBox.addItem(layer.nameOfLayer);
         }
@@ -115,7 +114,7 @@ public class ChooseLabelJDialog extends javax.swing.JDialog {
     
     private void labelComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_labelComboBoxActionPerformed
         // TODO add your handling code here:
-        chooseLabel = labelComboBox.getSelectedIndex()-1;
+        chooseLabel = labelComboBox.getSelectedIndex();
     }//GEN-LAST:event_labelComboBoxActionPerformed
 
     private void okBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okBtnActionPerformed

@@ -23,6 +23,7 @@ import java.awt.Frame;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.InputStream;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -147,7 +148,6 @@ public final class MLLearningTopComponent extends TopComponent {
         clusteringToggleButton = new javax.swing.JToggleButton();
         jSeparator2 = new javax.swing.JToolBar.Separator();
         gnerateModel = new javax.swing.JButton();
-        chooseModel = new javax.swing.JButton();
         jSeparator3 = new javax.swing.JToolBar.Separator();
         runButton = new javax.swing.JButton();
         clearClusterBtn = new javax.swing.JButton();
@@ -329,14 +329,12 @@ public final class MLLearningTopComponent extends TopComponent {
         gnerateModel.setFocusable(false);
         gnerateModel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         gnerateModel.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        gnerateModel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                gnerateModelActionPerformed(evt);
+            }
+        });
         mainToolBar.add(gnerateModel);
-
-        chooseModel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cif/mllearning/icons/choose.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(chooseModel, org.openide.util.NbBundle.getMessage(MLLearningTopComponent.class, "MLLearningTopComponent.chooseModel.text")); // NOI18N
-        chooseModel.setFocusable(false);
-        chooseModel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        chooseModel.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        mainToolBar.add(chooseModel);
         mainToolBar.add(jSeparator3);
 
         runButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cif/mllearning/icons/run.png"))); // NOI18N
@@ -479,7 +477,12 @@ public final class MLLearningTopComponent extends TopComponent {
         int index = functionComboBox.getSelectedIndex();
         Function function = null;
         try {
+            
             function = (Function) mlGlobal.getFunctionProxys(learningMode)[index].classType.newInstance();
+            function.setRunModel(Function.RUN_MODEL);
+            JFileChooser jfc = new JFileChooser();
+            jfc.showDialog(this, "选择模型");
+            return;
         } catch (InstantiationException | IllegalAccessException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -532,9 +535,31 @@ public final class MLLearningTopComponent extends TopComponent {
 
     private void functionComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_functionComboBoxActionPerformed
         // TODO add your handling code here:
-      
+      selectPagePanel(mlGlobal.messagePanel);
+        int index = functionComboBox.getSelectedIndex();
+        Function function = null;
+        try {
+            function = (Function) mlGlobal.getFunctionProxys(learningMode)[index].classType.newInstance();
+        } catch (InstantiationException | IllegalAccessException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        executeFunction(function);
         
     }//GEN-LAST:event_functionComboBoxActionPerformed
+
+    private void gnerateModelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gnerateModelActionPerformed
+        // TODO add your handling code here:
+        selectPagePanel(mlGlobal.messagePanel);
+        int index = functionComboBox.getSelectedIndex();
+        Function function = null;
+        try {
+            function = (Function) mlGlobal.getFunctionProxys(learningMode)[index].classType.newInstance();
+            function.setRunModel(Function.GENERATE_MODEL);
+        } catch (InstantiationException | IllegalAccessException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        executeFunction(function);
+    }//GEN-LAST:event_gnerateModelActionPerformed
 
     private void executeFunction(Function function) {
         Frame parent = WindowManager.getDefault().getMainWindow();
@@ -687,7 +712,6 @@ public final class MLLearningTopComponent extends TopComponent {
         return tabIdx;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton chooseModel;
     private javax.swing.JToggleButton classificationToggleButton;
     private javax.swing.JButton clearClusterBtn;
     private javax.swing.JToggleButton clusteringToggleButton;

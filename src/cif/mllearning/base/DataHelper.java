@@ -83,19 +83,11 @@ public class DataHelper {
         }
         return count;
     }
-    public int getLabeledRowCount(){
-        int count = 0;
-        for (int label : mlModel.dataLabelAs) {
-            if (label>0) {
-                count++;
-            }
-        }
-        return count;
-    }
+    
     public void getLabeledY(int[] desiredY){
         int count = 0;
-        for(int i = 0;i<mlModel.dataLabelAs.length;i++){
-            if(mlModel.dataLabelAs[i]>0){
+        for(int i = 0;i<mlModel.dataRowSelectedFlags.length;i++){
+            if(mlModel.dataRowSelectedFlags[i]){
                 desiredY[count++] = mlModel.dataLabelAs[i];
             }
         }

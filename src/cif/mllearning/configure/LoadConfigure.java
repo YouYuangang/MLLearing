@@ -61,6 +61,8 @@ public class LoadConfigure {
                     JOptionPane.showMessageDialog(parent, "加载配置文件成功共"+colorLayers.size()+"层");
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Frame parent = WindowManager.getDefault().getMainWindow();
+                    JOptionPane.showMessageDialog(parent, "解析配置文件出错");
                 }
 
             }

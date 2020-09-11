@@ -52,7 +52,7 @@ class DataPanelTableModel extends AbstractTableModel {
         if (mlModel.dataLabelAs == null || mlModel.dataLabelAs.length != this.getRowCount()) {
             mlModel.dataLabelAs = new int[getRowCount()];
             for (int i = 0; i < mlModel.dataLabelAs.length; i++) {
-                mlModel.dataLabelAs[i] = -1;
+                mlModel.dataLabelAs[i] = 0;
             }
         }
         
@@ -183,7 +183,7 @@ class DataPanelTableModel extends AbstractTableModel {
                         }
                         
                     }else if(columnIndex == 1){
-                        if(mlModel.dataLabelAs[rowIndex]==-1){
+                        if(mlModel.dataLabelAs[rowIndex]==0){
                             return "无";  
                         }else{
                             int layerIndex = mlModel.dataLabelAs[rowIndex];

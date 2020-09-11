@@ -341,6 +341,7 @@ public class DataPanel extends PagePanel {
             chooseLabelJDialog.setVisible(true);
             if (chooseLabelJDialog.retStatu == ChooseLabelJDialog.OK) {
                 for (int row : rows) {
+                    mlModel.dataRowSelectedFlags[row] = true;
                     mlModel.dataLabelAs[row] = chooseLabelJDialog.getChooseBoxIndex();
                     //tableModel.fireTableCellUpdated(row, 0);
                 }

@@ -144,10 +144,10 @@ public class FunTools {
         return null;
     }
 
-    public static int computeEquivalenceCount(String[] y1s, String[] y2s) {
+    public static int computeEquivalenceCount(int[] y1s, int[] y2s) {
         int correctCount = 0;
         for (int i = 0; i < y1s.length; i++) {
-            if (y1s[i].equals(y2s[i])) {
+            if (y1s[i] == y2s[i]) {
                 correctCount++;
             }
         }
