@@ -195,7 +195,12 @@ class DataPanelTableModel extends AbstractTableModel {
                     }else if(columnIndex>=(0+3)&&columnIndex<(0+3+mlModel.getVariables().length)){
                         return String.format("%.4f", curveHelper.getCurveData(columnIndex - 3, rowIndex));
                     }else if(columnIndex == 0+3+mlModel.getVariables().length){
-                        return mlModel.classifyResult+"";
+                        if(mlModel.learningMode == MLGlobal.CLASSIFYING_MODE){
+                            int layerIndex = mlModel.classifyResult[rowIndex];
+                            return LoadConfigure.colorLayers.get(layerIndex).nameOfLayer;
+                        }else if(mlModel.learningMode == MLGlobal.CLUSTERING_MODE){
+                            return ""+mlModel.clusterResult[rowIndex];
+                        }
                     }else{
                         return "";
                     }

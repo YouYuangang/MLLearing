@@ -1,10 +1,10 @@
 D:\ciflog\platform=1599136395978
-cluster.E:/CIFLogClusterModule/MLLearning/build/cluster=1599794360533
+cluster.E:/CIFLogClusterModule/MLLearning/build/cluster=1600173160100
 cluster.D:/ciflog/ciflog=1599136395977
 cluster.D:/ciflog/platform=1599136395978
-user=1599794360533
+user=1600173160100
 crc=7
-locale=zh_CN
+locale=zh_TW
 branding=ciflog
 java.version=1.8.0_151
 java.vm.version=25.151-b12

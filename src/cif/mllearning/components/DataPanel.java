@@ -43,7 +43,7 @@ public class DataPanel extends PagePanel {
                 Frame parent = WindowManager.getDefault().getMainWindow();
                 switch (mlModel.dataFrom) {
                     case MLDataModel.FROM_CURVE:
-                        if (col >= 3) {
+                        if (col >= 3&&col < 0+3+mlModel.getVariables().length) {
 
                             int vIndex = col - 3;
 

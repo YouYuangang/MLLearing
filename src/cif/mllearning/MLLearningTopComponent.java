@@ -4,6 +4,11 @@
  * and open the template in the editor.
  */
 package cif.mllearning;
+import cif.base.Global;
+import cif.dataengine.DataPath;
+import cif.dataengine.io.LogCategory;
+import cif.dataengine.io.LogTable;
+import cif.datautil.datatreeview.dialogs.SelectDataTreeNodeDialog;
 import cif.mllearning.base.MLDataModel;
 import cif.mllearning.base.MLDataModelHelper;
 import cif.mllearning.base.UpdatePanelFlag;
@@ -16,13 +21,17 @@ import cif.mllearning.components.PagePanel;
 import cif.mllearning.components.PlotPanel;
 import cif.mllearning.components.ProgressDialog;
 import cif.mllearning.configure.LoadConfigure;
+import cif.mllearning.functions.FunTools;
 import cif.mllearning.functions.Function;
 import cif.mllearning.functions.FunctionProxy;
+import cif.mllearning.inputdata.ChooseClassLabelJDialog;
 import cif.mllearning.inputdata.InputDataDialog;
 import java.awt.Frame;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.io.InputStream;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
@@ -89,7 +98,7 @@ public final class MLLearningTopComponent extends TopComponent {
         updateFunctions();
         maskTabbedPaneEvent = false;
        LoadConfigure loadConfigure = new LoadConfigure();
-        variableTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+       /*variableTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting()) {
@@ -98,7 +107,7 @@ public final class MLLearningTopComponent extends TopComponent {
                     
                 }
             }
-        });
+        })*/;
         setSubTabbedPaneVisuable(false);
     }
 
@@ -148,7 +157,6 @@ public final class MLLearningTopComponent extends TopComponent {
         clusteringToggleButton = new javax.swing.JToggleButton();
         jSeparator2 = new javax.swing.JToolBar.Separator();
         gnerateModel = new javax.swing.JButton();
-        jSeparator3 = new javax.swing.JToolBar.Separator();
         runButton = new javax.swing.JButton();
         clearClusterBtn = new javax.swing.JButton();
 
@@ -185,7 +193,6 @@ public final class MLLearningTopComponent extends TopComponent {
 
         yButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cif/mllearning/icons/y.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(yButton, org.openide.util.NbBundle.getMessage(MLLearningTopComponent.class, "MLLearningTopComponent.yButton.text")); // NOI18N
-        yButton.setEnabled(false);
         yButton.setMargin(new java.awt.Insets(2, 4, 2, 4));
         yButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -208,7 +215,7 @@ public final class MLLearningTopComponent extends TopComponent {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(yButton)
+                        .addComponent(yButton, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(selectVariableButton)))
                 .addContainerGap())
@@ -335,7 +342,6 @@ public final class MLLearningTopComponent extends TopComponent {
             }
         });
         mainToolBar.add(gnerateModel);
-        mainToolBar.add(jSeparator3);
 
         runButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cif/mllearning/icons/run.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(runButton, org.openide.util.NbBundle.getMessage(MLLearningTopComponent.class, "MLLearningTopComponent.runButton.text")); // NOI18N
@@ -380,7 +386,20 @@ public final class MLLearningTopComponent extends TopComponent {
         mlModel.learningMode=mode;
         variableTableModel.setLearningMode(learningMode);
         variableTableModel.fireTableStructureChanged();
-        yButton.setVisible(mode != MLGlobal.CLUSTERING_MODE);
+        switch(mode){
+            case MLGlobal.PREDICTING_MODE:
+                yButton.setVisible(true);
+                yButton.setText("设置为y");
+                break;
+            case MLGlobal.CLASSIFYING_MODE:
+                yButton.setVisible(true);
+                yButton.setText("加载标签");
+                break;
+            case MLGlobal.CLUSTERING_MODE:
+                yButton.setVisible(false);
+                break;
+        }
+        
         updateMainPagePanels();
         updateFunctions();
     }
@@ -391,6 +410,16 @@ public final class MLLearningTopComponent extends TopComponent {
         dialog.setMLModel(mlModel);
         dialog.setVisible(true);
         if (dialog.getReturnStatus() == InputDataDialog.RET_OK) {
+            if(mlModel.dataRowSelectedFlags!=null){
+                for(int i = 0;i<mlModel.dataRowSelectedFlags.length;i++){
+                    mlModel.dataRowSelectedFlags[i] = true;
+                
+                }
+            }
+            
+            mlModel.predictResult = null;
+            mlModel.classifyResult = null;
+            mlModel.clusterResult = null;
             selectPagePanel(mlGlobal.dataPanel);
             variableTableModel.refreshViewData();
             variableTableModel.fireTableDataChanged();
@@ -432,11 +461,44 @@ public final class MLLearningTopComponent extends TopComponent {
     }//GEN-LAST:event_selectVariableButtonActionPerformed
 
     private void yButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yButtonActionPerformed
-        int selectedRow = variableTable.getSelectedRow();
+        /*int selectedRow = variableTable.getSelectedRow();
         variableTableModel.setY(selectedRow);
         variableTableModel.fireTableDataChanged();
         int selectedIndex = variableTableModel.getRowCount() - 1;
         variableTable.setRowSelectionInterval(selectedIndex, selectedIndex);
+        */
+        if(mlModel==null){
+            JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), "请先导入数据！");
+            return;
+        }
+        LogCategory category = null;
+        int i = 0;
+        switch(learningMode){
+            
+                
+            case MLGlobal.PREDICTING_MODE:
+                i = variableTable.getSelectedRow();
+                if(i>=0){
+                    variableTableModel.setY(i);
+                }
+                break;
+                
+            case MLGlobal.CLASSIFYING_MODE:
+                category = mlModel.inputDataPath.getCategory();
+                
+                ChooseClassLabelJDialog ChooseClassLabelJDialog = new ChooseClassLabelJDialog(WindowManager.getDefault().getMainWindow(),true);
+                
+                LogTable table = null;
+                for(i = 0;i<category.getLogCommonTableCount();i++){
+                    table = category.getLogCommonTable(i);
+                    ChooseClassLabelJDialog.addItem(table.getName());
+                }
+                ChooseClassLabelJDialog.setVisible(true);
+                
+                
+                break;
+                
+        }
     }//GEN-LAST:event_yButtonActionPerformed
 
     private void pagePaneSplitedToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pagePaneSplitedToggleButtonActionPerformed
@@ -476,17 +538,28 @@ public final class MLLearningTopComponent extends TopComponent {
         selectPagePanel(mlGlobal.messagePanel);
         int index = functionComboBox.getSelectedIndex();
         Function function = null;
-        try {
-            
-            function = (Function) mlGlobal.getFunctionProxys(learningMode)[index].classType.newInstance();
-            function.setRunModel(Function.RUN_MODEL);
-            JFileChooser jfc = new JFileChooser();
-            jfc.showDialog(this, "选择模型");
-            return;
-        } catch (InstantiationException | IllegalAccessException ex) {
-            Exceptions.printStackTrace(ex);
+        if (learningMode == MLGlobal.CLASSIFYING_MODE) {
+            try {
+
+                function = (Function) mlGlobal.getFunctionProxys(learningMode)[index].classType.newInstance();
+                function.setRunModel(Function.RUN_MODEL);
+                JFileChooser jfc = new JFileChooser(new File(FunTools.getModelPath()));
+                jfc.showDialog(this, "选择");
+                File moldelFile = jfc.getSelectedFile();
+                function.modelPath = moldelFile.getAbsolutePath();
+            } catch (InstantiationException | IllegalAccessException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            executeFunction(function, Function.RUN_MODEL);
+        }else{
+            try {
+                function = (Function) mlGlobal.getFunctionProxys(learningMode)[index].classType.newInstance();
+            } catch (InstantiationException | IllegalAccessException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            executeFunction(function, Function.RUN_MODEL);
         }
-        executeFunction(function);
+
     }//GEN-LAST:event_runButtonActionPerformed
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
@@ -535,15 +608,7 @@ public final class MLLearningTopComponent extends TopComponent {
 
     private void functionComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_functionComboBoxActionPerformed
         // TODO add your handling code here:
-      selectPagePanel(mlGlobal.messagePanel);
-        int index = functionComboBox.getSelectedIndex();
-        Function function = null;
-        try {
-            function = (Function) mlGlobal.getFunctionProxys(learningMode)[index].classType.newInstance();
-        } catch (InstantiationException | IllegalAccessException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        executeFunction(function);
+    
         
     }//GEN-LAST:event_functionComboBoxActionPerformed
 
@@ -558,10 +623,10 @@ public final class MLLearningTopComponent extends TopComponent {
         } catch (InstantiationException | IllegalAccessException ex) {
             Exceptions.printStackTrace(ex);
         }
-        executeFunction(function);
+        executeFunction(function,Function.GENERATE_MODEL);
     }//GEN-LAST:event_gnerateModelActionPerformed
 
-    private void executeFunction(Function function) {
+    private void executeFunction(Function function,int flag) {
         Frame parent = WindowManager.getDefault().getMainWindow();
         final ProgressDialog progressDialog = new ProgressDialog(parent, true);
 
@@ -593,14 +658,27 @@ public final class MLLearningTopComponent extends TopComponent {
                 return;
             }
         }
-        if (function.setParameters(parent)) {
-            function.execute();
-            progressDialog.setVisible(true);
-            UpdatePanelFlag.DataPanelUpdateFlag = true;
-            UpdatePanelFlag.CrossPlotUpdateFlag = true;
-            UpdatePanelFlag.PlotPanelUpdateFlag = true;
-            updatePagePanels();
+        switch(learningMode){
+            case MLGlobal.PREDICTING_MODE:
+                function.setParameters(parent);
+                break;
+            case MLGlobal.CLASSIFYING_MODE:
+                if(flag == Function.GENERATE_MODEL){
+                   function.setParameters(parent); 
+                }
+                break;
+            case MLGlobal.CLUSTERING_MODE:
+                function.setParameters(parent); 
+                break;
         }
+        
+        function.execute();
+        progressDialog.setVisible(true);
+        UpdatePanelFlag.DataPanelUpdateFlag = true;
+        UpdatePanelFlag.CrossPlotUpdateFlag = true;
+        UpdatePanelFlag.PlotPanelUpdateFlag = true;
+        updatePagePanels();
+        
     }
 
     private void updateMainPagePanels() {
@@ -725,7 +803,6 @@ public final class MLLearningTopComponent extends TopComponent {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
-    private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JSplitPane mainSplitPane;
     private javax.swing.JTabbedPane mainTabbedPane;
     private javax.swing.JToolBar mainToolBar;

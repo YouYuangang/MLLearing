@@ -7,11 +7,9 @@
             <file>file:/E:/CIFLogClusterModule/MLLearning/src/cif/mllearning/functions/PredictingBPFunction.java</file>
             <file>file:/E:/CIFLogClusterModule/MLLearning/src/cif/mllearning/functions/ClassifyingBPFunction.java</file>
             <file>file:/E:/CIFLogClusterModule/MLLearning/src/cif/mllearning/base/RawCurveDataHelper.java</file>
-            <file>file:/E:/CIFLogClusterModule/MLLearning/src/cif/mllearning/components/DataPanel.java</file>
             <file>file:/E:/CIFLogClusterModule/MLLearning/src/cif/mllearning/MLLearningTopComponent.java</file>
-            <file>file:/E:/CIFLogClusterModule/MLLearning/src/cif/mllearning/inputdata/ChooseLabelJDialog.java</file>
+            <file>file:/E:/CIFLogClusterModule/MLLearning/src/cif/mllearning/components/PlotPanel.java</file>
             <file>file:/E:/CIFLogClusterModule/MLLearning/src/cif/mllearning/base/MLDataModelHelper.java</file>
-            <file>file:/E:/CIFLogClusterModule/MLLearning/src/cif/mllearning/MLGlobal.java</file>
             <file>file:/E:/CIFLogClusterModule/MLLearning/src/cif/mllearning/configure/LoadConfigure.java</file>
         </group>
     </open-files>

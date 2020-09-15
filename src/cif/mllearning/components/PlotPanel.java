@@ -146,7 +146,7 @@ public class PlotPanel extends PagePanel {
 
         standardClusterResultColIndex = 0;
         //添加曲线 这里面有一个数据偏移的问题，曲线的数据是从2开始的，所以有一个2的偏移量
-        for (int i = 0; i < variables.length; i++) {
+       /* for (int i = 0; i < variables.length; i++) {
             if (tableModel.getColumnName(i + 2).equals(MLGlobal.STANDARD_CLUSTER_RESULT_CURVE_NAME)) {
                 standardClusterResultColIndex = i + 2;
 
@@ -164,11 +164,28 @@ public class PlotPanel extends PagePanel {
             } else if (variables[i].flag == MLDataModel.Y_VARIABLE) {
                 yVariable = variables[i];
             }
+        }*/
+        standardClusterResultColIndex = 0 + 3 + variables.length;
+        //找到聚类标准列里面的最大值  这个里面
+        if (mlModel.clusterResult != null) {
+            for (int j = 0; j < tableModel.getRowCount(); j++) {
+                if (stanadardCluterCount < Double.valueOf((String) tableModel.getValueAt(j, standardClusterResultColIndex))) {
+                    stanadardCluterCount = Double.valueOf((String) tableModel.getValueAt(j, standardClusterResultColIndex)).intValue();
+                }
+            }
+        }
+        for (int i = 0; i < variables.length; i++) {
+            if (variables[i].flag == MLDataModel.X_VARIABLE) {
+                addTrackAndCurve(variables[i], dataIndex);
+            } else if (variables[i].flag == MLDataModel.Y_VARIABLE) {
+                yVariable = variables[i];
+                addTrackAndCurve(yVariable, dataIndex);
+            }
         }
 
         //这里添加曲线的时候 可以通过一个曲线模板来做这个事儿，先加入一个模板 然后再添加后面两个类别曲线
         //这样能够考虑到美观的问题
-        addTrackAndCurve(yVariable, dataIndex);
+        //addTrackAndCurve(yVariable, dataIndex);
 
         //现在出问题的地方就在于不能创建label表
         addTrackAndTable(dataIndex);
@@ -211,16 +228,16 @@ public class PlotPanel extends PagePanel {
 
         //创建 标准聚类结果表及添加其typeCurve
         //判断曲线中是否有standardClusterResult        
-        if (standardClusterResultColIndex > 0) {
+        /*if (standardClusterResultColIndex > 0) {
             createClusterResultTable(logCategory, standardClusterResultColIndex, MLGlobal.STANDARD_CLUSTER_RESULT_TABLE_NAME);
             standardClusterResultTypeCurve = addTrackAndTypeCurve(MLGlobal.STANDARD_CLUSTER_RESULT_CURVE_NAME,
                     MLGlobal.STANDARD_CLUSTER_RESULT_TABLE_NAME, dataIndex);
 
-        }
+        }*/
 
         //创建 聚类结果表及添加其typeCurve
         if (mlModel.clusterResult != null) {
-            createClusterResultTable(logCategory, tableModel.getColumnCount() - 1, MLGlobal.CLUSTER_RESULT_TABLE_NAME);
+            createClusterResultTable(logCategory, standardClusterResultColIndex, MLGlobal.CLUSTER_RESULT_TABLE_NAME);
             clusterResultTypeCurve = addTrackAndTypeCurve(MLGlobal.CLUSTER_RESULT_TABLE_NAME,
                     MLGlobal.CLUSTER_RESULT_TABLE_NAME, dataIndex);
 
@@ -269,9 +286,11 @@ public class PlotPanel extends PagePanel {
         //渐变色的东西，我还不确定这个应该怎么写，后面留着
         ArrayList<CategoryItem> categoryList = new ArrayList<>();
         int gap = 255 / clusterCount;
+        
         for (int i = 0; i < clusterCount; i++) {
             CategoryItem item = new CategoryItem();
             item.setPropertyValue(i + "");
+            
             if(mlModel!=null&&mlModel.clusterLayerMap!=null&&mlModel.clusterLayerMap.containsKey(i)){
                 int j = mlModel.clusterLayerMap.get(i);
                 Color temp = new Color(LoadConfigure.colorLayers.get(j).red,LoadConfigure.colorLayers.get(j).green,LoadConfigure.colorLayers.get(j).blue);
@@ -284,6 +303,11 @@ public class PlotPanel extends PagePanel {
             item.setWidth(100);
             categoryList.add(item);
         }
+        CategoryItem item = new CategoryItem();
+        item.setPropertyValue(100 + "");
+        item.setWidth(100);
+        item.setBackgroundColor(new Color(255,255,255));
+        categoryList.add(item);
         return categoryList;
     }
 
@@ -350,8 +374,8 @@ public class PlotPanel extends PagePanel {
         //填充数据
         for (int i = 0; i < tableRecords.getRecordsNum(); i++) {
             //起始、结束深度列
-            tableRecords.setRecordDoubleData(i, 0, Double.valueOf((String) tableModel.getValueAt(i, 1)));
-            tableRecords.setRecordDoubleData(i, 1, Double.valueOf((String) tableModel.getValueAt(i + 1, 1)));
+            tableRecords.setRecordDoubleData(i, 0, Double.valueOf((String) tableModel.getValueAt(i, 2)));
+            tableRecords.setRecordDoubleData(i, 1, Double.valueOf((String) tableModel.getValueAt(i + 1, 2)));
             //聚类结果列
             int value = Double.valueOf(String.valueOf(tableModel.getValueAt(i, dataColIndex))).intValue();
             tableRecords.setRecordStringData(i, 2, String.valueOf(value));

@@ -38,11 +38,11 @@ class VariableTableModel extends AbstractTableModel {
             }
             return;
         }
-        if(mode == MLGlobal.PREDICTING_MODE){
+        /*if(mode == MLGlobal.PREDICTING_MODE){
             if(usedVariables!=null&&usedVariables.size()>0){
                 usedVariables.get(usedVariables.size()-1).variable.flag = MLDataModel.Y_VARIABLE;
             }
-        }
+        }*/
 
     }
 

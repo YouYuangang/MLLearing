@@ -112,7 +112,7 @@ public class SimpleKMeansFunction extends Function {
            if(mlModel.dataRowSelectedFlags[i]==true){
                clusterResult2[i] = clusterResult[curIndex++];
            }else{
-               clusterResult2[i] = -1;
+               clusterResult2[i] = 100;
            }
        }
         mlModel.clusterResult = clusterResult2;

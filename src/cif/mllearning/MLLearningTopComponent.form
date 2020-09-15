@@ -57,7 +57,7 @@
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
-                              <Component id="yButton" min="-2" max="-2" attributes="0"/>
+                              <Component id="yButton" min="-2" pref="114" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="selectVariableButton" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -160,7 +160,6 @@
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                   <ResourceString bundle="cif/mllearning/Bundle.properties" key="MLLearningTopComponent.yButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
-                <Property name="enabled" type="boolean" value="false"/>
                 <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
                   <Insets value="[2, 4, 2, 4]"/>
                 </Property>
@@ -351,8 +350,6 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="gnerateModelActionPerformed"/>
           </Events>
-        </Component>
-        <Component class="javax.swing.JToolBar$Separator" name="jSeparator3">
         </Component>
         <Component class="javax.swing.JButton" name="runButton">
           <Properties>

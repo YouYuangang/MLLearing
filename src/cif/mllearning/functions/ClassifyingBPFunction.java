@@ -6,6 +6,7 @@
 package cif.mllearning.functions;
 
 import cif.loglab.math.MathBase;
+import cif.mllearning.base.UpdatePanelFlag;
 import cif.mllearning.configure.LoadConfigure;
 import java.awt.Frame;
 import java.io.File;
@@ -73,7 +74,7 @@ public class ClassifyingBPFunction extends Function {
 
     @Override
     protected Integer doInBackground() throws Exception {
-        if (flag == 0) {
+        if (flag == Function.GENERATE_MODEL) {
             printDataMessage();
             DataSet dataSet = formLearningDataSet();
             MultiLayerPerceptron neuralNet = new MultiLayerPerceptron(dataSet.getInputSize(), hiddenNeuronCount, dataSet.getOutputSize());
@@ -94,8 +95,9 @@ public class ClassifyingBPFunction extends Function {
             neuralNet.learn(dataSet);
             println("完成训练");
             String filePath = FunTools.getModelPath() + File.separator + FunTools.getModelFileName("Classfy_BP", mlModel);
+            neuralNet.save(filePath);
             FunTools.saveModelAuxFile(true, filePath, mlModelHelper, normalization);
-
+            
             int[] py = computeY(neuralNet, dataSet);
             int correctCount = FunTools.computeEquivalenceCount(desiredY, py);
             StringBuilder sb = new StringBuilder();
@@ -110,7 +112,18 @@ public class ClassifyingBPFunction extends Function {
             DataSet needToClassify = formToClassifyDataSet();
             MultiLayerPerceptron neuralNet = (MultiLayerPerceptron)NeuralNetwork.createFromFile(modelPath);
             int[] yByModel = computeY(neuralNet,needToClassify);
-            mlModel.classifyResult = yByModel;
+            mlModel.classifyResult = new int[mlModel.dataRowSelectedFlags.length];
+            int j = 0;
+            for(int i =0;i<mlModel.classifyResult.length;i++){
+                if(mlModel.dataRowSelectedFlags[i]){
+                    mlModel.classifyResult[i] = yByModel[j++];
+                }
+            }
+            printHighlight("数据处理完成！");
+            UpdatePanelFlag.DataPanelUpdateFlag = true;
+            UpdatePanelFlag.HistogramUpdateFlag = true;
+            UpdatePanelFlag.CrossPlotUpdateFlag = true;
+            UpdatePanelFlag.PlotPanelUpdateFlag = true;
             return 0;
         }
 
