@@ -36,7 +36,7 @@ public class MLDataModel {
     public String logTableName;
     public String inputFilePath;
     public DataGridModel dataGridModel;
-    private Variable[] variables = null;
+    public Variable[] variables = null;
     public boolean[] dataRowSelectedFlags;
     public int[] dataLabelAs;
 

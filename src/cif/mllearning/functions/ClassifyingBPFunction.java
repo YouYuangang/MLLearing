@@ -96,7 +96,7 @@ public class ClassifyingBPFunction extends Function {
             println("完成训练");
             String filePath = FunTools.getModelPath() + File.separator + FunTools.getModelFileName("Classfy_BP", mlModel);
             neuralNet.save(filePath);
-            FunTools.saveModelAuxFile(true, filePath, mlModelHelper, normalization);
+            FunTools.saveModelAuxFile(false, filePath, mlModelHelper, normalization);
             
             int[] py = computeY(neuralNet, dataSet);
             int correctCount = FunTools.computeEquivalenceCount(desiredY, py);

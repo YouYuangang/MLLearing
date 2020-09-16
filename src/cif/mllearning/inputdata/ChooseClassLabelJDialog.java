@@ -5,11 +5,14 @@
  */
 package cif.mllearning.inputdata;
 
+import cif.base.Global;
+
 /**
  *
  * @author Administrator
  */
 public class ChooseClassLabelJDialog extends javax.swing.JDialog {
+    public int retStatu = Global.RET_CANCEL;
 
     /**
      * Creates new form chooseClassLabelJDialog
@@ -22,8 +25,13 @@ public class ChooseClassLabelJDialog extends javax.swing.JDialog {
         comboBoxForTable.addItem(tableName);
         
     }
-    public int getSelectedTable(){
-        return comboBoxForTable.getSelectedIndex();
+    private void doClose(int retStatus) {
+        this.retStatu = retStatus;
+        setVisible(false);
+        dispose();
+    }
+    public String getSelectedTable(){
+        return (String)comboBoxForTable.getItemAt(comboBoxForTable.getSelectedIndex());
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -36,19 +44,42 @@ public class ChooseClassLabelJDialog extends javax.swing.JDialog {
 
         jLabel1 = new javax.swing.JLabel();
         comboBoxForTable = new javax.swing.JComboBox();
+        okBtn = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(ChooseClassLabelJDialog.class, "ChooseClassLabelJDialog.jLabel1.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(okBtn, org.openide.util.NbBundle.getMessage(ChooseClassLabelJDialog.class, "ChooseClassLabelJDialog.okBtn.text")); // NOI18N
+        okBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okBtnActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(jButton2, org.openide.util.NbBundle.getMessage(ChooseClassLabelJDialog.class, "ChooseClassLabelJDialog.jButton2.text")); // NOI18N
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(comboBoxForTable, 0, 264, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(comboBoxForTable, 0, 264, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(okBtn)
+                        .addGap(34, 34, 34)
+                        .addComponent(jButton2)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -57,11 +88,25 @@ public class ChooseClassLabelJDialog extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(comboBoxForTable, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 316, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 283, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(okBtn)
+                    .addComponent(jButton2))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void okBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okBtnActionPerformed
+        // TODO add your handling code here:
+        doClose(Global.RET_OK);
+    }//GEN-LAST:event_okBtnActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        doClose(Global.RET_CANCEL);
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -108,6 +153,8 @@ public class ChooseClassLabelJDialog extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox comboBoxForTable;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton okBtn;
     // End of variables declaration//GEN-END:variables
 }

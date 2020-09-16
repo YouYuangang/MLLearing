@@ -15,7 +15,7 @@ import javax.swing.table.AbstractTableModel;
  * @author wangcaizhi
  * @create 2019.2.24
  */
-class VariableTableModel extends AbstractTableModel {
+public class VariableTableModel extends AbstractTableModel {
 
     private static final Class[] TYPES = new Class[]{java.lang.String.class, java.lang.String.class};
     private static final String[] PREDICTING_CLASSIFICATION_COLUMN_NAMES = {"变量", "名称"};
@@ -80,9 +80,8 @@ class VariableTableModel extends AbstractTableModel {
         }
         if (yIndex >= 0) {
             usedVariables.add(new VariableEx(variables[yIndex], yIndex));
-        } else {
-            usedVariables.get(usedVariables.size() - 1).variable.flag = MLDataModel.Y_VARIABLE;
         }
+        
     }
 
     public void setY(int rowIndex) {

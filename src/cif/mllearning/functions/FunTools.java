@@ -7,19 +7,29 @@ package cif.mllearning.functions;
 
 import cif.base.Global;
 import cif.baseutil.PathUtil;
+import cif.mllearning.VariableTableModel;
 import cif.mllearning.base.MLDataModel;
 import cif.mllearning.base.MLDataModelHelper;
+import cif.mllearning.base.Variable;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import javax.swing.JOptionPane;
 import org.openide.util.Exceptions;
+import org.openide.windows.WindowManager;
 
 /**
  *
@@ -162,6 +172,67 @@ public class FunTools {
             }
         }
         return correctCount;
+    }
+     
+    public static boolean checkXsAreRightAndOrder(String AuxPath,MLDataModel mlModel,VariableTableModel variableTableModel){
+        BufferedReader bfr = null;
+        File auxFile = new File(AuxPath);
+        Variable[] variables = mlModel.getVariables();
+        HashMap<String,Integer> XsIntegerMap = new HashMap<>();
+        for(int i =0;i<variables.length;i++){
+            if(variables[i].flag == MLDataModel.X_VARIABLE){
+              XsIntegerMap.put(variables[i].name,i);  
+            }
+            
+        }
+        
+        if(!auxFile.exists()){
+            JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), "模型检查文件不存在");
+            return false;
+        }
+        try{
+            bfr = new BufferedReader(new InputStreamReader(new FileInputStream(auxFile),"UTF-8"));
+            String temp = bfr.readLine();
+            String[] tempA = temp.split(",");
+            String[] modelOrderOfXs = null;
+            int xCount = Integer.parseInt(tempA[1]);
+            modelOrderOfXs = new String[xCount];
+            for(int i = 0;i<xCount;i++){
+                temp = bfr.readLine();
+                tempA = temp.split(",");
+                modelOrderOfXs[i] = tempA[0];
+                if(XsIntegerMap.containsKey(tempA[0])==false){
+                    JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), "模型的输入与实际输入不一致");
+                    return false;
+                }
+            }
+            HashSet<String> modelXsSet = new HashSet<String>();
+            for(String stemp:modelOrderOfXs){
+                modelXsSet.add(stemp);
+            }
+            
+            Variable[] variableNewOrder = new Variable[mlModel.getVariables().length];
+            for(int i =0;i<xCount;i++){
+                variables[XsIntegerMap.get(modelOrderOfXs[i])].flag = MLDataModel.X_VARIABLE;
+                variableNewOrder[i] = variables[XsIntegerMap.get(modelOrderOfXs[i])];
+             }
+            int startIndex = xCount;
+            for(int i=0;i< variables.length;i++){
+                if(!modelXsSet.contains(variables[i].name)){
+                    variables[i].flag = MLDataModel.UNSEL_VARIABLE;
+                    variableNewOrder[startIndex++] = variables[i];
+                }
+            }
+            mlModel.variables = variableNewOrder;
+            variableTableModel.refreshViewData();
+            variableTableModel.fireTableDataChanged();
+            return true;
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), "检测模型出现异常");
+        }
+        JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), "模型检查文件出错");
+        return false;
+        
     }
 
 }

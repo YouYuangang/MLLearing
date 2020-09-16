@@ -59,7 +59,7 @@ public class MLDataModelHelper {
                 return variable.name;
             }
         }
-        return null;
+        return "没有y变量";
     }
 
     public String[] getRealVariableNames() {

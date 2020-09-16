@@ -7,6 +7,8 @@ package cif.mllearning.base;
 
 import cif.base.Global;
 import cif.mllearning.MLGlobal;
+import javax.swing.JOptionPane;
+import org.openide.windows.WindowManager;
 
 /**
  *
@@ -39,6 +41,23 @@ public class DataHelper {
         }
         formColumnIndices();
         realRowIndices = null;
+    }
+    public double getDepthLevel(){
+       
+        switch (mlModel.dataFrom) {
+            case MLDataModel.FROM_CURVE:
+                return curveHelper.getDepthLevel();
+                
+            case MLDataModel.FROM_TABLE:
+                JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), "未实现从表格获取采样率");
+                return 0.0;
+            case MLDataModel.FROM_TEXT:
+                JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), "未实现从文本获取采样率");
+                return 0.0;
+            default:
+                JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), "无法获取采样率");
+                return 0.0;
+        }
     }
 
     private void formColumnIndices() {

@@ -8,9 +8,12 @@ import cif.base.Global;
 import cif.dataengine.DataPath;
 import cif.dataengine.io.LogCategory;
 import cif.dataengine.io.LogTable;
+import cif.dataengine.io.TableRecords;
 import cif.datautil.datatreeview.dialogs.SelectDataTreeNodeDialog;
+import cif.mllearning.base.DataHelper;
 import cif.mllearning.base.MLDataModel;
 import cif.mllearning.base.MLDataModelHelper;
+import cif.mllearning.base.RawCurveDataHelper;
 import cif.mllearning.base.UpdatePanelFlag;
 import cif.mllearning.base.Variable;
 import cif.mllearning.components.CrossPlotPanel;
@@ -473,6 +476,7 @@ public final class MLLearningTopComponent extends TopComponent {
         }
         LogCategory category = null;
         int i = 0;
+        DataHelper dateHepler = new DataHelper(mlModel);
         switch(learningMode){
             
                 
@@ -486,16 +490,56 @@ public final class MLLearningTopComponent extends TopComponent {
             case MLGlobal.CLASSIFYING_MODE:
                 category = mlModel.inputDataPath.getCategory();
                 
-                ChooseClassLabelJDialog ChooseClassLabelJDialog = new ChooseClassLabelJDialog(WindowManager.getDefault().getMainWindow(),true);
+                ChooseClassLabelJDialog chooseClassLabelJDialog = new ChooseClassLabelJDialog(WindowManager.getDefault().getMainWindow(),true);
                 
                 LogTable table = null;
                 for(i = 0;i<category.getLogCommonTableCount();i++){
                     table = category.getLogCommonTable(i);
-                    ChooseClassLabelJDialog.addItem(table.getName());
+                    chooseClassLabelJDialog.addItem(table.getName());
                 }
-                ChooseClassLabelJDialog.setVisible(true);
-                
-                
+                chooseClassLabelJDialog.setVisible(true);
+                if(chooseClassLabelJDialog.retStatu == Global.RET_OK){
+                    String choosedLabel = chooseClassLabelJDialog.getSelectedTable();
+                    LogTable labelTable = category.getLogCommonTable(choosedLabel);
+                    int row = labelTable.getRowCount();
+                    
+                    TableRecords tableRecord = new TableRecords();
+                    labelTable.readTableRecords(tableRecord);
+                    float[] sdepth = new float[row];
+                    float[] edepth = new float[row];
+                    String[] label = new String[row];
+                    int sIndex = 0;
+                    int eIndex = 0;
+                    int labelIndex = 0;
+                    
+                    
+                    for(i = 0;i<row;i++){
+                        labelIndex = 0;
+                        sdepth[i] = tableRecord.getRecordFloatData(i, 0);
+                        edepth[i] = tableRecord.getRecordFloatData(i, 1);
+                        label[i] = tableRecord.getRecordStringData(i, 3);
+                        JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), "采样率"+dateHepler.getDepthLevel());
+                        sIndex = (int)((sdepth[i])/dateHepler.getDepthLevel());
+                        eIndex = (int)((edepth[i])/dateHepler.getDepthLevel());
+                        for(int j =0;j<LoadConfigure.colorLayers.size();j++){
+                            if(label[i].equals(LoadConfigure.colorLayers.get(j).nameOfLayer)){
+                                labelIndex = j;
+                                break;
+                            }
+                        }
+                        JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(),""+sIndex+","+eIndex+","+labelIndex);
+                        if(sIndex>=0&&eIndex>=0&&sIndex<=eIndex){
+                            
+                            for(int j=sIndex;j<=eIndex;j++){
+                                mlModel.dataLabelAs[j] = labelIndex;
+                            }
+                        }
+                    }
+                    UpdatePanelFlag.DataPanelUpdateFlag = true;
+                    updatePagePanels();
+                    
+                    
+                }
                 break;
                 
         }
@@ -540,13 +584,13 @@ public final class MLLearningTopComponent extends TopComponent {
         Function function = null;
         if (learningMode == MLGlobal.CLASSIFYING_MODE) {
             try {
-
                 function = (Function) mlGlobal.getFunctionProxys(learningMode)[index].classType.newInstance();
                 function.setRunModel(Function.RUN_MODEL);
                 JFileChooser jfc = new JFileChooser(new File(FunTools.getModelPath()));
                 jfc.showDialog(this, "选择");
                 File moldelFile = jfc.getSelectedFile();
                 function.modelPath = moldelFile.getAbsolutePath();
+                FunTools.checkXsAreRightAndOrder(moldelFile.getAbsolutePath()+"Aux", mlModel, variableTableModel);
             } catch (InstantiationException | IllegalAccessException ex) {
                 Exceptions.printStackTrace(ex);
             }

@@ -18,7 +18,7 @@ public class Normalization {
     private double yVarUpper;
     private double[] varLowers;
     private double[] varUppers;
-
+    
     public Normalization(int xVarCount, int varCount) {
         if (xVarCount > 0) {
             xVarLowers = new double[xVarCount];
