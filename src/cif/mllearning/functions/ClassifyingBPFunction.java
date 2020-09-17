@@ -9,7 +9,10 @@ import cif.loglab.math.MathBase;
 import cif.mllearning.base.UpdatePanelFlag;
 import cif.mllearning.configure.LoadConfigure;
 import java.awt.Frame;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import javax.swing.JOptionPane;
 import org.neuroph.core.NeuralNetwork;
@@ -96,7 +99,11 @@ public class ClassifyingBPFunction extends Function {
             println("完成训练");
             String filePath = FunTools.getModelPath() + File.separator + FunTools.getModelFileName("Classfy_BP", mlModel);
             neuralNet.save(filePath);
-            FunTools.saveModelAuxFile(false, filePath, mlModelHelper, normalization);
+            
+           
+            FunTools.saveModelAuxFile(false, filePath, mlModelHelper, normalization,this);
+            
+            
             
             int[] py = computeY(neuralNet, dataSet);
             int correctCount = FunTools.computeEquivalenceCount(desiredY, py);

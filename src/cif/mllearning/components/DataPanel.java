@@ -119,6 +119,9 @@ public class DataPanel extends PagePanel {
         });
 
     }
+    public void updateDataPanel(){
+        tableModel.fireTableStructureChanged();
+    }
 
     public void setMLModel(MLDataModel mlModel) {
         if (mlModel.dataFrom < 0) {
@@ -128,13 +131,18 @@ public class DataPanel extends PagePanel {
         tableModel.setMLModel(mlModel);
         //filterDataByDefalut();
         tableModel.fireTableStructureChanged();
+        filterDataByDefalut();
         //dataTable.getColumnModel().getColumn(0).setPreferredWidth(40);
     }
 
     public void filterDataByDefalut() {
         Double invalidNum = MLGlobal.INVALID_VALUE;
+        
         MLDataModel model = tableModel.getmlModel();
         Variable[] variables = model.getVariables();
+        for (int i = 0; i < model.dataRowSelectedFlags.length; i++) {
+            model.dataRowSelectedFlags[i] = true;
+        }
         for (int i = 0; i < model.dataRowSelectedFlags.length; i++) {
             for (int j = 0; j < variables.length; j++) {
                 if (variables[j].flag != MLDataModel.UNSEL_VARIABLE) {
@@ -147,6 +155,8 @@ public class DataPanel extends PagePanel {
                 }
             }
         }
+        tableModel.fireTableDataChanged();
+        
     }
 
     /**

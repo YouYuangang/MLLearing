@@ -91,18 +91,21 @@ class DataPanelTableModel extends AbstractTableModel {
         int colCount = 0;
         switch (dataFrom) {
             case MLDataModel.FROM_CURVE:
-                colCount = 2+1+curveHelper.getCurveCount();
+                colCount = 2+curveHelper.getCurveCount();
+                
                 break;
             case MLDataModel.FROM_TABLE:
-                colCount = 2+tableHelper.getFieldCount();
+                colCount = 1+tableHelper.getFieldCount();
                 break;
             case MLDataModel.FROM_TEXT:
-                colCount = 2+textHelper.getColumnCount();
+                colCount = 1+textHelper.getColumnCount();
                 break;
             default:
                 return 0;
         }
-
+        if(mlModel.learningMode == MLGlobal.CLASSIFYING_MODE){
+            colCount++;
+        }
         switch (mlModel.learningMode) {
             case MLGlobal.CLASSIFYING_MODE:
                 if (mlModel.classifyResult != null) {
@@ -183,18 +186,18 @@ class DataPanelTableModel extends AbstractTableModel {
                         }
                         
                     }else if(columnIndex == 1){
-                        if(mlModel.dataLabelAs[rowIndex]==0){
+                        return Double.toString(curveHelper.getDepth(rowIndex));
+                    }else if(columnIndex>=(0+2)&&columnIndex<(0+2+mlModel.getVariables().length)){
+                        return String.format("%.4f", curveHelper.getCurveData(columnIndex - 2, rowIndex));
+                    }else if(columnIndex == 0+2+mlModel.getVariables().length)
+                    {
+                        if(mlModel.dataLabelAs[rowIndex] == 0 ){
                             return "无";  
                         }else{
                             int layerIndex = mlModel.dataLabelAs[rowIndex];
                             return LoadConfigure.colorLayers.get(layerIndex).nameOfLayer;
                         }
-                        
-                    }else if(columnIndex == 2){
-                        return Double.toString(curveHelper.getDepth(rowIndex));
-                    }else if(columnIndex>=(0+3)&&columnIndex<(0+3+mlModel.getVariables().length)){
-                        return String.format("%.4f", curveHelper.getCurveData(columnIndex - 3, rowIndex));
-                    }else if(columnIndex == 0+3+mlModel.getVariables().length){
+                    }else if(columnIndex == 0+2+mlModel.getVariables().length+1){
                         if(mlModel.learningMode == MLGlobal.CLASSIFYING_MODE){
                             int layerIndex = mlModel.classifyResult[rowIndex];
                             return LoadConfigure.colorLayers.get(layerIndex).nameOfLayer;
@@ -207,19 +210,27 @@ class DataPanelTableModel extends AbstractTableModel {
                 case MLDataModel.FROM_TABLE:
                     if (columnIndex == 0) {
                         return rowIndex+1+"";
-                    }else if(columnIndex == 1){
+                    }else if((columnIndex>=0+1)&&(columnIndex<0+1+tableHelper.getFieldCount())){
+                       return tableHelper.getTableData(rowIndex-1, columnIndex); 
+                    }else if(columnIndex == 0+1+tableHelper.getFieldCount()){
                         return "无";
+                    }else if(columnIndex == 0+1+tableHelper.getFieldCount()+1){
+                        return "未实现的功能";
                     }else{
-                       return tableHelper.getTableData(rowIndex-2, columnIndex); 
+                        return "未实现的功能";
                     }
                     
                 case MLDataModel.FROM_TEXT:
                     if (columnIndex == 0) {
                         return rowIndex+1+"";
-                    }else if(columnIndex == 1){
+                    }else if((columnIndex>=0+1)&&(columnIndex<0+1+tableHelper.getFieldCount())){
+                       return textHelper.getTextData(rowIndex-1, columnIndex); 
+                    }else if(columnIndex == 0+1+textHelper.getColumnCount()){
                         return "无";
+                    }else if(columnIndex == 0+1+textHelper.getColumnCount()+1){
+                        return "未实现的功能";
                     }else{
-                        return textHelper.getTextData(rowIndex, columnIndex);
+                        return "未实现的功能";
                     }
             
             }
@@ -257,41 +268,56 @@ class DataPanelTableModel extends AbstractTableModel {
         if(column == 0){
             return "标志/序号";
         }
-        if(column == 1){
-            return "标签";
-        }
         switch(dataFrom){
-            case MLDataModel.FROM_CURVE:{
-                if(column == 2 ){
+            case MLDataModel.FROM_CURVE: {
+                if (column == 1) {
                     return nameUnitToString("深度", curveHelper.getDepthUnit());
                 }
-                if(column>=(0+3)&&column<(0+3+mlModel.getVariables().length)){
-                    return nameUnitToString(curveHelper.getCurveName(column - 3), curveHelper.getCurveUnit(column - 3));
+                if (column >= (0 + 2) && column < (0 + 2 + mlModel.getVariables().length)) {
+                    return nameUnitToString(curveHelper.getCurveName(column - 2), curveHelper.getCurveUnit(column - 2));
                 }
-                if(column == 0+3+mlModel.getVariables().length){
-                    return "程序分类结果";
+                if (column == 0 + 2 + mlModel.getVariables().length) {
+                    if (mlModel.learningMode == MLGlobal.PREDICTING_MODE) {
+                        return "模型预测值";
+                    } else if (mlModel.learningMode == MLGlobal.CLASSIFYING_MODE) {
+                        return "标签";
+                    } else if (mlModel.learningMode == MLGlobal.CLUSTERING_MODE) {
+                        return "Cluster";
+                    }
                 }
-                
-                
+                if(column == 0 + 2 + mlModel.getVariables().length +1){
+                    return "分类结果";
+                }
                 return "";
             }
             case MLDataModel.FROM_TABLE:{
-                if(column>=(0+2)&&column<(0+2+mlModel.getVariables().length)){
-                   return nameUnitToString(tableHelper.getFieldName(column-2), tableHelper.getFieldUnit(column-2)); 
-                }else if(column == 0+2+mlModel.getVariables().length){
+                if(column>=(0+1)&&column<(0+1+mlModel.getVariables().length)){
+                   return nameUnitToString(tableHelper.getFieldName(column-1), tableHelper.getFieldUnit(column-1)); 
+                }else if(column == 0+1+mlModel.getVariables().length){
+                    if (mlModel.learningMode == MLGlobal.PREDICTING_MODE) {
+                        return "模型预测值";
+                    } else if (mlModel.learningMode == MLGlobal.CLASSIFYING_MODE) {
+                        return "标签";
+                    } else if (mlModel.learningMode == MLGlobal.CLUSTERING_MODE) {
+                        return "Cluster";
+                    }
+                }else if(column == 0+1+mlModel.getVariables().length+1){
                     return "程序分类结果";
-                }else{
-                    return "";
-                }
-                
+                } 
             }
             case MLDataModel.FROM_TEXT:{
-                if(column>=(0+2)&&column<(0+2+mlModel.getVariables().length)){
-                    return nameUnitToString(textHelper.getColumnName(column-2), textHelper.getColumnUnit(column-2));
-                }else if(column == 0+2+mlModel.getVariables().length){
+                if(column>=(0+1)&&column<(0+1+mlModel.getVariables().length)){
+                    return nameUnitToString(textHelper.getColumnName(column-1), textHelper.getColumnUnit(column-1));
+                }else if(column == 0+1+mlModel.getVariables().length){
+                    if (mlModel.learningMode == MLGlobal.PREDICTING_MODE) {
+                        return "模型预测值";
+                    } else if (mlModel.learningMode == MLGlobal.CLASSIFYING_MODE) {
+                        return "标签";
+                    } else if (mlModel.learningMode == MLGlobal.CLUSTERING_MODE) {
+                        return "Cluster";
+                    }
+                }else if(column == 0+1+mlModel.getVariables().length+1){
                     return "程序分类结果";
-                }else{
-                    return "";
                 }
             }
             default:return "";

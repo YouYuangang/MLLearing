@@ -4,7 +4,7 @@
     <name unique="anonymousMode_2"  />
   <kind type="editor" />
   <state type="separated"  />
-  <bounds x="-4" y="-4" width="1932" height="1052" />
-  <frame state="0"/>
+  <bounds x="-8" y="-8" width="1936" height="1056" />
+  <frame state="7"/>
     <empty-behavior permanent="false"/>
 </mode>

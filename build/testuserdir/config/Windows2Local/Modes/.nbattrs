@@ -4,16 +4,28 @@
     <fileobject name="anonymousMode_2">
         <attr name="WinSys-TCRef-Order" stringvalue="MLLearningTopComponent"/>
     </fileobject>
+    <fileobject name="bottomSlidingSide">
+        <attr name="WinSys-TCRef-Order" stringvalue=""/>
+    </fileobject>
     <fileobject name="editor">
-        <attr name="WinSys-TCRef-Order" stringvalue="HeadMapAppTopComponent/TableDrawingTopComponent/AppModuleTopComponent/CifPlotTopComponent/MultiCrossViewTopComponent/SymbolEditorTopComponent/CrossChartTopComponent/FunctionDiagramTopComponent/MLClassifyTopComponent/AppDeveloperTopComponent/WellSectionTopComponent/WellLocationsTopComponent/CurveEditTopComponent/MultiHistogramViewTopComponent/LogSpliceTopComponent/ContourAppTopComponent/PaySensitivityTopComponent/VerticalSectionPlotTopComponent/MethodsTestTopComponent/HistChartAppTopComponent/RegionProcessTopComponent/MutiHistTopComponent/MainViewTopComponent/StatTableTopComponent/NormalTopComponent/ReservoirPlotTopComponent/CorrectTopComponent/Workspace3DTopComponent/RegressionTopComponent/MultiCrossPlotTopComponent/FormatConversionTopComponent/MLPredictTopComponent/MulProcessorTopComponent/DataEditorTopComponent/DataManagerTopComponent"/>
+        <attr name="WinSys-TCRef-Order" stringvalue="HeadMapAppTopComponent/TableDrawingTopComponent/AppModuleTopComponent/CifPlotTopComponent/MultiCrossViewTopComponent/SymbolEditorTopComponent/CrossChartTopComponent/FunctionDiagramTopComponent/MLClassifyTopComponent/AppDeveloperTopComponent/WellSectionTopComponent/WellLocationsTopComponent/CurveEditTopComponent/MultiHistogramViewTopComponent/LogSpliceTopComponent/ContourAppTopComponent/PaySensitivityTopComponent/VerticalSectionPlotTopComponent/MethodsTestTopComponent/HistChartAppTopComponent/RegionProcessTopComponent/MutiHistTopComponent/MainViewTopComponent/StatTableTopComponent/NormalTopComponent/ReservoirPlotTopComponent/CorrectTopComponent/Workspace3DTopComponent/RegressionTopComponent/MultiCrossPlotTopComponent/FormatConversionTopComponent/MLPredictTopComponent/MulProcessorTopComponent/DataEditorTopComponent/DataManagerTopComponent/WelcomeTopComponent"/>
     </fileobject>
     <fileobject name="explorer">
         <attr name="WinSys-TCRef-Order" stringvalue="favorites/CifLogchainTopComponent/BaseModuleTopComponent"/>
+    </fileobject>
+    <fileobject name="leftSlidingSide">
+        <attr name="WinSys-TCRef-Order" stringvalue="TaskPaneTopComponent"/>
     </fileobject>
     <fileobject name="output">
         <attr name="WinSys-TCRef-Order" stringvalue="output/PrintTopComponent"/>
     </fileobject>
     <fileobject name="properties">
         <attr name="WinSys-TCRef-Order" stringvalue="properties"/>
+    </fileobject>
+    <fileobject name="rightSlidingSide">
+        <attr name="WinSys-TCRef-Order" stringvalue=""/>
+    </fileobject>
+    <fileobject name="topSlidingSide">
+        <attr name="WinSys-TCRef-Order" stringvalue=""/>
     </fileobject>
 </attributes>

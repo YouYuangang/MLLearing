@@ -3,10 +3,10 @@
 <windowmanager version="2.1">
     <main-window>
   <joined-properties
-   x="-327"
-   y="621"
-   width="1511"
-   height="1040"
+   x="-8"
+   y="-8"
+   width="1936"
+   height="1056"
    relative-x="0.0"
    relative-y="0.0"
    relative-width="0.0"
@@ -15,7 +15,7 @@
    centered-vertically="false"
    maximize-if-width-below="0"
    maximize-if-height-below="0"
-   frame-state="6"
+   frame-state="0"
 />
   <separated-properties
    x="192"

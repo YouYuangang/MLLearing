@@ -7,10 +7,12 @@ package cif.mllearning.functions;
 
 import cif.base.Global;
 import cif.baseutil.PathUtil;
+import cif.mllearning.MLGlobal;
 import cif.mllearning.VariableTableModel;
 import cif.mllearning.base.MLDataModel;
 import cif.mllearning.base.MLDataModelHelper;
 import cif.mllearning.base.Variable;
+import cif.mllearning.components.DataPanel;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -85,7 +87,7 @@ public class FunTools {
         return Global.getUserResourcePath(Global.PATH_ML_MODEL);
     }
 
-    public static void saveModelAuxFile(boolean isYExisted, String modelFilePath, MLDataModelHelper mlModelHelper, Normalization normalization) {
+    public static void saveModelAuxFile(boolean isYExisted, String modelFilePath, MLDataModelHelper mlModelHelper, Normalization normalization,Function function) {
         BufferedWriter outputWriter = null;
         try {
             outputWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(modelFilePath + "Aux"), "UTF-8"));
@@ -101,8 +103,10 @@ public class FunTools {
             } else {
                 String[] names = mlModelHelper.getRealVariableNames();
                 sb.append("x,").append(names.length).append("\n");
+                function.println("realVariableLenth:"+names.length);
                 for (int i = 0; i < names.length; i++) {
-                    sb.append(names[i]).append(",").append(normalization.getVarLower(i)).append(",").append(normalization.getVarUpper(i)).append("\n");
+                    sb.append(names[i]).append(",").append(i).append("\n");
+                    
                 }
             }
             outputWriter.write(sb.toString());
@@ -174,7 +178,7 @@ public class FunTools {
         return correctCount;
     }
      
-    public static boolean checkXsAreRightAndOrder(String AuxPath,MLDataModel mlModel,VariableTableModel variableTableModel){
+    public static boolean checkXsAreRightAndOrder(String AuxPath,MLDataModel mlModel,VariableTableModel variableTableModel,MLGlobal mlGlobal){
         BufferedReader bfr = null;
         File auxFile = new File(AuxPath);
         Variable[] variables = mlModel.getVariables();
@@ -224,8 +228,12 @@ public class FunTools {
                 }
             }
             mlModel.variables = variableNewOrder;
+            DataPanel dataPanel = (DataPanel)mlGlobal.dataPanel;
+            dataPanel.filterDataByDefalut();
+            dataPanel.setMLModel(mlModel);
             variableTableModel.refreshViewData();
             variableTableModel.fireTableDataChanged();
+            
             return true;
         }catch(Exception e){
             JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), "检测模型出现异常");

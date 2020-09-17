@@ -402,7 +402,10 @@ public final class MLLearningTopComponent extends TopComponent {
                 yButton.setVisible(false);
                 break;
         }
-        
+        UpdatePanelFlag.DataPanelUpdateFlag = true;
+        UpdatePanelFlag.HistogramUpdateFlag = true;
+        UpdatePanelFlag.CrossPlotUpdateFlag = true;
+        UpdatePanelFlag.PlotPanelUpdateFlag = true;
         updateMainPagePanels();
         updateFunctions();
     }
@@ -431,6 +434,7 @@ public final class MLLearningTopComponent extends TopComponent {
             UpdatePanelFlag.CrossPlotUpdateFlag = true;
             UpdatePanelFlag.PlotPanelUpdateFlag = true;
             updatePagePanels();
+            
         }
     }//GEN-LAST:event_inputDataButtonActionPerformed
 
@@ -476,7 +480,7 @@ public final class MLLearningTopComponent extends TopComponent {
         }
         LogCategory category = null;
         int i = 0;
-        DataHelper dateHepler = new DataHelper(mlModel);
+        DataHelper dataHepler = new DataHelper(mlModel);
         switch(learningMode){
             
                 
@@ -502,7 +506,7 @@ public final class MLLearningTopComponent extends TopComponent {
                     String choosedLabel = chooseClassLabelJDialog.getSelectedTable();
                     LogTable labelTable = category.getLogCommonTable(choosedLabel);
                     int row = labelTable.getRowCount();
-                    
+                    int col = labelTable.getColumnCount();
                     TableRecords tableRecord = new TableRecords();
                     labelTable.readTableRecords(tableRecord);
                     float[] sdepth = new float[row];
@@ -511,23 +515,27 @@ public final class MLLearningTopComponent extends TopComponent {
                     int sIndex = 0;
                     int eIndex = 0;
                     int labelIndex = 0;
-                    
-                    
+                    int rowUsed = 0;
+               
                     for(i = 0;i<row;i++){
                         labelIndex = 0;
                         sdepth[i] = tableRecord.getRecordFloatData(i, 0);
                         edepth[i] = tableRecord.getRecordFloatData(i, 1);
                         label[i] = tableRecord.getRecordStringData(i, 3);
-                        JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), "采样率"+dateHepler.getDepthLevel());
-                        sIndex = (int)((sdepth[i])/dateHepler.getDepthLevel());
-                        eIndex = (int)((edepth[i])/dateHepler.getDepthLevel());
+                        
+                        sIndex = (int)((sdepth[i]-mlModel.curveStdep)/dataHepler.getDepthLevel());
+                        eIndex = (int)((edepth[i]-mlModel.curveStdep)/dataHepler.getDepthLevel());
                         for(int j =0;j<LoadConfigure.colorLayers.size();j++){
                             if(label[i].equals(LoadConfigure.colorLayers.get(j).nameOfLayer)){
                                 labelIndex = j;
                                 break;
                             }
+                            
                         }
-                        JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(),""+sIndex+","+eIndex+","+labelIndex);
+                        if(labelIndex>0){
+                            rowUsed++;
+                        }
+                        
                         if(sIndex>=0&&eIndex>=0&&sIndex<=eIndex){
                             
                             for(int j=sIndex;j<=eIndex;j++){
@@ -535,6 +543,8 @@ public final class MLLearningTopComponent extends TopComponent {
                             }
                         }
                     }
+                    JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(),"共读取"+row+"行记录! 采样率："+dataHepler.getDepthLevel()+"有效行数："+rowUsed);
+                    
                     UpdatePanelFlag.DataPanelUpdateFlag = true;
                     updatePagePanels();
                     
@@ -590,7 +600,7 @@ public final class MLLearningTopComponent extends TopComponent {
                 jfc.showDialog(this, "选择");
                 File moldelFile = jfc.getSelectedFile();
                 function.modelPath = moldelFile.getAbsolutePath();
-                FunTools.checkXsAreRightAndOrder(moldelFile.getAbsolutePath()+"Aux", mlModel, variableTableModel);
+                FunTools.checkXsAreRightAndOrder(moldelFile.getAbsolutePath()+"Aux", mlModel, variableTableModel,mlGlobal);
             } catch (InstantiationException | IllegalAccessException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -664,6 +674,7 @@ public final class MLLearningTopComponent extends TopComponent {
         try {
             function = (Function) mlGlobal.getFunctionProxys(learningMode)[index].classType.newInstance();
             function.setRunModel(Function.GENERATE_MODEL);
+            
         } catch (InstantiationException | IllegalAccessException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -748,8 +759,10 @@ public final class MLLearningTopComponent extends TopComponent {
     private void variableTableRowSelected() {
         updatePagePanels();
     }
+    
+   
 
-    private void updatePagePanels() {
+    public void updatePagePanels(){
         int mainOrSubPagePane = 2;
         PagePanel[] panels = getActivePagePanel(mainOrSubPagePane);
         for (PagePanel pagePanel : panels) {
