@@ -33,7 +33,7 @@ import org.openide.windows.WindowManager;
 public class ClassifyingBPFunction extends Function {
    
     private Normalization normalization;
-    private int hiddenNeuronCount = 10;
+    private int hiddenNeuronCount = 16;
     private double learningRate = 0.05;
     private double maxError = 0.005;
     private int maxIteration = 1000;
@@ -80,7 +80,7 @@ public class ClassifyingBPFunction extends Function {
         if (flag == Function.GENERATE_MODEL) {
             printDataMessage();
             DataSet dataSet = formLearningDataSet();
-            MultiLayerPerceptron neuralNet = new MultiLayerPerceptron(dataSet.getInputSize(), hiddenNeuronCount, dataSet.getOutputSize());
+            MultiLayerPerceptron neuralNet = new MultiLayerPerceptron(dataSet.getInputSize(), hiddenNeuronCount,8, dataSet.getOutputSize());
             MomentumBackpropagation learningRule = (MomentumBackpropagation) neuralNet.getLearningRule();
             learningRule.setMaxIterations(maxIteration);
             learningRule.addListener(new LearningEventListener() {

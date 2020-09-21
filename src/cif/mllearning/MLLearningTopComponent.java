@@ -14,6 +14,7 @@ import cif.mllearning.base.DataHelper;
 import cif.mllearning.base.MLDataModel;
 import cif.mllearning.base.MLDataModelHelper;
 import cif.mllearning.base.RawCurveDataHelper;
+import cif.mllearning.base.TableHelper;
 import cif.mllearning.base.UpdatePanelFlag;
 import cif.mllearning.base.Variable;
 import cif.mllearning.components.CrossPlotPanel;
@@ -162,6 +163,7 @@ public final class MLLearningTopComponent extends TopComponent {
         gnerateModel = new javax.swing.JButton();
         runButton = new javax.swing.JButton();
         clearClusterBtn = new javax.swing.JButton();
+        save = new javax.swing.JButton();
 
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
@@ -371,6 +373,18 @@ public final class MLLearningTopComponent extends TopComponent {
         });
         mainToolBar.add(clearClusterBtn);
 
+        save.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cif/mllearning/icons/save.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(save, org.openide.util.NbBundle.getMessage(MLLearningTopComponent.class, "MLLearningTopComponent.save.text")); // NOI18N
+        save.setFocusable(false);
+        save.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        save.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        save.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveActionPerformed(evt);
+            }
+        });
+        mainToolBar.add(save);
+
         add(mainToolBar, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -504,51 +518,14 @@ public final class MLLearningTopComponent extends TopComponent {
                 chooseClassLabelJDialog.setVisible(true);
                 if(chooseClassLabelJDialog.retStatu == Global.RET_OK){
                     String choosedLabel = chooseClassLabelJDialog.getSelectedTable();
-                    LogTable labelTable = category.getLogCommonTable(choosedLabel);
-                    int row = labelTable.getRowCount();
-                    int col = labelTable.getColumnCount();
-                    TableRecords tableRecord = new TableRecords();
-                    labelTable.readTableRecords(tableRecord);
-                    float[] sdepth = new float[row];
-                    float[] edepth = new float[row];
-                    String[] label = new String[row];
-                    int sIndex = 0;
-                    int eIndex = 0;
-                    int labelIndex = 0;
-                    int rowUsed = 0;
-               
-                    for(i = 0;i<row;i++){
-                        labelIndex = 0;
-                        sdepth[i] = tableRecord.getRecordFloatData(i, 0);
-                        edepth[i] = tableRecord.getRecordFloatData(i, 1);
-                        label[i] = tableRecord.getRecordStringData(i, 3);
-                        
-                        sIndex = (int)((sdepth[i]-mlModel.curveStdep)/dataHepler.getDepthLevel());
-                        eIndex = (int)((edepth[i]-mlModel.curveStdep)/dataHepler.getDepthLevel());
-                        for(int j =0;j<LoadConfigure.colorLayers.size();j++){
-                            if(label[i].equals(LoadConfigure.colorLayers.get(j).nameOfLayer)){
-                                labelIndex = j;
-                                break;
-                            }
-                            
-                        }
-                        if(labelIndex>0){
-                            rowUsed++;
-                        }
-                        
-                        if(sIndex>=0&&eIndex>=0&&sIndex<=eIndex){
-                            
-                            for(int j=sIndex;j<=eIndex;j++){
-                                mlModel.dataLabelAs[j] = labelIndex;
-                            }
-                        }
-                    }
-                    JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(),"共读取"+row+"行记录! 采样率："+dataHepler.getDepthLevel()+"有效行数："+rowUsed);
+                    TableHelper tableHelper = new TableHelper(mlModel);
+                    int rowUsed = tableHelper.fillDataLabelFromTable(choosedLabel);
+                   
+                    JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow()," 采样率："+dataHepler.getDepthLevel()+"有效行数："+rowUsed);
                     
                     UpdatePanelFlag.DataPanelUpdateFlag = true;
                     updatePagePanels();
-                    
-                    
+      
                 }
                 break;
                 
@@ -589,15 +566,23 @@ public final class MLLearningTopComponent extends TopComponent {
     }//GEN-LAST:event_classificationToggleButtonActionPerformed
 
     private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
+        if(mlModel.variables == null){
+            JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), "请先导入数据！");
+            return;
+        }
         selectPagePanel(mlGlobal.messagePanel);
         int index = functionComboBox.getSelectedIndex();
         Function function = null;
+        
         if (learningMode == MLGlobal.CLASSIFYING_MODE) {
             try {
                 function = (Function) mlGlobal.getFunctionProxys(learningMode)[index].classType.newInstance();
                 function.setRunModel(Function.RUN_MODEL);
                 JFileChooser jfc = new JFileChooser(new File(FunTools.getModelPath()));
-                jfc.showDialog(this, "选择");
+                int retStatus = jfc.showDialog(this, "选择");
+                if(retStatus == JFileChooser.CANCEL_OPTION){
+                    return;
+                }
                 File moldelFile = jfc.getSelectedFile();
                 function.modelPath = moldelFile.getAbsolutePath();
                 FunTools.checkXsAreRightAndOrder(moldelFile.getAbsolutePath()+"Aux", mlModel, variableTableModel,mlGlobal);
@@ -681,7 +666,23 @@ public final class MLLearningTopComponent extends TopComponent {
         executeFunction(function,Function.GENERATE_MODEL);
     }//GEN-LAST:event_gnerateModelActionPerformed
 
-    private void executeFunction(Function function,int flag) {
+    private void saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveActionPerformed
+        // TODO add your handling code here:
+        TableHelper tableHelper = new TableHelper(mlModel);
+        switch(learningMode){
+            case MLGlobal.CLASSIFYING_MODE:
+                tableHelper.saveToTableFromClassifyRes("分类结果");
+                break;
+            case MLGlobal.CLUSTERING_MODE:
+                tableHelper.saveToTableFromClusterRes("聚类结果");
+                break;
+            default:
+                
+        }
+        
+    }//GEN-LAST:event_saveActionPerformed
+
+    private void executeFunction(Function function,int runModelflag) {
         Frame parent = WindowManager.getDefault().getMainWindow();
         final ProgressDialog progressDialog = new ProgressDialog(parent, true);
 
@@ -718,7 +719,7 @@ public final class MLLearningTopComponent extends TopComponent {
                 function.setParameters(parent);
                 break;
             case MLGlobal.CLASSIFYING_MODE:
-                if(flag == Function.GENERATE_MODEL){
+                if(runModelflag == Function.GENERATE_MODEL){
                    function.setParameters(parent); 
                 }
                 break;
@@ -867,6 +868,7 @@ public final class MLLearningTopComponent extends TopComponent {
     private javax.swing.JToggleButton pagePaneSplitedToggleButton;
     private javax.swing.JToggleButton predictingToggleButton;
     private javax.swing.JButton runButton;
+    private javax.swing.JButton save;
     private javax.swing.JButton selectVariableButton;
     private javax.swing.JTabbedPane subTabbedPane;
     private javax.swing.JSplitPane tabbedPaneSplitPane;

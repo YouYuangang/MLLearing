@@ -33,6 +33,8 @@ public class PlotTopPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         accuracyBtn = new javax.swing.JButton();
+        loadResult = new javax.swing.JButton();
+        loadRightResult = new javax.swing.JButton();
 
         org.openide.awt.Mnemonics.setLocalizedText(accuracyBtn, org.openide.util.NbBundle.getMessage(PlotTopPanel.class, "PlotTopPanel.accuracyBtn.text")); // NOI18N
         accuracyBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -41,17 +43,28 @@ public class PlotTopPanel extends javax.swing.JPanel {
             }
         });
 
+        org.openide.awt.Mnemonics.setLocalizedText(loadResult, org.openide.util.NbBundle.getMessage(PlotTopPanel.class, "PlotTopPanel.loadResult.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(loadRightResult, org.openide.util.NbBundle.getMessage(PlotTopPanel.class, "PlotTopPanel.loadRightResult.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 167, Short.MAX_VALUE)
-                .addComponent(accuracyBtn))
+                .addComponent(loadResult)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(loadRightResult)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(accuracyBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(accuracyBtn)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(accuracyBtn)
+                .addComponent(loadResult)
+                .addComponent(loadRightResult))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -65,5 +78,7 @@ public class PlotTopPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton accuracyBtn;
+    private javax.swing.JButton loadResult;
+    private javax.swing.JButton loadRightResult;
     // End of variables declaration//GEN-END:variables
 }

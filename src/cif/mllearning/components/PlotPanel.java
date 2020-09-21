@@ -136,7 +136,7 @@ public class PlotPanel extends PagePanel {
         // 获取plot数据源
         PlotDataSourceManager plotDataSourceManager = canvas.getWell().getDataSourceManager();
         PlotDataSource plotDataSource = plotDataSourceManager.addDataSource(mlModel.inputDataPath.toString(), mlModel.inputDataPath.toString());
-        int dataIndex = plotDataSourceManager.getDataSources().indexOf(plotDataSource);
+        int dataSourceIndex = plotDataSourceManager.getDataSources().indexOf(plotDataSource);
         
         Variable[] variables = mlModel.getVariables();
         Variable yVariable = null;
@@ -146,7 +146,7 @@ public class PlotPanel extends PagePanel {
 
         standardClusterResultColIndex = 0;
         //添加曲线 这里面有一个数据偏移的问题，曲线的数据是从2开始的，所以有一个2的偏移量
-       /* for (int i = 0; i < variables.length; i++) {
+        /*for (int i = 0; i < variables.length; i++) {
             if (tableModel.getColumnName(i + 2).equals(MLGlobal.STANDARD_CLUSTER_RESULT_CURVE_NAME)) {
                 standardClusterResultColIndex = i + 2;
 
@@ -164,8 +164,9 @@ public class PlotPanel extends PagePanel {
             } else if (variables[i].flag == MLDataModel.Y_VARIABLE) {
                 yVariable = variables[i];
             }
-        }*/
-        standardClusterResultColIndex = 0 + 3 + variables.length;
+        }
+        
+        
         //找到聚类标准列里面的最大值  这个里面
         if (mlModel.clusterResult != null) {
             for (int j = 0; j < tableModel.getRowCount(); j++) {
@@ -173,13 +174,14 @@ public class PlotPanel extends PagePanel {
                     stanadardCluterCount = Double.valueOf((String) tableModel.getValueAt(j, standardClusterResultColIndex)).intValue();
                 }
             }
-        }
+        }*/
+        
         for (int i = 0; i < variables.length; i++) {
             if (variables[i].flag == MLDataModel.X_VARIABLE) {
-                addTrackAndCurve(variables[i], dataIndex);
+                addTrackAndCurve(variables[i], dataSourceIndex);
             } else if (variables[i].flag == MLDataModel.Y_VARIABLE) {
                 yVariable = variables[i];
-                addTrackAndCurve(yVariable, dataIndex);
+                addTrackAndCurve(yVariable, dataSourceIndex);
             }
         }
 
@@ -188,14 +190,14 @@ public class PlotPanel extends PagePanel {
         //addTrackAndCurve(yVariable, dataIndex);
 
         //现在出问题的地方就在于不能创建label表
-        addTrackAndTable(dataIndex);
+        addTrackAndTable(dataSourceIndex);
 
         canvas.update(true, true);
 
     }
 
     //添加道以及对应的常规曲线
-    private void addTrackAndCurve(Variable variable, int dataIndex) {
+    private void addTrackAndCurve(Variable variable, int dataSourceIndex) {
 
         if (variable == null) {
             return;
@@ -212,7 +214,7 @@ public class PlotPanel extends PagePanel {
         CommonCurveInfo commonCurveInfo = new CommonCurveInfo();
         CommonCurve commonCurve = track.addCurve(commonCurveInfo);
         CommonCurveHead commonCurveHead = commonCurve.getCurveHead();
-        commonCurveHead.setDataPathIndex(dataIndex);
+        commonCurveHead.setDataPathIndex(dataSourceIndex);
         commonCurveHead.setName(curveName);
         commonCurveHead.setLabel(curveName);
         commonCurveHead.setScaleType(ScaleType.Custom);
@@ -223,7 +225,7 @@ public class PlotPanel extends PagePanel {
     /**
      * 添加道、创建表、往道里面添加类别曲线
      */
-    private void addTrackAndTable(int dataIndex) {
+    private void addTrackAndTable(int dataSourceIndex) {
         LogCategory logCategory = mlModel.inputDataPath.getCategory();
 
         //创建 标准聚类结果表及添加其typeCurve
@@ -239,7 +241,7 @@ public class PlotPanel extends PagePanel {
         if (mlModel.clusterResult != null) {
             createClusterResultTable(logCategory, standardClusterResultColIndex, MLGlobal.CLUSTER_RESULT_TABLE_NAME);
             clusterResultTypeCurve = addTrackAndTypeCurve(MLGlobal.CLUSTER_RESULT_TABLE_NAME,
-                    MLGlobal.CLUSTER_RESULT_TABLE_NAME, dataIndex);
+                    MLGlobal.CLUSTER_RESULT_TABLE_NAME, dataSourceIndex);
 
         }
     }

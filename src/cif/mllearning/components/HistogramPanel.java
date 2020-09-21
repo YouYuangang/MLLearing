@@ -206,7 +206,7 @@ public class HistogramPanel extends PagePanel {
         mainPanel.getViewport().add(insertPanel);
     }
 
-    //这里负责处理直方图变幻重画的问题 repaint
+    //这里负责处理直方图变换重画的问题 repaint
     public void repaintHistPanel() {
         reCreateChartPanels();
         initMainPanel();
