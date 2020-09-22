@@ -91,21 +91,19 @@ class DataPanelTableModel extends AbstractTableModel {
         int colCount = 0;
         switch (dataFrom) {
             case MLDataModel.FROM_CURVE:
-                colCount = 2+curveHelper.getCurveCount();
+                colCount = 2+curveHelper.getCurveCount()+1;
                 
                 break;
             case MLDataModel.FROM_TABLE:
-                colCount = 1+tableHelper.getFieldCount();
+                colCount = 1+tableHelper.getFieldCount()+1;
                 break;
             case MLDataModel.FROM_TEXT:
-                colCount = 1+textHelper.getColumnCount();
+                colCount = 1+textHelper.getColumnCount()+1;
                 break;
             default:
                 return 0;
         }
-        if(mlModel.learningMode == MLGlobal.CLASSIFYING_MODE){
-            colCount++;
-        }
+        
         switch (mlModel.learningMode) {
             case MLGlobal.CLASSIFYING_MODE:
                 if (mlModel.classifyResult != null) {
@@ -277,6 +275,10 @@ class DataPanelTableModel extends AbstractTableModel {
                     return nameUnitToString(curveHelper.getCurveName(column - 2), curveHelper.getCurveUnit(column - 2));
                 }
                 if (column == 0 + 2 + mlModel.getVariables().length) {
+                    return "标签";    
+                }
+                if(column == 0 + 2 + mlModel.getVariables().length +1){
+                    
                     if (mlModel.learningMode == MLGlobal.PREDICTING_MODE) {
                         return "模型预测值";
                     } else if (mlModel.learningMode == MLGlobal.CLASSIFYING_MODE) {
@@ -284,9 +286,6 @@ class DataPanelTableModel extends AbstractTableModel {
                     } else if (mlModel.learningMode == MLGlobal.CLUSTERING_MODE) {
                         return "Cluster";
                     }
-                }
-                if(column == 0 + 2 + mlModel.getVariables().length +1){
-                    return "分类结果";
                 }
                 return "";
             }
@@ -294,35 +293,35 @@ class DataPanelTableModel extends AbstractTableModel {
                 if(column>=(0+1)&&column<(0+1+mlModel.getVariables().length)){
                    return nameUnitToString(tableHelper.getFieldName(column-1), tableHelper.getFieldUnit(column-1)); 
                 }else if(column == 0+1+mlModel.getVariables().length){
+                    return "标签";
+                }else if(column == 0+1+mlModel.getVariables().length+1){
                     if (mlModel.learningMode == MLGlobal.PREDICTING_MODE) {
                         return "模型预测值";
                     } else if (mlModel.learningMode == MLGlobal.CLASSIFYING_MODE) {
-                        return "标签";
+                        return "分类结果";
                     } else if (mlModel.learningMode == MLGlobal.CLUSTERING_MODE) {
-                        return "Cluster";
+                        return "聚类结果";
                     }
-                }else if(column == 0+1+mlModel.getVariables().length+1){
-                    return "程序分类结果";
                 } 
             }
             case MLDataModel.FROM_TEXT:{
                 if(column>=(0+1)&&column<(0+1+mlModel.getVariables().length)){
                     return nameUnitToString(textHelper.getColumnName(column-1), textHelper.getColumnUnit(column-1));
                 }else if(column == 0+1+mlModel.getVariables().length){
+                    return "标签";
+                }else if(column == 0+1+mlModel.getVariables().length+1){
                     if (mlModel.learningMode == MLGlobal.PREDICTING_MODE) {
                         return "模型预测值";
                     } else if (mlModel.learningMode == MLGlobal.CLASSIFYING_MODE) {
-                        return "标签";
+                        return "分类结果";
                     } else if (mlModel.learningMode == MLGlobal.CLUSTERING_MODE) {
-                        return "Cluster";
+                        return "聚类结果";
                     }
-                }else if(column == 0+1+mlModel.getVariables().length+1){
-                    return "程序分类结果";
                 }
             }
-            default:return "";
+            
         }
-       
+       return "";
     }
 
     @Override

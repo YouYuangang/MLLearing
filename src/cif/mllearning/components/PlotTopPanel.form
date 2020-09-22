@@ -53,6 +53,9 @@
           <ResourceString bundle="cif/mllearning/components/Bundle.properties" key="PlotTopPanel.loadResult.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loadResultActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="loadRightResult">
       <Properties>

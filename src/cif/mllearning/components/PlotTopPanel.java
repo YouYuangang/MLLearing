@@ -44,6 +44,11 @@ public class PlotTopPanel extends javax.swing.JPanel {
         });
 
         org.openide.awt.Mnemonics.setLocalizedText(loadResult, org.openide.util.NbBundle.getMessage(PlotTopPanel.class, "PlotTopPanel.loadResult.text")); // NOI18N
+        loadResult.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loadResultActionPerformed(evt);
+            }
+        });
 
         org.openide.awt.Mnemonics.setLocalizedText(loadRightResult, org.openide.util.NbBundle.getMessage(PlotTopPanel.class, "PlotTopPanel.loadRightResult.text")); // NOI18N
 
@@ -74,6 +79,12 @@ public class PlotTopPanel extends javax.swing.JPanel {
 //        JOptionPane.showMessageDialog(this, "Accuracy！");
         plotPanel.getAccuracy();
     }//GEN-LAST:event_accuracyBtnActionPerformed
+
+    private void loadResultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadResultActionPerformed
+        // TODO add your handling code here:
+        plotPanel.loadAndPaintClassifyRes("分类结果",plotPanel.dataSourceIndex);
+        plotPanel.loadAndPaintClusterRes("聚类结果",plotPanel.dataSourceIndex);
+    }//GEN-LAST:event_loadResultActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

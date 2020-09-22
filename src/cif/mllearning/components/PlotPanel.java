@@ -14,6 +14,7 @@ import cif.dataengine.io.TableRecords;
 import cif.mllearning.MLGlobal;
 import cif.mllearning.base.DataHelper;
 import cif.mllearning.base.MLDataModel;
+import cif.mllearning.base.TableHelper;
 import cif.mllearning.base.Variable;
 import cif.mllearning.configure.LoadConfigure;
 import com.flyfox.baseplot.data.PlotDataSource;
@@ -52,7 +53,7 @@ public class PlotPanel extends PagePanel {
 
     //聚类结果和标准结果列都能使用同一个tableFileds
     private TableFields tableFields;
-
+    public int dataSourceIndex;
     private TypeCurve standardClusterResultTypeCurve;
     private TypeCurve clusterResultTypeCurve;
 
@@ -136,7 +137,7 @@ public class PlotPanel extends PagePanel {
         // 获取plot数据源
         PlotDataSourceManager plotDataSourceManager = canvas.getWell().getDataSourceManager();
         PlotDataSource plotDataSource = plotDataSourceManager.addDataSource(mlModel.inputDataPath.toString(), mlModel.inputDataPath.toString());
-        int dataSourceIndex = plotDataSourceManager.getDataSources().indexOf(plotDataSource);
+        dataSourceIndex = plotDataSourceManager.getDataSources().indexOf(plotDataSource);
         
         Variable[] variables = mlModel.getVariables();
         Variable yVariable = null;
@@ -190,8 +191,8 @@ public class PlotPanel extends PagePanel {
         //addTrackAndCurve(yVariable, dataIndex);
 
         //现在出问题的地方就在于不能创建label表
-        addTrackAndTable(dataSourceIndex);
-
+        //addTrackAndTable(dataSourceIndex);
+        
         canvas.update(true, true);
 
     }
@@ -247,15 +248,14 @@ public class PlotPanel extends PagePanel {
     }
 
     //添加道以及对应的类别曲线
-    private TypeCurve addTrackAndTypeCurve(String curveName, String tableName, int dataIndex) {
+    private TypeCurve addTrackAndTypeCurve(String curveName, String tableName, int dataSourceIndex) {
         Track track = canvas.addTrack(AppConstants.TRACK_TYPE_BKANK, true);
-
         track.setTrackWidth(20);
 
         TypeCurveInfo typeCurveInfo = new TypeCurveInfo();
         TypeCurve typeCurve = track.addCurve(typeCurveInfo);
         TypeCurveHead typeCurveHead = typeCurve.getCurveHead();
-        typeCurveHead.setDataPathIndex(dataIndex);
+        typeCurveHead.setDataPathIndex(dataSourceIndex);
         typeCurveHead.setName(tableName);
         typeCurveHead.setLabel(curveName);
 
@@ -276,7 +276,71 @@ public class PlotPanel extends PagePanel {
 
         return typeCurve;
     }
+public int loadAndPaintClassifyRes(String tableName,int dataSourceIndex){
+        TableHelper tableHelper = new TableHelper(mlModel);
+        tableHelper.fillClassifyResultFromTable(tableName);
+        
+        Track track = canvas.addTrack(AppConstants.TRACK_TYPE_BKANK, true);
+        track.setTrackWidth(20);
+        TypeCurveInfo typeCurveInfo = new TypeCurveInfo();
+        TypeCurve typeCurve = track.addCurve(typeCurveInfo);
+        TypeCurveHead typeCurveHead = typeCurve.getCurveHead();
+        typeCurveHead.setDataPathIndex(dataSourceIndex);
+        typeCurveHead.setName(tableName);
+        typeCurveHead.setLabel(tableName);
+        typeCurve.setStartDepthName("开始深度");
+        typeCurve.setEndDepthName("结束深度");
+        typeCurve.setCategoryName("分类结果");
+        typeCurveHead.setScaleType(ScaleType.Custom);
+        
+        ArrayList<CategoryItem> categoryList = new ArrayList<>();
+        for (int i = 0; i < LoadConfigure.colorLayers.size(); i++) {
+            CategoryItem item = new CategoryItem();
+            item.setPropertyValue(i + "");
+            Color temp = new Color(LoadConfigure.colorLayers.get(i).red,LoadConfigure.colorLayers.get(i).green,LoadConfigure.colorLayers.get(i).blue);
+            item.setBackgroundColor(temp);
+            item.setWidth(100);
+            categoryList.add(item);
+        }
+        typeCurve.setCategoryItems(categoryList);
+        typeCurve.setDrawLabel(false);
+        canvas.update(true, true);
+        return 1;
+    }
 
+public int loadAndPaintClusterRes(String tableName,int dataSourceIndex){
+        TableHelper tableHelper = new TableHelper(mlModel);
+        int clusterCount = tableHelper.fillClusterResultFromTable(tableName);
+        
+        Track track = canvas.addTrack(AppConstants.TRACK_TYPE_BKANK, true);
+        track.setTrackWidth(20);
+        TypeCurveInfo typeCurveInfo = new TypeCurveInfo();
+        TypeCurve typeCurve = track.addCurve(typeCurveInfo);
+        TypeCurveHead typeCurveHead = typeCurve.getCurveHead();
+        typeCurveHead.setDataPathIndex(dataSourceIndex);
+        typeCurveHead.setName(tableName);
+        typeCurveHead.setLabel(tableName);
+        typeCurve.setStartDepthName("开始深度");
+        typeCurve.setEndDepthName("结束深度");
+        typeCurve.setCategoryName("聚类结果");
+        typeCurveHead.setScaleType(ScaleType.Custom);
+        
+        ArrayList<CategoryItem> categoryList = new ArrayList<>();
+        int gap = 255/clusterCount;
+        for (int i = 0; i < clusterCount; i++) {
+            CategoryItem item = new CategoryItem();
+            item.setPropertyValue(i + "");
+            Color temp = new Color(0,(i+1)*gap,(i+3)*gap%255);
+            item.setBackgroundColor(temp);
+            item.setWidth(100);
+            categoryList.add(item);
+        }
+        
+        typeCurve.setCategoryItems(categoryList);
+        typeCurve.setDrawLabel(false);
+        canvas.update(true, true);
+        return 1;
+    }
     /**
      * 为typeCurve创建categoryItems
      *
@@ -483,6 +547,7 @@ public class PlotPanel extends PagePanel {
 //        standardClusterResultTypeCurve.getCategories().get(0).getBackgroundColor();
 //        JOptionPane.showMessageDialog(this, clusterResultTypeCurve.getCategories().get(0).getBackgroundColor());
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.

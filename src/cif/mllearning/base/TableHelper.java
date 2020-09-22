@@ -12,6 +12,8 @@ import cif.dataengine.io.TableFields;
 import cif.dataengine.io.TableRecords;
 import cif.mllearning.MLGlobal;
 import cif.mllearning.configure.LoadConfigure;
+import javax.swing.JOptionPane;
+import org.openide.windows.WindowManager;
 
 /**
  *
@@ -79,21 +81,33 @@ public class TableHelper {
      * @return 
      */
     public int fillClassifyResultFromTable(String tableName){
+        DataHelper dataHelper = new DataHelper(mlModel);
+        int rowUsed = dataHelper.getRawDataCount();
+        mlModel.classifyResult = new int[rowUsed];
+        for(int i = 0;i<mlModel.classifyResult.length;i++){
+            mlModel.classifyResult[i] = 0;
+        }
         LogCategory category = mlModel.inputDataPath.getCategory();
         LogTable labelTable = category.getLogCommonTable(tableName);
+        if(labelTable == null){
+            JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), "不存在分类结果表");
+        }
         int row = labelTable.getRowCount();
         int col = labelTable.getColumnCount();
         TableRecords tableRecord = new TableRecords();
         labelTable.readTableRecords(tableRecord);
         int resIndex = 0;
         int label = 0;
+        int maxLabel = 0;
         float depth;
         int count = 0;
+        
         for (int i = 0; i < row; i++) {
             resIndex = 0;
             depth = tableRecord.getRecordFloatData(i, 0);
-            label = tableRecord.getRecordIntData(i, 1);
+            label = tableRecord.getRecordIntData(i, 2);
             resIndex = (int)((depth-mlModel.curveStdep)/dataHelper.getDepthLevel());
+            
             if(resIndex>=0&&resIndex<mlModel.classifyResult.length){
                 mlModel.classifyResult[resIndex] = label;
                 count++;
@@ -107,27 +121,43 @@ public class TableHelper {
      * @return 
      */
     public int fillClusterResultFromTable(String tableName){
+        DataHelper dataHelper = new DataHelper(mlModel);
+        int rowUsed = dataHelper.getRawDataCount();
+        mlModel.clusterResult = new int[rowUsed];
+        for(int i =0;i<mlModel.clusterResult.length;i++){
+            mlModel.clusterResult[i] = -1;
+        }
         LogCategory category = mlModel.inputDataPath.getCategory();
-        LogTable labelTable = category.getLogCommonTable(tableName);
-        int row = labelTable.getRowCount();
-        int col = labelTable.getColumnCount();
+        LogTable clusterTable = category.getLogCommonTable(tableName);
+        
+        if(clusterTable == null){
+            JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), "不存在聚类结果表");
+        }
+        int row = clusterTable.getRowCount();
+        int col = clusterTable.getColumnCount();
         TableRecords tableRecord = new TableRecords();
-        labelTable.readTableRecords(tableRecord);
+        clusterTable.readTableRecords(tableRecord);
         int resIndex = 0;
         int label = 0;
+        int maxLabel = 0;
         float depth;
         int count = 0;
         for (int i = 0; i < row; i++) {
             resIndex = 0;
             depth = tableRecord.getRecordFloatData(i, 0);
-            label = tableRecord.getRecordIntData(i, 1);
+            label = tableRecord.getRecordIntData(i, 2);
+            if(label>maxLabel){
+                maxLabel=label;
+            }
             resIndex = (int)((depth-mlModel.curveStdep)/dataHelper.getDepthLevel());
             if(resIndex>=0&&resIndex<mlModel.clusterResult.length){
                 mlModel.clusterResult[resIndex] = label;
                 count++;
             }
         }
-        return count;
+        maxLabel++;
+        JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), "聚类中心个数"+maxLabel);
+        return maxLabel;
     }
     
     public int saveToTableFromClassifyRes(String tableName) {
@@ -136,13 +166,16 @@ public class TableHelper {
             logCategory.deleteLogging(tableName);
         }
         TableFields tableFields = new TableFields();
-        tableFields.init(2);
-        tableFields.setName(0, "深度");
+        tableFields.init(3);
+        tableFields.setName(0, "开始深度");
         tableFields.setDataType(0, Global.DATA_DEPTH);
         tableFields.setUnit(0, "米");
-        tableFields.setName(1, "分类结果");
-        tableFields.setDataType(1, Global.DATA_INT);
-        tableFields.setUnit(0, "");
+        tableFields.setName(1, "结束深度");
+        tableFields.setDataType(1, Global.DATA_DEPTH);
+        tableFields.setUnit(1, "米");
+        tableFields.setName(2, "分类结果");
+        tableFields.setDataType(2, Global.DATA_INT);
+        tableFields.setUnit(2, "");
         
         TableRecords tableRecords = new TableRecords();
         tableRecords.init(dataHelper.getRealRowCount(), tableFields);
@@ -156,7 +189,8 @@ public class TableHelper {
             }
             if(indexInClassifyRes<mlModel.dataRowSelectedFlags.length){
                 tableRecords.setRecordDoubleData(i, 0, mlModel.curveStdep+indexInClassifyRes*dataHelper.getDepthLevel());
-                tableRecords.setRecordIntData(i, 1, mlModel.classifyResult[indexInClassifyRes]);
+                tableRecords.setRecordDoubleData(i, 1, mlModel.curveStdep+(indexInClassifyRes+1)*dataHelper.getDepthLevel());
+                tableRecords.setRecordIntData(i, 2, mlModel.classifyResult[indexInClassifyRes]);
                 indexInClassifyRes++;
             }
         }
@@ -170,13 +204,15 @@ public class TableHelper {
             logCategory.deleteLogging(tableName);
         }
         TableFields tableFields = new TableFields();
-        tableFields.init(2);
-        tableFields.setName(0, "深度");
+        tableFields.init(3);
+        tableFields.setName(0, "开始深度");
         tableFields.setDataType(0, Global.DATA_DEPTH);
-        tableFields.setUnit(0, "米");
-        tableFields.setName(1, "聚类结果");
-        tableFields.setDataType(1, Global.DATA_INT);
-        tableFields.setUnit(0, "");
+        tableFields.setName(1, "结束深度");
+        tableFields.setDataType(1, Global.DATA_DEPTH);
+        tableFields.setUnit(1, "米");
+        tableFields.setName(2, "聚类结果");
+        tableFields.setDataType(2, Global.DATA_INT);
+        tableFields.setUnit(2, "");
         
         TableRecords tableRecords = new TableRecords();
         tableRecords.init(dataHelper.getRealRowCount(), tableFields);
@@ -190,7 +226,8 @@ public class TableHelper {
             }
             if(indexInClassifyRes<mlModel.dataRowSelectedFlags.length){
                 tableRecords.setRecordDoubleData(i, 0, mlModel.curveStdep+indexInClassifyRes*dataHelper.getDepthLevel());
-                tableRecords.setRecordIntData(i, 1, mlModel.clusterResult[indexInClassifyRes]);
+                tableRecords.setRecordDoubleData(i, 1, mlModel.curveStdep+(indexInClassifyRes+1)*dataHelper.getDepthLevel());
+                tableRecords.setRecordIntData(i, 2, mlModel.clusterResult[indexInClassifyRes]);
                 indexInClassifyRes++;
             }
         }
