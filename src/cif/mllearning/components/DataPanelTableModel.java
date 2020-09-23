@@ -282,9 +282,9 @@ class DataPanelTableModel extends AbstractTableModel {
                     if (mlModel.learningMode == MLGlobal.PREDICTING_MODE) {
                         return "模型预测值";
                     } else if (mlModel.learningMode == MLGlobal.CLASSIFYING_MODE) {
-                        return "标签";
+                        return "分类结果";
                     } else if (mlModel.learningMode == MLGlobal.CLUSTERING_MODE) {
-                        return "Cluster";
+                        return "聚类结果";
                     }
                 }
                 return "";

@@ -30,9 +30,27 @@ public class Normalization {
         }
     }
 
-    public void normalizeXVar(int index, double[] data, double lower, double upper) {
-        xVarLowers[index] = lower;
-        xVarUppers[index] = upper;
+    public void normalizeXVar(String variableName,int index, double[] data, double lower, double upper) {
+        if(variableName.equals("RT")){
+            if(lower<2){
+                lower = 2;
+            }
+            lower = Math.log(lower);
+            upper = Math.log(upper);
+            xVarLowers[index] = lower;
+            xVarUppers[index] = upper;
+            for(int i = 0 ;i<data.length;i++){
+                if(data[i]<2){
+                    data[i]=2;
+                }
+                data[i] = Math.log(data[i]);
+            }
+        }else{
+            xVarLowers[index] = lower;
+            xVarUppers[index] = upper;
+        }
+        
+        
         normalize(data, lower, upper);
     }
 

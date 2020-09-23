@@ -135,7 +135,8 @@ public class ClassifyingSVMFunction extends Function {
         printHighlight("Data Statistics:\n");
         for (int col = 0; col < xVarCount; col++) {
             dataHelper.readRealXData(col, buffer);
-            normalization.normalizeXVar(col, buffer, MathBase.minimum(buffer), MathBase.maximum(buffer));
+            String variableName = dataHelper.getRealXVariableName(col);
+            normalization.normalizeXVar(variableName,col, buffer, MathBase.minimum(buffer), MathBase.maximum(buffer));
             for (int row = 0; row < rowCount; row++) {
                 problem.x[row][col] = new svm_node();
                 problem.x[row][col].index = col;

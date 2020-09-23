@@ -177,7 +177,8 @@ public class ClassifyingBPFunction extends Function {
         double[] buffer = new double[rowCount];
         for (int col = 0; col < xCount; col++) {
             dataHelper.readRealXData(col, buffer);
-            normalization.normalizeXVar(col, buffer, MathBase.minimum(buffer), MathBase.maximum(buffer));
+            String variableName = dataHelper.getRealXVariableName(col);
+            normalization.normalizeXVar(variableName,col, buffer, MathBase.minimum(buffer), MathBase.maximum(buffer));
             for (int row = 0; row < rowCount; row++) {
                 dataSet.get(row).getInput()[col] = buffer[row];
             }
@@ -207,7 +208,8 @@ public class ClassifyingBPFunction extends Function {
         double[] buffer = new double[rowCount];
         for (int col = 0; col < xCount; col++) {
             dataHelper.readRealXData(col, buffer);
-            normalization.normalizeXVar(col, buffer, MathBase.minimum(buffer), MathBase.maximum(buffer));
+            String variableName = dataHelper.getRealXVariableName(col);
+            normalization.normalizeXVar(variableName,col, buffer, MathBase.minimum(buffer), MathBase.maximum(buffer));
             for (int row = 0; row < rowCount; row++) {
                 dataSet.get(row).getInput()[col] = buffer[row];
             }

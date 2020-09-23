@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
->Log Session: Tuesday, September 22, 2020 2:43:41 PM CST
+>Log Session: Wednesday, September 23, 2020 6:49:20 PM CST
 >System Info: 
   Product Version         = CIFLog 2.0
   Operating System        = Windows 7 version 6.1 running on amd64
@@ -201,7 +201,7 @@ INFO [org.netbeans.core.startup.NbEvents]: Turning on modules:
 	cif.paysummary [1.0 190819]
 	cif.normalization [1.0 190819]
 	cif.mulprocessor [1.0 190819]
-	cif.mllearning [1.0 200922]
+	cif.mllearning [1.0 200923]
 	cif.methods [1.0 190819]
 	cif.logsplice [1.0 190819]
 	cif.basemodule [1.0 190819]
@@ -245,12 +245,152 @@ Input arguments:
 Compiler: HotSpot 64-Bit Tiered Compilers
 Heap memory usage: initial 128.0MB maximum 1799.5MB
 Non heap memory usage: initial 2.4MB maximum -1b
-Garbage collector: PS Scavenge (Collections=6 Total time spent=0s)
+Garbage collector: PS Scavenge (Collections=10 Total time spent=0s)
 Garbage collector: PS MarkSweep (Collections=2 Total time spent=0s)
-Classes: loaded=5123 total loaded=5123 unloaded 0
+Classes: loaded=5321 total loaded=5321 unloaded 0
 INFO [org.netbeans.core.ui.warmup.DiagnosticTask]: Total memory 8,485,453,824
 INFO [null]: Total physical memory 8,485,453,824
 WARNING [org.openide.filesystems.Ordering]: Found same position 100 for both Menu/Tools/ResourceManage and Menu/Tools/org-openide-actions-ToolsAction.shadow
 WARNING [org.openide.filesystems.Ordering]: Not all children in Menu/Window/ marked with the position attribute: [cif-mllearning-MLLearningTopComponent.shadow, cif-stattable-StatTableTopComponent.shadow, com-sgt-modul3d-topcomponent-MainViewTopComponent.shadow], but some are: [TaskPaneAction.shadow, WelcomeAction.shadow, javax-swing-JSeparator.instance, org-netbeans-core-windows-actions-ToggleFullScreenAction.instance, Separator3.instance, ConfigureWindow, org-netbeans-core-windows-actions-ResetWindowsAction.shadow, Separator4.instance, CloseWindowAction.shadow, CloseAllDocumentsAction.shadow, CloseAllButThisAction.shadow, DocumentsAction.shadow]
 WARNING [org.openide.filesystems.Ordering]: Not all children in Menu/Help/ marked with the position attribute: [检查更新], but some are: [cif-helpwrapper-helper-HelperAction.shadow, cif-helpwrapper-helper-HelperAction-separatorAfter.instance, cif-helpwrapper-logger-PlatformLoggerAction.shadow, cif-projectmanager-LicenseAction-separatorBefore.instance, cif-projectmanager-LicenseAction.shadow, cif-helpwrapper-logger-PlatformLoggerAction-separatorAfter.instance, cif-helpwrapper-about-AboutAction.shadow]
 WARNING [org.openide.filesystems.Ordering]: Relative ordering attribute cif-helpwrapper-updater-UpdateAction1.shadow/cif-helpwrapper-updater-ImportPacket.shadow on Menu/Help/检查更新 is deprecated in favor of numeric position attributes
+WARNING [org.netbeans.modules.progress.spi.InternalHandle]: Cannot switch to silent mode when not running at org.netbeans.core.ui.warmup.MenuWarmUpTask$NbWindowsAdapter$1HandleBridge.run(MenuWarmUpTask.java:269)
+SEVERE [global]
+java.lang.NullPointerException
+	at cif.mllearning.base.TableHelper.fillClassifyResultFromTable(TableHelper.java:99)
+	at cif.mllearning.components.PlotPanel.loadAndPaintClassifyRes(PlotPanel.java:281)
+	at cif.mllearning.components.PlotTopPanel.loadResultActionPerformed(PlotTopPanel.java:85)
+	at cif.mllearning.components.PlotTopPanel.access$100(PlotTopPanel.java:14)
+	at cif.mllearning.components.PlotTopPanel$2.actionPerformed(PlotTopPanel.java:49)
+	at javax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:2022)
+	at javax.swing.AbstractButton$Handler.actionPerformed(AbstractButton.java:2348)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(DefaultButtonModel.java:402)
+	at javax.swing.DefaultButtonModel.setPressed(DefaultButtonModel.java:259)
+	at javax.swing.plaf.basic.BasicButtonListener.mouseReleased(BasicButtonListener.java:252)
+	at java.awt.Component.processMouseEvent(Component.java:6533)
+	at javax.swing.JComponent.processMouseEvent(JComponent.java:3324)
+	at java.awt.Component.processEvent(Component.java:6298)
+	at java.awt.Container.processEvent(Container.java:2236)
+	at java.awt.Component.dispatchEventImpl(Component.java:4889)
+	at java.awt.Container.dispatchEventImpl(Container.java:2294)
+	at java.awt.Component.dispatchEvent(Component.java:4711)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4888)
+	at java.awt.LightweightDispatcher.processMouseEvent(Container.java:4525)
+	at java.awt.LightweightDispatcher.dispatchEvent(Container.java:4466)
+	at java.awt.Container.dispatchEventImpl(Container.java:2280)
+	at java.awt.Window.dispatchEventImpl(Window.java:2746)
+	at java.awt.Component.dispatchEvent(Component.java:4711)
+	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:758)
+	at java.awt.EventQueue.access$500(EventQueue.java:97)
+	at java.awt.EventQueue$3.run(EventQueue.java:709)
+	at java.awt.EventQueue$3.run(EventQueue.java:703)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:80)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:90)
+	at java.awt.EventQueue$4.run(EventQueue.java:731)
+	at java.awt.EventQueue$4.run(EventQueue.java:729)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:80)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:728)
+	at org.netbeans.core.TimableEventQueue.dispatchEvent(TimableEventQueue.java:159)
+[catch] at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:201)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:116)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:105)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:93)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:82)
+SEVERE [global]
+java.lang.NullPointerException
+	at cif.mllearning.base.TableHelper.fillClusterResultFromTable(TableHelper.java:140)
+	at cif.mllearning.components.PlotPanel.loadAndPaintClusterRes(PlotPanel.java:313)
+	at cif.mllearning.components.PlotTopPanel.loadResultActionPerformed(PlotTopPanel.java:86)
+	at cif.mllearning.components.PlotTopPanel.access$100(PlotTopPanel.java:14)
+	at cif.mllearning.components.PlotTopPanel$2.actionPerformed(PlotTopPanel.java:49)
+	at javax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:2022)
+	at javax.swing.AbstractButton$Handler.actionPerformed(AbstractButton.java:2348)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(DefaultButtonModel.java:402)
+	at javax.swing.DefaultButtonModel.setPressed(DefaultButtonModel.java:259)
+	at javax.swing.plaf.basic.BasicButtonListener.mouseReleased(BasicButtonListener.java:252)
+	at java.awt.Component.processMouseEvent(Component.java:6533)
+	at javax.swing.JComponent.processMouseEvent(JComponent.java:3324)
+	at java.awt.Component.processEvent(Component.java:6298)
+	at java.awt.Container.processEvent(Container.java:2236)
+	at java.awt.Component.dispatchEventImpl(Component.java:4889)
+	at java.awt.Container.dispatchEventImpl(Container.java:2294)
+	at java.awt.Component.dispatchEvent(Component.java:4711)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4888)
+	at java.awt.LightweightDispatcher.processMouseEvent(Container.java:4525)
+	at java.awt.LightweightDispatcher.dispatchEvent(Container.java:4466)
+	at java.awt.Container.dispatchEventImpl(Container.java:2280)
+	at java.awt.Window.dispatchEventImpl(Window.java:2746)
+	at java.awt.Component.dispatchEvent(Component.java:4711)
+	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:758)
+	at java.awt.EventQueue.access$500(EventQueue.java:97)
+	at java.awt.EventQueue$3.run(EventQueue.java:709)
+	at java.awt.EventQueue$3.run(EventQueue.java:703)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:80)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:90)
+	at java.awt.EventQueue$4.run(EventQueue.java:731)
+	at java.awt.EventQueue$4.run(EventQueue.java:729)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:80)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:728)
+	at org.netbeans.core.TimableEventQueue.dispatchEvent(TimableEventQueue.java:159)
+[catch] at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:201)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:116)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:105)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:93)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:82)
+SEVERE [global]
+java.lang.ArrayIndexOutOfBoundsException: -1
+	at cif.mllearning.base.CreateScatterPlotData.createClusterDataset(CreateScatterPlotData.java:103)
+	at cif.mllearning.base.CreateScatterPlotPanel.getChart(CreateScatterPlotPanel.java:144)
+	at cif.mllearning.components.CrossPlotPanel.updateCharts(CrossPlotPanel.java:193)
+	at cif.mllearning.components.CrossPlotPanel.initChartPanels(CrossPlotPanel.java:141)
+	at cif.mllearning.components.CrossPlotPanel.setMLModel(CrossPlotPanel.java:83)
+	at cif.mllearning.MLLearningTopComponent.updatePagePanels(MLLearningTopComponent.java:786)
+	at cif.mllearning.MLLearningTopComponent.mainTabbedPaneStateChanged(MLLearningTopComponent.java:561)
+	at cif.mllearning.MLLearningTopComponent.access$400(MLLearningTopComponent.java:75)
+	at cif.mllearning.MLLearningTopComponent$5.stateChanged(MLLearningTopComponent.java:252)
+	at javax.swing.JTabbedPane.fireStateChanged(JTabbedPane.java:416)
+	at javax.swing.JTabbedPane$ModelListener.stateChanged(JTabbedPane.java:270)
+	at javax.swing.DefaultSingleSelectionModel.fireStateChanged(DefaultSingleSelectionModel.java:132)
+	at javax.swing.DefaultSingleSelectionModel.setSelectedIndex(DefaultSingleSelectionModel.java:67)
+	at javax.swing.JTabbedPane.setSelectedIndexImpl(JTabbedPane.java:616)
+	at javax.swing.JTabbedPane.setSelectedIndex(JTabbedPane.java:591)
+	at javax.swing.plaf.basic.BasicTabbedPaneUI$Handler.mousePressed(BasicTabbedPaneUI.java:3647)
+	at java.awt.Component.processMouseEvent(Component.java:6530)
+	at javax.swing.JComponent.processMouseEvent(JComponent.java:3324)
+	at java.awt.Component.processEvent(Component.java:6298)
+	at java.awt.Container.processEvent(Container.java:2236)
+	at java.awt.Component.dispatchEventImpl(Component.java:4889)
+	at java.awt.Container.dispatchEventImpl(Container.java:2294)
+	at java.awt.Component.dispatchEvent(Component.java:4711)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4888)
+	at java.awt.LightweightDispatcher.processMouseEvent(Container.java:4522)
+	at java.awt.LightweightDispatcher.dispatchEvent(Container.java:4466)
+	at java.awt.Container.dispatchEventImpl(Container.java:2280)
+	at java.awt.Window.dispatchEventImpl(Window.java:2746)
+	at java.awt.Component.dispatchEvent(Component.java:4711)
+	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:758)
+	at java.awt.EventQueue.access$500(EventQueue.java:97)
+	at java.awt.EventQueue$3.run(EventQueue.java:709)
+	at java.awt.EventQueue$3.run(EventQueue.java:703)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:80)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:90)
+	at java.awt.EventQueue$4.run(EventQueue.java:731)
+	at java.awt.EventQueue$4.run(EventQueue.java:729)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:80)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:728)
+	at org.netbeans.core.TimableEventQueue.dispatchEvent(TimableEventQueue.java:159)
+[catch] at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:201)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:116)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:105)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:93)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:82)
+SEVERE [null]: Last record repeated again.

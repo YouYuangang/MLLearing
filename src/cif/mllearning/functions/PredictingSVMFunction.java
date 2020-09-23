@@ -132,8 +132,9 @@ public class PredictingSVMFunction extends Function {
         printHighlight("Data Statistics:\n");
         for (int col = 0; col < xVarCount; col++) {
             dataHelper.readRealXData(col, buffer);
+            String variableName = dataHelper.getRealXVariableName(col);
             printCurveStatistics(xVarNames[col], buffer);
-            normalization.normalizeXVar(col, buffer, MathBase.minimum(buffer), MathBase.maximum(buffer));
+            normalization.normalizeXVar(variableName,col, buffer, MathBase.minimum(buffer), MathBase.maximum(buffer));
             for (int row = 0; row < rowCount; row++) {
                 problem.x[row][col] = new svm_node();
                 problem.x[row][col].index = col;

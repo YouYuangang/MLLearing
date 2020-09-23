@@ -140,17 +140,18 @@ public class DataPanel extends PagePanel {
         
         MLDataModel model = tableModel.getmlModel();
         Variable[] variables = model.getVariables();
-        for (int i = 0; i < model.dataRowSelectedFlags.length; i++) {
-            model.dataRowSelectedFlags[i] = true;
-        }
+        
         for (int i = 0; i < model.dataRowSelectedFlags.length; i++) {
             for (int j = 0; j < variables.length; j++) {
                 if (variables[j].flag != MLDataModel.UNSEL_VARIABLE) {
                     String cur = (String) tableModel.getValueAt(i, j + 2);
                     Double curNum = Double.valueOf(cur);
                     if (Math.abs(curNum - invalidNum) < 10e-4) {
-                        model.dataRowSelectedFlags[i] = false;
-                        break;
+                        if(model.dataRowSelectedFlags[i]==true){
+                            model.dataRowSelectedFlags[i] = false;
+                            break;
+                        }
+                        
                     }
                 }
             }

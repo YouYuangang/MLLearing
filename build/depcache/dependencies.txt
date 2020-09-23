@@ -1687,6 +1687,7 @@ cif.mllearning.functions.Function
 java.lang.Double
 java.awt.Frame
 java.lang.Object
+java.lang.String
 ||:cif.mllearning.functions.ClusterValidity
 cif.mllearning.functions.ClusterValidity
 cif.mllearning.base.Indice
@@ -2688,6 +2689,8 @@ cif.mllearning.components.ClusterToLayerJDialog$3
 cif.mllearning.components.ClusterToLayerJDialog$3$1
 ||:cif.mllearning.functions.Normalization
 java.lang.Object
+java.lang.String
+java.lang.Math
 cif.mllearning.functions.Normalization
 ||:cif.mllearning.inputdata.ChooseLabelJDialog$4
 java.lang.Object

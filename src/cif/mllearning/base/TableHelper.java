@@ -32,6 +32,9 @@ public class TableHelper {
      * @return 
      */
     public int fillDataLabelFromTable(String tableName) {
+        for(int i = 0;i<mlModel.dataRowSelectedFlags.length;i++){
+            mlModel.dataRowSelectedFlags[i] = false;
+        }
         LogCategory category = mlModel.inputDataPath.getCategory();
         LogTable labelTable = category.getLogCommonTable(tableName);
         int row = labelTable.getRowCount();
@@ -70,6 +73,7 @@ public class TableHelper {
 
                 for (int j = sIndex; j <= eIndex; j++) {
                     mlModel.dataLabelAs[j] = labelIndex;
+                    mlModel.dataRowSelectedFlags[j] = true;
                 }
             }
         }

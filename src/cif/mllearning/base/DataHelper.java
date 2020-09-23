@@ -84,7 +84,9 @@ public class DataHelper {
             }
         }
     }
-
+    public String getRealXVariableName(int realIndex){
+        return mlModel.getVariables()[realXVariableColumnIndices[realIndex]].name;
+    }
     public int getRealXVariableCount() {
         return realXVariableColumnIndices.length;
     }
