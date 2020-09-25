@@ -37,7 +37,7 @@ public class ClassifyingBPFunction extends Function {
     private double learningRate = 0.05;
     private double maxError = 0.005;
     private int maxIteration = 1000;
-    private HashMap<String, Integer> itemCodeTable;
+    
     private int[] desiredY;
     
     

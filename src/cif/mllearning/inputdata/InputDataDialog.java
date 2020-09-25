@@ -24,6 +24,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
@@ -686,9 +687,24 @@ public class InputDataDialog extends javax.swing.JDialog {
             Double interval = logging.getLoggingProperties().getDepthLevel();
             variableTableModel.add(logging.getName(),false,String.format("%.2f",sDepth),String.format("%.2f",eDepth),String.format("%.2f",interval));
         }
+        defaultSelectedCurves();
         variableTableModel.fireTableDataChanged();
     }
-
+    private void defaultSelectedCurves(){
+        HashSet<String> curvesName = new HashSet<String>();
+        curvesName.add("AC");
+        curvesName.add("RT");
+        curvesName.add("POR");
+        curvesName.add("SW");
+        for(int i = 0;i<variableTableModel.getRowCount();i++){
+            String name = variableTableModel.getName(i).toUpperCase();
+            if(curvesName.contains(name)){
+                variableTableModel.select(i);
+            }
+            
+        };
+        
+    }
     private void fillDepthTextFields(DataPath dataPath) {
         LogCategory category = dataPath.getCategory();
         stdepTextField.setText(Double.toString(category.getCategoryStartDepth()));
