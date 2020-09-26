@@ -458,6 +458,7 @@ org.openide.util.Exceptions
 org.openide.util.NbBundle
 javax.swing.JOptionPane
 javax.swing.JSplitPane
+cif.mllearning.functions.ClassifyingBPFunction
 org.openide.windows.WindowManager
 cif.mllearning.components.ProgressDialog
 cif.mllearning.base.MLDataModelHelper

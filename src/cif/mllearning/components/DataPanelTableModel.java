@@ -221,8 +221,8 @@ class DataPanelTableModel extends AbstractTableModel {
                 case MLDataModel.FROM_TEXT:
                     if (columnIndex == 0) {
                         return rowIndex+1+"";
-                    }else if((columnIndex>=0+1)&&(columnIndex<0+1+tableHelper.getFieldCount())){
-                       return textHelper.getTextData(rowIndex-1, columnIndex); 
+                    }else if((columnIndex>=0+1)&&(columnIndex<0+1+textHelper.getColumnCount())){
+                       return textHelper.getTextData(rowIndex, columnIndex-1); 
                     }else if(columnIndex == 0+1+textHelper.getColumnCount()){
                         return "无";
                     }else if(columnIndex == 0+1+textHelper.getColumnCount()+1){

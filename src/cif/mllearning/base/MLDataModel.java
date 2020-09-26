@@ -20,8 +20,10 @@ public class MLDataModel {
     public final static int FROM_TABLE = 1;
     public final static int FROM_TEXT = 2;
     public final static int UNSEL_VARIABLE = -1;
-    public final static int X_VARIABLE = 1;
-    public final static int Y_VARIABLE = 2;
+    public final static int X_VARIABLE_OIL = 1;
+    public final static int Y_VARIABLE_OIL = 2;
+    public final static int X_VARIABLE_LITH = 3;
+    public final static int Y_VARIABLE_LITH = 4;
 
     public int dataFrom = -1;
     public DataPath inputDataPath;

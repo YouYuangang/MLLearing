@@ -18,11 +18,32 @@ public class MLDataModelHelper {
         this.mlModel = mlModel;
     }
 
-    public int getRealXVariableCount() {
+    /*public int getRealXVariableCount() {
         int xVarCount = 0;
         Variable[] variables = mlModel.getVariables();
         for (Variable variable : variables) {
             if (variable.flag == MLDataModel.X_VARIABLE) {
+                xVarCount++;
+            }
+        }
+        return xVarCount;
+    }*/
+    
+    public int getOilXVariableCount(){
+        int xVarCount = 0;
+        Variable[] variables = mlModel.getVariables();
+        for (Variable variable : variables) {
+            if (variable.flag == MLDataModel.X_VARIABLE_OIL) {
+                xVarCount++;
+            }
+        }
+        return xVarCount;
+    }
+    public int getLithXVariableCount(){
+        int xVarCount = 0;
+        Variable[] variables = mlModel.getVariables();
+        for (Variable variable : variables) {
+            if (variable.flag == MLDataModel.X_VARIABLE_LITH) {
                 xVarCount++;
             }
         }
@@ -40,7 +61,7 @@ public class MLDataModelHelper {
         return varCount;
     }
 
-    public String[] getRealXVariableNames() {
+    /*public String[] getRealXVariableNames() {
         String[] names = new String[getRealXVariableCount()];
         Variable[] variables = mlModel.getVariables();
         int index = 0;
@@ -50,12 +71,36 @@ public class MLDataModelHelper {
             }
         }
         return names;
+    }*/
+    
+    public String[] getOilXVariableNames(){
+        String[] names = new String[getOilXVariableCount()];
+        Variable[] variables = mlModel.getVariables();
+        int index = 0;
+        for (Variable variable : variables) {
+            if (variable.flag == MLDataModel.X_VARIABLE_OIL) {
+                names[index++] = variable.name;
+            }
+        }
+        return names;
+    }
+    
+    public String[] getLithXVariableNames(){
+        String[] names = new String[getLithXVariableCount()];
+        Variable[] variables = mlModel.getVariables();
+        int index = 0;
+        for (Variable variable : variables) {
+            if (variable.flag == MLDataModel.X_VARIABLE_LITH) {
+                names[index++] = variable.name;
+            }
+        }
+        return names;
     }
 
-    public String getRealYVariableName() {
+    public String getOilYVariableName() {
         Variable[] variables = mlModel.getVariables();
         for (Variable variable : variables) {
-            if (variable.flag == MLDataModel.Y_VARIABLE) {
+            if (variable.flag == MLDataModel.Y_VARIABLE_OIL) {
                 return variable.name;
             }
         }

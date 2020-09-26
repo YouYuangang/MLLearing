@@ -30,6 +30,7 @@ import cif.mllearning.functions.FunTools;
 import cif.mllearning.functions.Function;
 import cif.mllearning.functions.FunctionProxy;
 import cif.mllearning.inputdata.ChooseClassLabelJDialog;
+import cif.mllearning.inputdata.ChooseLabelJDialog;
 import cif.mllearning.inputdata.InputDataDialog;
 import java.awt.Frame;
 import java.beans.PropertyChangeEvent;
@@ -476,7 +477,7 @@ public final class MLLearningTopComponent extends TopComponent {
             for (int i = 0; i < variables.length; i++) {
                 if (dialog.isSelected(i)) {
                     if (variables[i].flag < 0) {
-                        variables[i].flag = MLDataModel.X_VARIABLE;
+                        variables[i].flag = MLDataModel.X_VARIABLE_OIL;
                     }
                 } else {
                     variables[i].flag = MLDataModel.UNSEL_VARIABLE;
@@ -497,8 +498,48 @@ public final class MLLearningTopComponent extends TopComponent {
             JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), "请先导入数据！");
             return;
         }
-        int selectedRow = variableTable.getSelectedRow();
-        variableTableModel.setY(selectedRow);
+        ChooseLabelJDialog chooseXorYforVariable = new ChooseLabelJDialog(WindowManager.getDefault().getMainWindow(),true);
+        chooseXorYforVariable.setTipText("将变量标为");
+        chooseXorYforVariable.addTolabelComboBox("预测含油性的属性");
+        chooseXorYforVariable.addTolabelComboBox("含油性");
+        chooseXorYforVariable.addTolabelComboBox("预测岩性的属性");
+        chooseXorYforVariable.addTolabelComboBox("岩性");
+        chooseXorYforVariable.setVisible(true);
+        int indexOfSelected = chooseXorYforVariable.getChooseBoxIndex();
+        int[] selectedRows = variableTable.getSelectedRows();
+        if(selectedRows.length>0&&chooseXorYforVariable.retStatu == ChooseLabelJDialog.OK&&indexOfSelected >= 0){
+            if(indexOfSelected == 0){
+                for(int i : selectedRows){
+                    variableTableModel.setLabelForXandY(i, MLDataModel.X_VARIABLE_OIL);
+                    
+                }
+            }else if(indexOfSelected == 1){
+                if(selectedRows.length > 1){
+                    JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), "不能选多个变量为Y");
+                    return;
+                }
+                for(int i : selectedRows){
+                    variableTableModel.setLabelForXandY(i, MLDataModel.Y_VARIABLE_OIL);
+                    
+                }
+            }else if(indexOfSelected == 2){
+                for(int i : selectedRows){
+                    variableTableModel.setLabelForXandY(i, MLDataModel.X_VARIABLE_LITH);
+                    
+                }
+            }else{
+                if(selectedRows.length > 1){
+                    JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), "不能选多个变量为Y");
+                    return;
+                }
+              for(int i : selectedRows){
+                    variableTableModel.setLabelForXandY(i, MLDataModel.Y_VARIABLE_LITH);
+                    
+                }  
+            }
+        }
+        
+        
         variableTableModel.fireTableDataChanged();
         int selectedIndex = variableTableModel.getRowCount() - 1;
         variableTable.setRowSelectionInterval(selectedIndex, selectedIndex);
@@ -677,10 +718,7 @@ public final class MLLearningTopComponent extends TopComponent {
             
                 
             case MLGlobal.PREDICTING_MODE:
-                i = variableTable.getSelectedRow();
-                if(i>=0){
-                    variableTableModel.setY(i);
-                }
+                
                 break;
                 
             case MLGlobal.CLASSIFYING_MODE:
@@ -734,14 +772,7 @@ public final class MLLearningTopComponent extends TopComponent {
             return;
         }
         function.setMLModel(mlModel);
-        if (learningMode == MLGlobal.PREDICTING_MODE || learningMode == MLGlobal.CLASSIFYING_MODE) {
-            MLDataModelHelper mlModelHelper = new MLDataModelHelper(mlModel);
-            int xVarCount = mlModelHelper.getRealXVariableCount();
-            if (xVarCount == 0) {
-                JOptionPane.showMessageDialog(parent, "仅选择一个变量，无法操作！");
-                return;
-            }
-        }
+        
         switch(learningMode){
             case MLGlobal.PREDICTING_MODE:
                 function.setParameters(parent);

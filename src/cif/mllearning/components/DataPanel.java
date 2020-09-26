@@ -137,27 +137,56 @@ public class DataPanel extends PagePanel {
 
     public void filterDataByDefalut() {
         Double invalidNum = MLGlobal.INVALID_VALUE;
-        
+
         MLDataModel model = tableModel.getmlModel();
         Variable[] variables = model.getVariables();
-        
-        for (int i = 0; i < model.dataRowSelectedFlags.length; i++) {
-            for (int j = 0; j < variables.length; j++) {
-                if (variables[j].flag != MLDataModel.UNSEL_VARIABLE) {
-                    String cur = (String) tableModel.getValueAt(i, j + 2);
-                    Double curNum = Double.valueOf(cur);
-                    if (Math.abs(curNum - invalidNum) < 10e-4) {
-                        if(model.dataRowSelectedFlags[i]==true){
-                            model.dataRowSelectedFlags[i] = false;
-                            break;
+        switch (mlModel.dataFrom) {
+            case MLDataModel.FROM_CURVE:
+                for (int i = 0; i < model.dataRowSelectedFlags.length; i++) {
+                    for (int j = 0; j < variables.length; j++) {
+                        if (variables[j].flag != MLDataModel.UNSEL_VARIABLE) {
+                            try {
+                                String cur = (String) tableModel.getValueAt(i, j + 2);
+                                Double curNum = Double.valueOf(cur);
+                                if (Math.abs(curNum - invalidNum) < 10e-4) {
+                                    if (model.dataRowSelectedFlags[i] == true) {
+                                        model.dataRowSelectedFlags[i] = false;
+                                        break;
+                                    }
+
+                                }
+                            } catch (NumberFormatException e) {
+                                break;
+                            }
+
                         }
-                        
                     }
                 }
-            }
+            case MLDataModel.FROM_TEXT:
+                for (int i = 0; i < model.dataRowSelectedFlags.length; i++) {
+                    for (int j = 0; j < variables.length; j++) {
+                        if (variables[j].flag != MLDataModel.UNSEL_VARIABLE) {
+                            String cur = (String) tableModel.getValueAt(i, j + 1);
+                            try {
+                                Double curNum = Double.valueOf(cur);
+                                if (Math.abs(curNum - invalidNum) < 10e-4) {
+                                    if (model.dataRowSelectedFlags[i] == true) {
+                                        model.dataRowSelectedFlags[i] = false;
+                                        break;
+                                    }
+
+                                }
+                            } catch (Exception e) {
+                                break;
+                            }
+
+                        }
+                    }
+                }
+
         }
         tableModel.fireTableDataChanged();
-        
+
     }
 
     /**

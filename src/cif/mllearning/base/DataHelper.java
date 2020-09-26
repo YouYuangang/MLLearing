@@ -21,9 +21,11 @@ public class DataHelper {
     private RawCurveDataHelper curveHelper;
     private RawTableDataHelper tableHelper;
     private RawTextDataHelper textHelper;
-    private int[] realXVariableColumnIndices;
-    private int realYVariableColumnIndex;
-    private int[] realVariableColumnIndices;
+    private int[] oilXVariableColumnIndices;
+    private int oilYVariableColumnIndex;
+    private int[] lithVariableColumnIndices;
+    private int lithYVariableColumnIndex;
+    
     private int[] realRowIndices = null;
 
     public DataHelper(MLDataModel mlModel) {
@@ -61,21 +63,29 @@ public class DataHelper {
     }
 
     private void formColumnIndices() {
-        int xCount = 0, yCount = 0;
+        int xCountOil = 0;
+        int xCountLith = 0;
+        int yOilIndex = -1;
+        int yLithIndex = -1;
         Variable[] variables = mlModel.getVariables();
-        for (Variable variable : variables) {
-            if (variable.flag == MLDataModel.X_VARIABLE) {
-                xCount++;
-            } else if (variable.flag == MLDataModel.Y_VARIABLE) {
-                yCount++;
+        for (int i = 0;i<variables.length;i++) {
+            Variable variable = variables[i];
+            if (variable.flag == MLDataModel.X_VARIABLE_OIL) {
+                xCountOil++;
+            } else if (variable.flag == MLDataModel.Y_VARIABLE_OIL) {
+                yOilIndex = i;
+            }else if(variable.flag == MLDataModel.X_VARIABLE_LITH){
+                xCountLith++;
+            }else if(variable.flag == MLDataModel.Y_VARIABLE_LITH){
+                yLithIndex = i;
             }
         }
-        realXVariableColumnIndices = new int[xCount];
-        realVariableColumnIndices = new int[xCount + yCount];
-        realYVariableColumnIndex = -1;
+        oilXVariableColumnIndices = new int[xCountOil];
+        lithVariableColumnIndices = new int[xCountLith];
+        
         int xVarIndex = 0, varIndex = 0;
         for (int i = 0; i < variables.length; i++) {
-            if (variables[i].flag == MLDataModel.X_VARIABLE) {
+            if (variables[i].flag == MLDataModel.X_VARIABLE_OIL) {
                 realXVariableColumnIndices[xVarIndex++] = i;
                 realVariableColumnIndices[varIndex++] = i;
             } else if (variables[i].flag == MLDataModel.Y_VARIABLE) {

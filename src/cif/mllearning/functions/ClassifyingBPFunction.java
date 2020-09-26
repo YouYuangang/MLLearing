@@ -38,16 +38,20 @@ public class ClassifyingBPFunction extends Function {
     private double maxError = 0.005;
     private int maxIteration = 1000;
     
-    private int[] desiredY;
+    private int[] desiredYOil = null;
+    private int[] desiredYLith = null;
     
-    
+    public int XcountOil = 0;
+    public int YcountOil = 0;
+    public int XcountLith = 0;
+    public int YcountLith = 0;
     
     @Override
     public boolean setParameters(Frame parentWindow) {
         BP_ANNDialog dialog = new BP_ANNDialog(parentWindow, true);
         dialog.setLocationRelativeTo(parentWindow);
         /////////////////////////
-        int xCount = dataHelper.getRealXVariableCount();
+        int xCount = dataHelper.;
         int rowCount = dataHelper.getRealRowCount();
         desiredY = new int[rowCount];
         dataHelper.getLabeledY(desiredY);
@@ -80,7 +84,7 @@ public class ClassifyingBPFunction extends Function {
         if (flag == Function.GENERATE_MODEL) {
             printDataMessage();
             DataSet dataSet = formLearningDataSet();
-            MultiLayerPerceptron neuralNet = new MultiLayerPerceptron(dataSet.getInputSize(), hiddenNeuronCount,8, dataSet.getOutputSize());
+            MultiLayerPerceptron neuralNet = new MultiLayerPerceptron(dataSet.getInputSize(), hiddenNeuronCount,hiddenNeuronCount-2, dataSet.getOutputSize());
             MomentumBackpropagation learningRule = (MomentumBackpropagation) neuralNet.getLearningRule();
             learningRule.setMaxIterations(maxIteration);
             learningRule.addListener(new LearningEventListener() {
@@ -101,7 +105,7 @@ public class ClassifyingBPFunction extends Function {
             neuralNet.save(filePath);
             
            
-            FunTools.saveModelAuxFile(false, filePath, mlModelHelper, normalization,this);
+            FunTools.saveModelAuxFile(true, filePath, mlModelHelper, normalization,this);
             
             
             
@@ -159,6 +163,7 @@ public class ClassifyingBPFunction extends Function {
     }
 
     private DataSet formLearningDataSet() {
+        
         int xCount = dataHelper.getRealXVariableCount();
         int rowCount = dataHelper.getRealRowCount();
         normalization = new Normalization(xCount, -1);

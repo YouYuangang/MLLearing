@@ -40,7 +40,8 @@ public class RawTextDataHelper {
     }
 
     public String getTextData( int rowIndex, int columnIndex) {
-          return (String) mlModel.dataGridModel.getValueAt(rowIndex+2, columnIndices[columnIndex]);
+        int indexInText = columnIndices[columnIndex];
+          return (String) mlModel.dataGridModel.getValueAt(rowIndex+2, indexInText);
     }
 
     private int getColumnIndex( String columnName) {

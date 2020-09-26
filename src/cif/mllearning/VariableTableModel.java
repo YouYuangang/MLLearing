@@ -33,7 +33,7 @@ public class VariableTableModel extends AbstractTableModel {
         if (mode != MLGlobal.PREDICTING_MODE) {
             for (VariableEx variableEx : usedVariables) {
                 if (variableEx.variable.flag > 0) {
-                    variableEx.variable.flag = MLDataModel.X_VARIABLE;
+                    variableEx.variable.flag = MLDataModel.X_VARIABLE_OIL;
                 }
             }
             return;
@@ -43,7 +43,6 @@ public class VariableTableModel extends AbstractTableModel {
                 usedVariables.get(usedVariables.size()-1).variable.flag = MLDataModel.Y_VARIABLE;
             }
         }*/
-
     }
 
     @Override
@@ -71,20 +70,22 @@ public class VariableTableModel extends AbstractTableModel {
         Variable[] variables = mlModel.getVariables();
         for (int i = 0; i < variables.length; i++) {
             if (variables[i].flag > 0) {
-                if (variables[i].flag == MLDataModel.Y_VARIABLE) {
-                    yIndex = i;
-                } else {
+                if (variables[i].flag == MLDataModel.X_VARIABLE_OIL||variables[i].flag == MLDataModel.X_VARIABLE_LITH) {
                     usedVariables.add(new VariableEx(variables[i], i));
                 }
             }
         }
-        if (yIndex >= 0) {
-            usedVariables.add(new VariableEx(variables[yIndex], yIndex));
-        }
         
+        for (int i = 0; i < variables.length; i++) {
+            if (variables[i].flag > 0) {
+                if (variables[i].flag == MLDataModel.Y_VARIABLE_OIL||variables[i].flag == MLDataModel.Y_VARIABLE_LITH) {
+                    usedVariables.add(new VariableEx(variables[i], i));
+                }
+            }
+        }  
     }
 
-    public void setY(int rowIndex) {
+    /*public void setY(int rowIndex) {
         for (int i = 0; i < usedVariables.size(); i++) {
             Variable variable = usedVariables.get(i).variable;
             if (i == rowIndex) {
@@ -94,6 +95,10 @@ public class VariableTableModel extends AbstractTableModel {
             }
         }
         refreshViewData();
+    }*/
+    
+    public void setLabelForXandY(int rowIndex,int whichKind){
+        usedVariables.get(rowIndex).variable.flag = whichKind;
     }
 
     @Override
@@ -102,14 +107,23 @@ public class VariableTableModel extends AbstractTableModel {
         if (columnIndex == 0) {
             switch (learningMode) {
                 case MLGlobal.PREDICTING_MODE:
-                    if(variable.flag == MLDataModel.X_VARIABLE){
+                    if(variable.flag == MLDataModel.X_VARIABLE_OIL){
                         return "X"+(rowIndex+1);
-                    }else{
+                    }else if(variable.flag == MLDataModel.Y_VARIABLE_OIL){
                         return "Y";
+                    }
+                case MLGlobal.CLASSIFYING_MODE:
+                    if(variable.flag == MLDataModel.X_VARIABLE_OIL){
+                        return "X_OIL"+(rowIndex+1);
+                    }else if(variable.flag == MLDataModel.Y_VARIABLE_OIL){
+                        return "Y_OIL";
+                    }else if(variable.flag == MLDataModel.X_VARIABLE_LITH){
+                        return "X_LITH";
+                    }else{
+                        return "Y_LITH";
                     }
                 default:
                     return "X"+(rowIndex+1);
-                    
             }
         } else {
             return variable.name;

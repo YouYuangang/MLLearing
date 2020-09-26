@@ -127,7 +127,15 @@ public class ChooseLabelJDialog extends javax.swing.JDialog {
         // TODO add your handling code here:
         doClose(CANCEL);
     }//GEN-LAST:event_cancelBtnActionPerformed
-
+    public void setTipText(String tip){
+        jLabel1.setText(tip);
+    }
+    public void clearCombox(){
+        labelComboBox.removeAll();
+    }
+    public void addTolabelComboBox(String text){
+        labelComboBox.addItem(text);
+    }
     /**
      * @param args the command line arguments
      */
