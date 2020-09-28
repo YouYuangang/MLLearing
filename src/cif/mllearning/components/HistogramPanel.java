@@ -10,7 +10,6 @@ import cif.mllearning.base.CreateHistDataset;
 import cif.mllearning.base.DataHelper;
 import cif.mllearning.base.MLDataModel;
 import cif.mllearning.base.Variable;
-import cif.mllearning.inputdata.InputDataDialog;
 import cif.mllearning.utils.ExportImage;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -48,7 +47,6 @@ public class HistogramPanel extends PagePanel {
     private double endDepth;
 
     private int variableCount;
-    private int rowCount;
 
     private double[] buffer;
 
@@ -96,8 +94,8 @@ public class HistogramPanel extends PagePanel {
         this.variables = mlModel.getVariables();
 
         this.dataHelper = new DataHelper(mlModel);
-        this.variableCount = dataHelper.getRealVariableCount();
-        this.rowCount = dataHelper.getRealRowCount();
+        this.variableCount = dataHelper.getUsedVariableCount();
+        //this.rowCount = dataHelper.getRealRowCount();
 
         this.tableModel.setMLModel(mlModel);
 
@@ -161,9 +159,17 @@ public class HistogramPanel extends PagePanel {
         int yIndex = 0;//记录y在mlModel.variables中的索引;
         boolean meetY = false;
         int validIndex = 0;
-        for (int i = 0, moveX = 0; i < variables.length; i++) {
+        
+        for(int i = 0;i<dataHelper.getUsedVariableCount();i++){
+            int len = dataHelper.readUsedData(i, this.buffer);
+            double[] temp = Arrays.copyOf(this.buffer, len);
+            histogramDataset = CreateHistDataset.getHistDataset(temp, dataHelper.getUsedVariableName(i), binCount);
+            chartPanels[i].setChart(CreateHistChart.getChart(histogramDataset, variables[i].name));
+        }
+        
+        /*for (int i = 0, moveX = 0; i < variables.length; i++) {
             if (variables[i].flag == MLDataModel.X_VARIABLE) {
-                int len = dataHelper.readValidData(validIndex, this.buffer);
+                int len = dataHelper.readUsedData(validIndex, this.buffer);
                 double[] temp = Arrays.copyOf(this.buffer, len);
                 histogramDataset = CreateHistDataset.getHistDataset(temp, variables[i].name, binCount);
                 chartPanels[moveX].setChart(CreateHistChart.getChart(histogramDataset, variables[i].name));
@@ -185,7 +191,7 @@ public class HistogramPanel extends PagePanel {
             double[] temp = Arrays.copyOf(this.buffer, len);
             histogramDataset = CreateHistDataset.getHistDataset(temp, yVariable.name, binCount);
             chartPanels[variableCount - 1].setChart(CreateHistChart.getChart(histogramDataset, yVariable.name));
-        }
+        }*/
 
         changeHistForegroundColor(fColor);
         changeHistBackgroundColor(bColor);

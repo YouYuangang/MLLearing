@@ -121,7 +121,7 @@ public class DensityBasedClusterFunction extends Function {
     
     
     private Instances formDataSet() {
-        int varCount = dataHelper.getRealVariableCount();
+        int varCount = dataHelper.getOilXVariableCount();
         int rowCount = dataHelper.getRealRowCount();
         ArrayList<Attribute> atts = new ArrayList<>();
         for (int i = 0; i < varCount; i++) {
@@ -131,7 +131,7 @@ public class DensityBasedClusterFunction extends Function {
 
         for (int row = 0; row < rowCount; row++) {
             double[] buffer = new double[varCount];
-            dataHelper.readRealRowData(row, buffer);
+            dataHelper.readRealRowOilXData(row, buffer);
             dataSet.add(new DenseInstance(1.0, buffer));
         }
         return dataSet;

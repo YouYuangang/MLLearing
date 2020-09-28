@@ -93,13 +93,13 @@ public class FunTools {
             outputWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(modelFilePath + "Aux"), "UTF-8"));
             StringBuilder sb = new StringBuilder();
             if (isYExisted) {
-                String[] names = mlModelHelper.getRealXVariableNames();
+                String[] names = mlModelHelper.getOilXVariableNames();
                 sb.append("x,").append(names.length).append("\n");
                 for (int i = 0; i < names.length; i++) {
                     sb.append(names[i]).append(",").append(normalization.getXVarLower(i)).append(",").append(normalization.getXVarUpper(i)).append("\n");
                 }
                 sb.append("y,1\n");
-                sb.append(mlModelHelper.getRealYVariableName()).append(",").append(normalization.getYVarLower()).append(",").append(normalization.getYVarUpper()).append("\n");
+                sb.append(mlModelHelper.getOilYVariableName()).append(",").append(normalization.getYVarLower()).append(",").append(normalization.getYVarUpper()).append("\n");
             } else {
                 String[] names = mlModelHelper.getRealVariableNames();
                 sb.append("x,").append(names.length).append("\n");
@@ -184,7 +184,7 @@ public class FunTools {
         Variable[] variables = mlModel.getVariables();
         HashMap<String,Integer> XsIntegerMap = new HashMap<>();
         for(int i =0;i<variables.length;i++){
-            if(variables[i].flag == MLDataModel.X_VARIABLE){
+            if(variables[i].flag == MLDataModel.X_VARIABLE_OIL){
               XsIntegerMap.put(variables[i].name,i);  
             }
             
@@ -217,7 +217,7 @@ public class FunTools {
             
             Variable[] variableNewOrder = new Variable[mlModel.getVariables().length];
             for(int i =0;i<xCount;i++){
-                variables[XsIntegerMap.get(modelOrderOfXs[i])].flag = MLDataModel.X_VARIABLE;
+                variables[XsIntegerMap.get(modelOrderOfXs[i])].flag = MLDataModel.X_VARIABLE_OIL;
                 variableNewOrder[i] = variables[XsIntegerMap.get(modelOrderOfXs[i])];
              }
             int startIndex = xCount;

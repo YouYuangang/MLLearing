@@ -28,7 +28,12 @@ public class CreateScatterPlotPanel {
 //        
 //        return newChartPanel;
 //    }
-//    
+//  
+    /**
+     * 以指定的输入集创建图面板
+     * @param paramXYDataset
+     * @return 
+     */
     public static ChartPanel createChartPanel(XYDataset paramXYDataset) {
 
         JFreeChart localJFreeChart = createChart(paramXYDataset);
@@ -42,6 +47,11 @@ public class CreateScatterPlotPanel {
         return localChartPanel;
     }
 
+    /**
+     * 以更大的尺寸重建输入的面板
+     * @param chartPanel
+     * @return 
+     */
     public static ChartPanel createChartPanel(ChartPanel chartPanel) {
         XYPlot plot = chartPanel.getChart().getXYPlot();
         String xLabel = plot.getDomainAxis(0).getLabel();
@@ -61,6 +71,13 @@ public class CreateScatterPlotPanel {
         return localChartPanel;
     }
 
+    /**
+     * 以不同的颜色重建输入的图面板
+     * @param chartPanel
+     * @param fColor
+     * @param bColor
+     * @return 
+     */
     public static ChartPanel createChartPanel(ChartPanel chartPanel, Color fColor, Color bColor) {
         XYPlot plot = chartPanel.getChart().getXYPlot();
         String xLabel = plot.getDomainAxis(0).getLabel();
@@ -84,7 +101,12 @@ public class CreateScatterPlotPanel {
         //localChartPanel.addChartMouseListener(new MyChartMouseListener(localChartPanel));
         return localChartPanel;
     }
-
+    /**
+     * 以指定的尺寸创建面板
+     * @param paramXYDataset
+     * @param dim
+     * @return 
+     */
     public static ChartPanel createChartPanel(XYDataset paramXYDataset, Dimension dim) {
 
         ChartPanel chartPanel = createChartPanel(paramXYDataset);
@@ -92,7 +114,8 @@ public class CreateScatterPlotPanel {
         return chartPanel;
 
     }
-
+    
+    
     private static JFreeChart createChart(XYDataset paramXYDataset, String curve1, String curve2) {
         JFreeChart localJFreeChart = ChartFactory.createScatterPlot("", curve1, curve2, paramXYDataset, PlotOrientation.VERTICAL, true, true, false);
         configChart(localJFreeChart);
@@ -119,9 +142,9 @@ public class CreateScatterPlotPanel {
         localNumberAxis.setAutoRangeIncludesZero(false);
     }
 
-    public static ChartPanel createChartPanel(int realIndex1, int realIndex2, int index1, int index2, CreateScatterPlotData plotData) {
+    public static ChartPanel createChartPanel(int index1, int index2, CreateScatterPlotData plotData) {
 
-        JFreeChart localJFreeChart = getChart(realIndex1, realIndex2, index1, index2, plotData);
+        JFreeChart localJFreeChart = getChart(index1, index2, plotData);
 
         //localJFreeChart.getLegend().visible = false;
         ChartPanel localChartPanel = new ChartPanel(localJFreeChart);
@@ -134,16 +157,16 @@ public class CreateScatterPlotPanel {
 
     //获取第index1行，第index2列的数据
     //
-    public static JFreeChart getChart(int realIndex1, int realIndex2, int index1, int index2, CreateScatterPlotData plotData) {
+    public static JFreeChart getChart(int index1, int index2, CreateScatterPlotData plotData) {
 
         MLDataModel mlModel = plotData.getMLModel();
         XYDataset dataset;
         
 
         if (mlModel.learningMode == MLGlobal.CLUSTERING_MODE && mlModel.clusterResult != null) {
-            dataset = plotData.createClusterDataset(realIndex1, realIndex2);
+            dataset = plotData.createClusterDataset(index1, index2);
         } else {
-            dataset = plotData.createDataset(realIndex1, realIndex2);
+            dataset = plotData.createDataset(index1, index2);
         }
 
 //        JFreeChart localJFreeChart = createChart(dataset, plotData.getVariableName(index1), plotData.getVariableName(index2));       

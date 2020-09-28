@@ -35,7 +35,7 @@ public class PredictingBPFunction extends Function {
         BP_ANNDialog dialog = new BP_ANNDialog(parentWindow, true);
         dialog.setLocationRelativeTo(parentWindow);
         Object[] paras = mlModel.getParameters(this.getClass().getSimpleName());
-        hiddenNeuronCount = (int) (Math.sqrt(dataHelper.getRealXVariableCount() + 1) + 5);
+        hiddenNeuronCount = (int) (Math.sqrt(dataHelper.getOilXVariableCount() + 1) + 5);
         dialog.setHiddenNeuronCount(paras == null ? hiddenNeuronCount : (int) paras[0]);
         dialog.setLearningRate(paras == null ? learningRate : (double) paras[1]);
         dialog.setMaxError(paras == null ? maxError : (double) paras[2]);
@@ -86,8 +86,8 @@ public class PredictingBPFunction extends Function {
 
     private void printDataMessage() {
         printHighlight("Variables:\n");
-        String[] xVarNames = mlModelHelper.getRealXVariableNames();
-        String yVarName = mlModelHelper.getRealYVariableName();
+        String[] xVarNames = mlModelHelper.getOilXVariableNames();
+        String yVarName = mlModelHelper.getOilYVariableName();
         println("X: " + mlModelHelper.formString(xVarNames, "\t"));
         println("Y: " + yVarName);
         println("Number of Points: " + dataHelper.getRealRowCount());
@@ -105,7 +105,7 @@ public class PredictingBPFunction extends Function {
     }
 
     private DataSet formDataSet() {
-        int xCount = dataHelper.getRealXVariableCount();
+        int xCount = dataHelper.getOilXVariableCount();
         normalization = new Normalization(xCount, -1);
         DataSet dataSet = new DataSet(xCount, 1);
         println("dataSet OutPutSize;"+dataSet.getOutputSize());
@@ -118,14 +118,14 @@ public class PredictingBPFunction extends Function {
         }
         double[] buffer = new double[rowCount];
         for (int col = 0; col < xCount; col++) {
-            dataHelper.readRealXData(col, buffer);
-            String variableName = dataHelper.getRealXVariableName(col);
+            dataHelper.readRealRowOilXData(col, buffer);
+            String variableName = dataHelper.getOilXVariableName(col);
             normalization.normalizeXVar(variableName,col, buffer, MathBase.minimum(buffer), MathBase.maximum(buffer));
             for (int row = 0; row < rowCount; row++) {
                 dataSet.get(row).getInput()[col] = buffer[row];
             }
         }
-        dataHelper.readRealYData(buffer);
+        dataHelper.readOilYData(dataHelper.oilYVariableColumnIndex,buffer);
         desiredY = MathBase.copy(buffer);
         normalization.normalizeYVar(buffer, MathBase.minimum(buffer), MathBase.maximum(buffer));
         for (int row = 0; row < rowCount; row++) {

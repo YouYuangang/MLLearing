@@ -145,11 +145,11 @@ public class WatershedClusterFunction extends Function {
     }
 
     private double[][] formDataSet() {
-        int varCount = dataHelper.getRealVariableCount();
+        int varCount = dataHelper.getOilXVariableCount();
         int rowCount = dataHelper.getRealRowCount();
         double[][] dataSet = new double[rowCount][varCount];
         for (int row = 0; row < rowCount; row++) {
-            dataHelper.readRealRowData(row, dataSet[row]);
+            dataHelper.readRealRowOilXData(row, dataSet[row]);
         }
         return dataSet;
     }

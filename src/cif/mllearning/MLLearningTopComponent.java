@@ -500,10 +500,12 @@ public final class MLLearningTopComponent extends TopComponent {
         }
         ChooseLabelJDialog chooseXorYforVariable = new ChooseLabelJDialog(WindowManager.getDefault().getMainWindow(),true);
         chooseXorYforVariable.setTipText("将变量标为");
+        chooseXorYforVariable.clearCombox();
         chooseXorYforVariable.addTolabelComboBox("预测含油性的属性");
         chooseXorYforVariable.addTolabelComboBox("含油性");
         chooseXorYforVariable.addTolabelComboBox("预测岩性的属性");
         chooseXorYforVariable.addTolabelComboBox("岩性");
+        chooseXorYforVariable.addTolabelComboBox("共用属性");
         chooseXorYforVariable.setVisible(true);
         int indexOfSelected = chooseXorYforVariable.getChooseBoxIndex();
         int[] selectedRows = variableTable.getSelectedRows();
@@ -527,7 +529,7 @@ public final class MLLearningTopComponent extends TopComponent {
                     variableTableModel.setLabelForXandY(i, MLDataModel.X_VARIABLE_LITH);
                     
                 }
-            }else{
+            }else if(indexOfSelected == 3){
                 if(selectedRows.length > 1){
                     JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), "不能选多个变量为Y");
                     return;
@@ -536,13 +538,18 @@ public final class MLLearningTopComponent extends TopComponent {
                     variableTableModel.setLabelForXandY(i, MLDataModel.Y_VARIABLE_LITH);
                     
                 }  
+            }else if(indexOfSelected == 4){
+                for(int i : selectedRows){
+                    variableTableModel.setLabelForXandY(i, MLDataModel.X_VARIABLE_ALL);
+                    
+                }
             }
         }
         
         
         variableTableModel.fireTableDataChanged();
-        int selectedIndex = variableTableModel.getRowCount() - 1;
-        variableTable.setRowSelectionInterval(selectedIndex, selectedIndex);
+        //int selectedIndex = variableTableModel.getRowCount() - 1;
+        //variableTable.setRowSelectionInterval(selectedIndex, selectedIndex);
         
         
     }//GEN-LAST:event_yButtonActionPerformed

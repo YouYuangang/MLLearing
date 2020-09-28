@@ -178,12 +178,9 @@ public class PlotPanel extends PagePanel {
         }*/
         
         for (int i = 0; i < variables.length; i++) {
-            if (variables[i].flag == MLDataModel.X_VARIABLE) {
+            if (variables[i].flag != MLDataModel.UNSEL_VARIABLE) {
                 addTrackAndCurve(variables[i], dataSourceIndex);
-            } else if (variables[i].flag == MLDataModel.Y_VARIABLE) {
-                yVariable = variables[i];
-                addTrackAndCurve(yVariable, dataSourceIndex);
-            }
+            } 
         }
 
         //这里添加曲线的时候 可以通过一个曲线模板来做这个事儿，先加入一个模板 然后再添加后面两个类别曲线

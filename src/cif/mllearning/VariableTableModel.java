@@ -18,7 +18,7 @@ import javax.swing.table.AbstractTableModel;
 public class VariableTableModel extends AbstractTableModel {
 
     private static final Class[] TYPES = new Class[]{java.lang.String.class, java.lang.String.class};
-    private static final String[] PREDICTING_CLASSIFICATION_COLUMN_NAMES = {"变量", "名称"};
+    private static final String[] PREDICTING_CLASSIFICATION_COLUMN_NAMES = {"变量用途", "名称"};
     private static final String[] CLUSTERING_COLUMN_NAMES = {"序号", "名称"};
     private int learningMode;
     private final ArrayList<VariableEx> usedVariables = new ArrayList<>();
@@ -108,19 +108,21 @@ public class VariableTableModel extends AbstractTableModel {
             switch (learningMode) {
                 case MLGlobal.PREDICTING_MODE:
                     if(variable.flag == MLDataModel.X_VARIABLE_OIL){
-                        return "X"+(rowIndex+1);
+                        return "X";
                     }else if(variable.flag == MLDataModel.Y_VARIABLE_OIL){
                         return "Y";
                     }
                 case MLGlobal.CLASSIFYING_MODE:
                     if(variable.flag == MLDataModel.X_VARIABLE_OIL){
-                        return "X_OIL"+(rowIndex+1);
+                        return "X_OIL";
                     }else if(variable.flag == MLDataModel.Y_VARIABLE_OIL){
                         return "Y_OIL";
                     }else if(variable.flag == MLDataModel.X_VARIABLE_LITH){
                         return "X_LITH";
-                    }else{
+                    }else if(variable.flag == MLDataModel.Y_VARIABLE_LITH){
                         return "Y_LITH";
+                    }else if(variable.flag == MLDataModel.X_VARIABLE_ALL){
+                        return "X_ALL";
                     }
                 default:
                     return "X"+(rowIndex+1);

@@ -126,7 +126,7 @@ public class ClassifyingSVMFunction extends Function {
     private svm_problem buildSVMProblem() {
         svm_problem problem = new svm_problem();
         int rowCount = dataHelper.getRealRowCount();
-        int xVarCount = dataHelper.getRealXVariableCount();
+        int xVarCount = dataHelper.getOilXVariableCount();
         normalization = new Normalization(xVarCount, -1);
         problem.l = rowCount;
         problem.x = new svm_node[rowCount][xVarCount];
@@ -134,8 +134,8 @@ public class ClassifyingSVMFunction extends Function {
         double[] buffer = new double[rowCount];
         printHighlight("Data Statistics:\n");
         for (int col = 0; col < xVarCount; col++) {
-            dataHelper.readRealXData(col, buffer);
-            String variableName = dataHelper.getRealXVariableName(col);
+            dataHelper.readOilXData(col, buffer);
+            String variableName = dataHelper.getOilXVariableName(col);
             normalization.normalizeXVar(variableName,col, buffer, MathBase.minimum(buffer), MathBase.maximum(buffer));
             for (int row = 0; row < rowCount; row++) {
                 problem.x[row][col] = new svm_node();
@@ -144,7 +144,10 @@ public class ClassifyingSVMFunction extends Function {
             }
         }
         desiredY = new String[rowCount];
-        dataHelper.readRealYString(desiredY);
+        for(int i = 0;i<desiredY.length;i++){
+            desiredY[i] = dataHelper.readRealOilYString(i);
+        }
+        
         itemCodeTable = FunTools.createItemCodeTable(desiredY);
         for (int row = 0; row < rowCount; row++) {
             problem.y[row] = itemCodeTable.get(desiredY[row]);
@@ -154,8 +157,8 @@ public class ClassifyingSVMFunction extends Function {
 
     private void printDataMessage() {
         printHighlight("Variables:\n");
-        String[] xVarNames = mlModelHelper.getRealXVariableNames();
-        String yVarName = mlModelHelper.getRealYVariableName();
+        String[] xVarNames = mlModelHelper.getOilXVariableNames();
+        String yVarName = mlModelHelper.getOilYVariableName();
         println("X: " + mlModelHelper.formString(xVarNames, "\t"));
         println("Y: " + yVarName);
         println("Number of Points: " + dataHelper.getRealRowCount());

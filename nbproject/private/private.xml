@@ -3,18 +3,27 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/CIFLogClusterModule/MLLearning/src/cif/mllearning/functions/FunTools.java</file>
-            <file>file:/E:/CIFLogClusterModule/MLLearning/src/cif/mllearning/base/DataHelper.java</file>
-            <file>file:/E:/CIFLogClusterModule/MLLearning/src/cif/mllearning/inputdata/InputDataDialog.java</file>
-            <file>file:/E:/CIFLogClusterModule/MLLearning/src/cif/mllearning/functions/ClassifyingBPFunction.java</file>
-            <file>file:/E:/CIFLogClusterModule/MLLearning/src/cif/mllearning/base/MLDataModel.java</file>
-            <file>file:/E:/CIFLogClusterModule/MLLearning/src/cif/mllearning/components/DataPanelTableModel.java</file>
-            <file>file:/E:/CIFLogClusterModule/MLLearning/src/cif/mllearning/components/DataPanel.java</file>
-            <file>file:/E:/CIFLogClusterModule/MLLearning/src/cif/mllearning/VariableTableModel.java</file>
-            <file>file:/E:/CIFLogClusterModule/MLLearning/src/cif/mllearning/MLLearningTopComponent.java</file>
-            <file>file:/E:/CIFLogClusterModule/MLLearning/src/cif/mllearning/inputdata/ChooseLabelJDialog.java</file>
-            <file>file:/E:/CIFLogClusterModule/MLLearning/src/cif/mllearning/base/RawTextDataHelper.java</file>
-            <file>file:/E:/CIFLogClusterModule/MLLearning/src/cif/mllearning/inputdata/ChooseClassLabelJDialog.java</file>
+            <file>file:/E:/postgraduate1/CIFLog%20Publish/MLLearning/src/cif/mllearning/components/PlotPanel.java</file>
+            <file>file:/E:/postgraduate1/CIFLog%20Publish/MLLearning/src/cif/mllearning/components/DataPanelTableModel.java</file>
+            <file>file:/E:/postgraduate1/CIFLog%20Publish/MLLearning/src/cif/mllearning/functions/FunTools.java</file>
+            <file>file:/E:/postgraduate1/CIFLog%20Publish/MLLearning/src/cif/mllearning/functions/ClassifyingSVMFunction.java</file>
+            <file>file:/E:/postgraduate1/CIFLog%20Publish/MLLearning/src/cif/mllearning/components/CrossPlotPanel.java</file>
+            <file>file:/E:/postgraduate1/CIFLog%20Publish/MLLearning/src/cif/mllearning/functions/PredictingBPFunction.java</file>
+            <file>file:/E:/postgraduate1/CIFLog%20Publish/MLLearning/src/cif/mllearning/functions/SOMClusterFunction.java</file>
+            <file>file:/E:/postgraduate1/CIFLog%20Publish/MLLearning/src/cif/mllearning/base/DataHelper.java</file>
+            <file>file:/E:/postgraduate1/CIFLog%20Publish/MLLearning/src/cif/mllearning/functions/RegressFunction.java</file>
+            <file>file:/E:/postgraduate1/CIFLog%20Publish/MLLearning/src/cif/mllearning/functions/DensityBasedClusterFunction.java</file>
+            <file>file:/E:/postgraduate1/CIFLog%20Publish/MLLearning/src/cif/mllearning/VariableTableModel.java</file>
+            <file>file:/E:/postgraduate1/CIFLog%20Publish/MLLearning/src/cif/mllearning/MLLearningTopComponent.java</file>
+            <file>file:/E:/postgraduate1/CIFLog%20Publish/MLLearning/src/cif/mllearning/inputdata/InputDataDialog.java</file>
+            <file>file:/E:/postgraduate1/CIFLog%20Publish/MLLearning/src/cif/mllearning/functions/ClassifyingBPFunction.java</file>
+            <file>file:/E:/postgraduate1/CIFLog%20Publish/MLLearning/src/cif/mllearning/components/DataPanel.java</file>
+            <file>file:/E:/postgraduate1/CIFLog%20Publish/MLLearning/src/cif/mllearning/base/CreateScatterPlotData.java</file>
+            <file>file:/E:/postgraduate1/CIFLog%20Publish/MLLearning/src/cif/mllearning/functions/PredictingSVMFunction.java</file>
+            <file>file:/E:/postgraduate1/CIFLog%20Publish/MLLearning/src/cif/mllearning/base/RawCurveDataHelper.java</file>
+            <file>file:/E:/postgraduate1/CIFLog%20Publish/MLLearning/src/cif/mllearning/SelectVariableDialog.java</file>
+            <file>file:/E:/postgraduate1/CIFLog%20Publish/MLLearning/src/cif/mllearning/MLGlobal.java</file>
+            <file>file:/E:/postgraduate1/CIFLog%20Publish/MLLearning/src/cif/mllearning/components/HistogramPanel.java</file>
         </group>
     </open-files>
 </project-private>

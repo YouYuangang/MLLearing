@@ -131,7 +131,7 @@ public class ChooseLabelJDialog extends javax.swing.JDialog {
         jLabel1.setText(tip);
     }
     public void clearCombox(){
-        labelComboBox.removeAll();
+        labelComboBox.removeAllItems();
     }
     public void addTolabelComboBox(String text){
         labelComboBox.addItem(text);

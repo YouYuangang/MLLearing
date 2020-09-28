@@ -25,7 +25,7 @@ public class SOMClusterFunction extends Function {
 
     @Override
     public boolean setParameters(Frame parentWindow) {
-        int varCount = dataHelper.getRealVariableCount();
+        int varCount = dataHelper.getOilXVariableCount();
         if (varCount < 2) {
             JOptionPane.showMessageDialog(parentWindow, "数据列数最小为2列");
             return false;
@@ -79,12 +79,12 @@ public class SOMClusterFunction extends Function {
     }
 
     private double[][] formXData() {
-        int varCount = dataHelper.getRealVariableCount();
+        int varCount = dataHelper.getOilXVariableCount();
         int rowCount = dataHelper.getRealRowCount();
         double[][] xData = new double[rowCount][varCount];
         double[] buffer = new double[rowCount];
         for (int var = 0; var < varCount; var++) {
-            dataHelper.readRealData(var, buffer);
+            dataHelper.readOilXData(var, buffer);
             for (int row = 0; row < rowCount; row++) {
                 xData[row][var] = buffer[row];
             }

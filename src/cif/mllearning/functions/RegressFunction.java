@@ -27,8 +27,8 @@ public class RegressFunction extends Function {
         double[] yData = formYData();
         proceedStatistics(xData, yData);
         RegressionUtil regUtil = new RegressionUtil();
-        String[] xVarNames = mlModelHelper.getRealXVariableNames();
-        String yVarName = mlModelHelper.getRealYVariableName();
+        String[] xVarNames = mlModelHelper.getOilXVariableNames();
+        String yVarName = mlModelHelper.getOilYVariableName();
         regUtil.setVariableNames(xVarNames, yVarName);
         regUtil.todo(xData, yData, regressXD, formulaIndex, yConversion);
         printHighlight(regUtil.getExpression(Regression.L_JAVA) + "\n");
@@ -41,11 +41,11 @@ public class RegressFunction extends Function {
     }
 
     private double[][] formXData() {
-        int xVarCount = dataHelper.getRealXVariableCount();
+        int xVarCount = dataHelper.getOilXVariableCount();
         int rowCount = dataHelper.getRealRowCount();
         double[][] xData = new double[xVarCount][rowCount];
         for (int xVar = 0; xVar < xVarCount; xVar++) {
-            dataHelper.readRealXData(xVar, xData[xVar]);
+            dataHelper.readOilXData(xVar, xData[xVar]);
         }
         return xData;
     }
@@ -53,13 +53,13 @@ public class RegressFunction extends Function {
     private double[] formYData() {
         int rowCount = dataHelper.getRealRowCount();
         double[] yData = new double[rowCount];
-        dataHelper.readRealYData(yData);
+        dataHelper.readOilYData(dataHelper.oilYVariableColumnIndex,yData);
         return yData;
     }
 
     @Override
     public boolean setParameters(Frame parentWindow) {
-        int xVarCount = mlModelHelper.getRealXVariableCount();
+        int xVarCount = mlModelHelper.getOilXVariableCount();
         switch (xVarCount) {
             case 1:
                 regressXD = RegressionUtil.REG_2D;
@@ -91,8 +91,8 @@ public class RegressFunction extends Function {
 
     protected void proceedStatistics(double[][] xData, double[] yData) {
         printHighlight("Variables:\n");
-        String[] xVarNames = mlModelHelper.getRealXVariableNames();
-        String yVarName = mlModelHelper.getRealYVariableName();
+        String[] xVarNames = mlModelHelper.getOilXVariableNames();
+        String yVarName = mlModelHelper.getOilYVariableName();
         println("X: " + mlModelHelper.formString(xVarNames, "\t"));
         println("Y: " + yVarName);
         println("Number of Points: " + dataHelper.getRealRowCount());

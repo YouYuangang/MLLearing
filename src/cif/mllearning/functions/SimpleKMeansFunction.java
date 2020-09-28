@@ -166,7 +166,7 @@ public class SimpleKMeansFunction extends Function {
     }
 
     private Instances formDataSet() {
-        int varCount = dataHelper.getRealVariableCount();
+        int varCount = dataHelper.getOilXVariableCount();
         int rowCount = dataHelper.getRealRowCount();
         //int rowCount = mlModel.dataRowSelectedFlags.length;
         ArrayList<Attribute> atts = new ArrayList<>();
@@ -177,7 +177,7 @@ public class SimpleKMeansFunction extends Function {
 
         for (int row = 0; row < rowCount; row++) {
             double[] buffer = new double[varCount];
-            dataHelper.readRealRowData(row, buffer);
+            dataHelper.readRealRowOilXData(row, buffer);
             dataSet.add(new DenseInstance(1.0, buffer));
         }
         return dataSet;

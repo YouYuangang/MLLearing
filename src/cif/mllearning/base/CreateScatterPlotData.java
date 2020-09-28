@@ -34,11 +34,12 @@ public class CreateScatterPlotData {
     }
 
     public String getVariableNameAndUnit(int index) {
-        String unitStr = dataHelper.getCurveUnit(index);
+        int indexInImported = dataHelper.getUsedVIndexInImported(index);
+        String unitStr = dataHelper.getCurveUnit(indexInImported);
         if (unitStr.equals("")) {
-            return this.variables[index].name;
+            return this.variables[indexInImported].name;
         } else {
-            return String.format("%s(%s) ", this.variables[index].name, dataHelper.getCurveUnit(index));
+            return String.format("%s(%s) ", this.variables[indexInImported].name, dataHelper.getCurveUnit(indexInImported));
         }
     }
 
@@ -47,7 +48,7 @@ public class CreateScatterPlotData {
         this.dataHelper = new DataHelper(mlModel);
         this.variables = mlModel.getVariables();
 
-        this.col = dataHelper.getRealVariableCount() + 1;
+        this.col = dataHelper.getUsedVariableCount() + 1;
         this.row = dataHelper.getRealRowCount();
 
         this.data = new double[dataHelper.getRawDataCount()];
@@ -61,9 +62,9 @@ public class CreateScatterPlotData {
     
     public XYDataset createDataset(int index1, int index2) {
 
-        int len = dataHelper.readRealData(index1, data);
+        int len = dataHelper.readUsedData(index1, data);
         double[] array1 = Arrays.copyOf(data, len);
-        len = dataHelper.readRealData(index2, data);
+        len = dataHelper.readUsedData(index2, data);
         double[] array2 = Arrays.copyOf(data, len);
 
         XYSeriesCollection localXYSeriesCollection = new XYSeriesCollection();
@@ -82,9 +83,9 @@ public class CreateScatterPlotData {
 
     public XYDataset createClusterDataset(int index1, int index2) {
 
-        int len = dataHelper.readRealData(index1, data);
+        int len = dataHelper.readUsedData(index1, data);
         double[] array1 = Arrays.copyOf(data, len);
-        len = dataHelper.readRealData(index2, data);
+        len = dataHelper.readUsedData(index2, data);
         double[] array2 = Arrays.copyOf(data, len);
 
         XYSeriesCollection localXYSeriesCollection = new XYSeriesCollection();

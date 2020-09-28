@@ -51,16 +51,13 @@ public class ClassifyingBPFunction extends Function {
         BP_ANNDialog dialog = new BP_ANNDialog(parentWindow, true);
         dialog.setLocationRelativeTo(parentWindow);
         /////////////////////////
-        int xCount = dataHelper.;
-        int rowCount = dataHelper.getRealRowCount();
-        desiredY = new int[rowCount];
-        dataHelper.getLabeledY(desiredY);
+        
         
         int yCount = LoadConfigure.colorLayers.size();
         /////////////////////////
 
         Object[] paras = mlModel.getParameters(this.getClass().getSimpleName());
-        hiddenNeuronCount = (int) (Math.sqrt(xCount + yCount) + 5);
+        hiddenNeuronCount = (int) (Math.sqrt(XcountOil + yCount) + 5);
         dialog.setHiddenNeuronCount(paras == null ? hiddenNeuronCount : (int) paras[0]);
         dialog.setLearningRate(paras == null ? learningRate : (double) paras[1]);
         dialog.setMaxError(paras == null ? maxError : (double) paras[2]);
@@ -83,7 +80,7 @@ public class ClassifyingBPFunction extends Function {
     protected Integer doInBackground() throws Exception {
         if (flag == Function.GENERATE_MODEL) {
             printDataMessage();
-            DataSet dataSet = formLearningDataSet();
+            DataSet dataSet = formLearningOilDataSet();
             MultiLayerPerceptron neuralNet = new MultiLayerPerceptron(dataSet.getInputSize(), hiddenNeuronCount,hiddenNeuronCount-2, dataSet.getOutputSize());
             MomentumBackpropagation learningRule = (MomentumBackpropagation) neuralNet.getLearningRule();
             learningRule.setMaxIterations(maxIteration);
@@ -110,7 +107,7 @@ public class ClassifyingBPFunction extends Function {
             
             
             int[] py = computeY(neuralNet, dataSet);
-            int correctCount = FunTools.computeEquivalenceCount(desiredY, py);
+            int correctCount = FunTools.computeEquivalenceCount(desiredYOil, py);
             StringBuilder sb = new StringBuilder();
             sb.append("总数： ").append(py.length);
             sb.append(", 正确个数: ").append(correctCount);
@@ -142,8 +139,8 @@ public class ClassifyingBPFunction extends Function {
 
     private void printDataMessage() {
         printHighlight("Variables:\n");
-        String[] xVarNames = mlModelHelper.getRealXVariableNames();
-        String yVarName = mlModelHelper.getRealYVariableName();
+        String[] xVarNames = mlModelHelper.getOilXVariableNames();
+        String yVarName = mlModelHelper.getOilYVariableName();
         println("X: " + mlModelHelper.formString(xVarNames, "\t"));
         println("Y: " + yVarName);
         println("Number of Points: " + dataHelper.getRealRowCount());
@@ -162,13 +159,22 @@ public class ClassifyingBPFunction extends Function {
         return y;
     }
 
-    private DataSet formLearningDataSet() {
+    private DataSet formLearningOilDataSet() {
         
-        int xCount = dataHelper.getRealXVariableCount();
+        int xCount = dataHelper.getOilXVariableCount();
         int rowCount = dataHelper.getRealRowCount();
         normalization = new Normalization(xCount, -1);
-        desiredY = new int[rowCount];
-        dataHelper.getLabeledY(desiredY);
+        
+        if(dataHelper.oilYVariableColumnIndex>=0){
+            desiredYOil = new int[rowCount];
+            for(int i = 0;i<desiredYOil.length;i++){
+                dataHelper.readOilYData(dataHelper.oilYVariableColumnIndex,desiredYOil);
+            }
+        }else{
+            desiredYOil = new int[rowCount];
+            dataHelper.getLabeledY(desiredYOil);
+        }
+        
         
         int yCount = LoadConfigure.colorLayers.size();
         DataSet dataSet = new DataSet(xCount, yCount);
@@ -181,15 +187,15 @@ public class ClassifyingBPFunction extends Function {
         }
         double[] buffer = new double[rowCount];
         for (int col = 0; col < xCount; col++) {
-            dataHelper.readRealXData(col, buffer);
-            String variableName = dataHelper.getRealXVariableName(col);
+            dataHelper.readOilXData(col, buffer);
+            String variableName = dataHelper.getOilXVariableName(col);
             normalization.normalizeXVar(variableName,col, buffer, MathBase.minimum(buffer), MathBase.maximum(buffer));
             for (int row = 0; row < rowCount; row++) {
                 dataSet.get(row).getInput()[col] = buffer[row];
             }
         }
-        for (int row = 0; row < desiredY.length; row++) {
-            int val = desiredY[row];
+        for (int row = 0; row < desiredYOil.length; row++) {
+            int val = desiredYOil[row];
             dataSet.get(row).getDesiredOutput()[val] = 1;
         }
        
@@ -197,7 +203,7 @@ public class ClassifyingBPFunction extends Function {
     }
     
     private DataSet formToClassifyDataSet() {
-        int xCount = dataHelper.getRealXVariableCount();
+        int xCount = dataHelper.getOilXVariableCount();
         int rowCount = dataHelper.getRealRowCount();
         normalization = new Normalization(xCount, -1);
         
@@ -212,8 +218,8 @@ public class ClassifyingBPFunction extends Function {
         }
         double[] buffer = new double[rowCount];
         for (int col = 0; col < xCount; col++) {
-            dataHelper.readRealXData(col, buffer);
-            String variableName = dataHelper.getRealXVariableName(col);
+            dataHelper.readOilXData(col, buffer);
+            String variableName = dataHelper.getOilXVariableName(col);
             normalization.normalizeXVar(variableName,col, buffer, MathBase.minimum(buffer), MathBase.maximum(buffer));
             for (int row = 0; row < rowCount; row++) {
                 dataSet.get(row).getInput()[col] = buffer[row];

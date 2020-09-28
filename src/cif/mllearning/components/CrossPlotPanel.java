@@ -89,8 +89,9 @@ public class CrossPlotPanel extends PagePanel {
 
         this.dataHelper = new DataHelper(mlModel);
 
-        if (this.chartPanels == null || this.chartPanels.length != dataHelper.getRealVariableCount()) {
-            this.chartPanels = new ChartPanel[dataHelper.getRealVariableCount()][dataHelper.getRealVariableCount()];
+        if (this.chartPanels == null || this.chartPanels.length != dataHelper.getUsedVariableCount()) {
+            this.chartPanels = new ChartPanel[dataHelper.getUsedVariableCount()][dataHelper.getUsedVariableCount()];
+            
         }
 
         if (this.buffer == null || this.buffer.length != dataHelper.getRawDataCount()) {
@@ -108,13 +109,7 @@ public class CrossPlotPanel extends PagePanel {
 
         this.binsFiled.setText(binCount + "");
 
-        for (int i = 0; i < mlModel.getVariables().length; i++) {
-            if (mlModel.getVariables()[i].flag == MLDataModel.Y_VARIABLE) {
-                yVariable = mlModel.getVariables()[i];
-                yIndex = i;
-                break;
-            }
-        }
+        
 
     }
 
@@ -123,18 +118,13 @@ public class CrossPlotPanel extends PagePanel {
         XYDataset dataset = new XYSeriesCollection();
         for (int i = 0; i < chartPanels.length; i++) {
             for (int j = 0; j < chartPanels[0].length; j++) {
-                if (i == j) {
-                    if (chartPanels[i][j] == null) {
-                        chartPanels[i][j] = CreateHistChart.createChartPanel(histogramDataset, mlModel.getVariables()[i].name);
 
-                    }
-                } else {
-                    if (chartPanels[i][j] == null) {
-                        chartPanels[i][j] = CreateScatterPlotPanel.createChartPanel(dataset);
-                        addMouseListener(chartPanels[i][j]);
+                if (chartPanels[i][j] == null) {
+                    chartPanels[i][j] = CreateScatterPlotPanel.createChartPanel(dataset);
+                    addMouseListener(chartPanels[i][j]);
 
-                    }
                 }
+
             }
         }
 
@@ -144,14 +134,14 @@ public class CrossPlotPanel extends PagePanel {
 
     private void initMainPanel() {
 
-        int variableCount = dataHelper.getRealVariableCount();
+        int variableCount = dataHelper.getUsedVariableCount();
         int width = variableCount * (CROSSPLOT_WIDTH + 10) + STUFFPLOT_WIDTH;
         insertPanel.setPreferredSize(new Dimension(width, width));
         insertPanel.setLayout(new GridLayout(chartPanels.length, chartPanels.length, GapBetweenCharts, GapBetweenCharts));
         insertPanel.removeAll();
         for (int i = 0; i < chartPanels.length; i++) {
             for (int j = 0; j < chartPanels[0].length; j++) {
-               if(i!=j){
+               if(i<j){
                    insertPanel.add(chartPanels[i][j]);
                } 
             }
@@ -166,13 +156,20 @@ public class CrossPlotPanel extends PagePanel {
         Variable[] variables = mlModel.getVariables();
 
         this.scatterPlotData = new CreateScatterPlotData(mlModel);
-
-        for (int i = 0, moveX = 0, validIndexX = 0; i < variables.length; i++) {
+        
+        for(int i = 0;i<dataHelper.getUsedVariableCount();i++){
+            for(int j = 0;j<dataHelper.getUsedVariableCount();j++){
+                if(i<j){
+                    chartPanels[i][j].setChart(CreateScatterPlotPanel.getChart(i, j, scatterPlotData));
+                }
+            }
+        }
+        
+        /*for (int i = 0, moveX = 0, validIndexX = 0; i < variables.length; i++) {
             if (variables[i].flag == MLDataModel.UNSEL_VARIABLE) {
                 continue;
             } else if (variables[i].flag == MLDataModel.Y_VARIABLE) {
                 realYIndex = validIndexX;
-                yIndex = i;
                 validIndexX++;
                 continue;
             }
@@ -225,6 +222,7 @@ public class CrossPlotPanel extends PagePanel {
         double[] temp = Arrays.copyOf(buffer, len);
         HistogramDataset histogramDataset = CreateHistDataset.getHistDataset(temp, mlModel.getVariables()[yIndex].name, binCount);
         chartPanels[chartPanels.length - 1][chartPanels.length - 1].setChart(CreateHistChart.getChart(histogramDataset, mlModel.getVariables()[yIndex].name));
+        */
 
         changeHistForegroundColor(fColor);
         changeHistBackgroundColor(bColor);
@@ -266,13 +264,15 @@ public class CrossPlotPanel extends PagePanel {
         }
         for (int i = 0; i < chartPanels.length; i++) {
             for (int j = 0; j < chartPanels[0].length; j++) {
-                XYPlot plot = (XYPlot) chartPanels[i][j].getChart().getPlot();
-                if (i == j) {
-                    XYBarRenderer render = (XYBarRenderer) plot.getRenderer();
-                    render.setSeriesPaint(0, color);
-                } else {
-                    XYLineAndShapeRenderer render = (XYLineAndShapeRenderer) plot.getRenderer();
-                    render.setSeriesPaint(0, color);
+                if (i > j) {
+                    XYPlot plot = (XYPlot) chartPanels[i][j].getChart().getPlot();
+                    if (i == j) {
+                        XYBarRenderer render = (XYBarRenderer) plot.getRenderer();
+                        render.setSeriesPaint(0, color);
+                    } else {
+                        XYLineAndShapeRenderer render = (XYLineAndShapeRenderer) plot.getRenderer();
+                        render.setSeriesPaint(0, color);
+                    }
                 }
 
             }

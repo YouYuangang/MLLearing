@@ -7,6 +7,7 @@ package cif.mllearning.base;
 
 import cif.base.Global;
 import cif.mllearning.MLGlobal;
+import java.util.HashMap;
 import javax.swing.JOptionPane;
 import org.openide.windows.WindowManager;
 
@@ -22,12 +23,13 @@ public class DataHelper {
     private RawTableDataHelper tableHelper;
     private RawTextDataHelper textHelper;
     private int[] oilXVariableColumnIndices;
-    private int oilYVariableColumnIndex;
-    private int[] lithVariableColumnIndices;
-    private int lithYVariableColumnIndex;
-    
+    public int oilYVariableColumnIndex = -1;
+    private int[] lithXVariableColumnIndices;
+    public int lithYVariableColumnIndex = -1;
+    private int[] usedVariableColumnIndeices;
     private int[] realRowIndices = null;
-
+    
+    HashMap<String,Integer> oilStringIntMap = null;
     public DataHelper(MLDataModel mlModel) {
         this.mlModel = mlModel;
         switch (mlModel.dataFrom) {
@@ -41,6 +43,7 @@ public class DataHelper {
                 textHelper = new RawTextDataHelper(mlModel);
                 break;
         }
+        formRowIndices();
         formColumnIndices();
         realRowIndices = null;
     }
@@ -65,44 +68,78 @@ public class DataHelper {
     private void formColumnIndices() {
         int xCountOil = 0;
         int xCountLith = 0;
-        int yOilIndex = -1;
-        int yLithIndex = -1;
+        int usedVariableCount = 0;
+        
         Variable[] variables = mlModel.getVariables();
         for (int i = 0;i<variables.length;i++) {
             Variable variable = variables[i];
-            if (variable.flag == MLDataModel.X_VARIABLE_OIL) {
+            if (variable.flag == MLDataModel.X_VARIABLE_OIL||variable.flag == MLDataModel.X_VARIABLE_ALL) {
                 xCountOil++;
-            } else if (variable.flag == MLDataModel.Y_VARIABLE_OIL) {
-                yOilIndex = i;
-            }else if(variable.flag == MLDataModel.X_VARIABLE_LITH){
+            }else if(variable.flag == MLDataModel.X_VARIABLE_LITH||variable.flag == MLDataModel.X_VARIABLE_ALL){
                 xCountLith++;
-            }else if(variable.flag == MLDataModel.Y_VARIABLE_LITH){
-                yLithIndex = i;
+            }
+            if(variable.flag != MLDataModel.UNSEL_VARIABLE&&variable.flag != MLDataModel.Y_VARIABLE_OIL&&variable.flag != MLDataModel.Y_VARIABLE_LITH){
+                usedVariableCount++;
             }
         }
         oilXVariableColumnIndices = new int[xCountOil];
-        lithVariableColumnIndices = new int[xCountLith];
-        
-        int xVarIndex = 0, varIndex = 0;
+        lithXVariableColumnIndices = new int[xCountLith];
+        usedVariableColumnIndeices = new int[usedVariableCount];
+        int xVarIndexForOil = 0, xVarIndexForLith = 0,usedVarIndex = 0;
         for (int i = 0; i < variables.length; i++) {
-            if (variables[i].flag == MLDataModel.X_VARIABLE_OIL) {
-                realXVariableColumnIndices[xVarIndex++] = i;
-                realVariableColumnIndices[varIndex++] = i;
-            } else if (variables[i].flag == MLDataModel.Y_VARIABLE) {
-                realYVariableColumnIndex = i;
-                realVariableColumnIndices[varIndex++] = i;
+            if (variables[i].flag == MLDataModel.X_VARIABLE_OIL||variables[i].flag == MLDataModel.X_VARIABLE_ALL) {
+                oilXVariableColumnIndices[xVarIndexForOil++] = i;
+            } else if (variables[i].flag == MLDataModel.Y_VARIABLE_OIL) {
+                oilYVariableColumnIndex = i;
+                
+            }else if(variables[i].flag == MLDataModel.X_VARIABLE_LITH||variables[i].flag == MLDataModel.X_VARIABLE_ALL){
+                lithXVariableColumnIndices[xVarIndexForLith++] = i;
+            }else if(variables[i].flag == MLDataModel.Y_VARIABLE_LITH){
+                lithYVariableColumnIndex = i;
+            }
+            if(variables[i].flag != MLDataModel.UNSEL_VARIABLE&&variables[i].flag != MLDataModel.Y_VARIABLE_OIL&&variables[i].flag != MLDataModel.Y_VARIABLE_LITH){
+                usedVariableColumnIndeices[usedVarIndex++] = i;
+            }
+        }
+        
+        int index = 0;
+        oilStringIntMap = new HashMap<>();
+        String oiltype = null;
+        for(int i = 0;i<realRowIndices.length;i++){
+            oiltype = getRawStringData(oilYVariableColumnIndex, realRowIndices[i]);
+            if(oilStringIntMap.containsKey(oiltype)){
+                continue;
+            }else{
+                oilStringIntMap.put(oiltype, index++);
             }
         }
     }
-    public String getRealXVariableName(int realIndex){
+    /*public String getRealXVariableName(int realIndex){
         return mlModel.getVariables()[realXVariableColumnIndices[realIndex]].name;
+    }*/
+    public String getOilXVariableName(int indexOfused){
+        return mlModel.getVariables()[oilXVariableColumnIndices[indexOfused]].name;
+        
     }
-    public int getRealXVariableCount() {
+    public String getLithXVariableName(int indexOfused){
+        return mlModel.getVariables()[lithXVariableColumnIndices[indexOfused]].name;
+    }
+    public String getUsedVariableName(int indexOfused){
+        return mlModel.getVariables()[usedVariableColumnIndeices[indexOfused]].name;
+    }
+    /*public int getRealXVariableCount() {
         return realXVariableColumnIndices.length;
+    }*/
+    
+    public int getOilXVariableCount(){
+        return oilXVariableColumnIndices.length;
+    }
+    public int getLithXVariableCount(){
+        return lithXVariableColumnIndices.length;
     }
 
-    public int getRealVariableCount() {
-        return realVariableColumnIndices.length;
+    public int getUsedVariableCount() {
+        return usedVariableColumnIndeices.length;
     }
 
     public int getRealRowCount() {
@@ -125,31 +162,57 @@ public class DataHelper {
     
     }
 
-    public int readRealXData(int realXVariableIndex, double[] buffer) {
-        return readRealDataFromRawIndex(realXVariableColumnIndices[realXVariableIndex], buffer);
+    public int readOilXData(int indexInused, double[] buffer) {
+        for(int i = 0;i<realRowIndices.length;i++){
+            buffer[i] = getRawDoubleData(oilXVariableColumnIndices[indexInused],realRowIndices[i]);
+        }
+        return realRowIndices.length;
     }
 
-    public int readRealYData(double[] buffer) {
-        return readRealDataFromRawIndex(realYVariableColumnIndex, buffer);
+    public int readOilYData(int indexInused,int[] buffer) {
+        for(int i = 0;i<realRowIndices.length;i++){
+            String temp = getRawStringData(oilXVariableColumnIndices[indexInused],realRowIndices[i]);
+            buffer[i] = oilStringIntMap.get(temp);
+        }
+        return realRowIndices.length;
+    }
+    
+    public int readOilYData(int indexInused,double[] buffer) {
+        for(int i = 0;i<realRowIndices.length;i++){
+            String temp = getRawStringData(oilXVariableColumnIndices[indexInused],realRowIndices[i]);
+            buffer[i] = (double)oilStringIntMap.get(temp);
+        }
+        return realRowIndices.length;
     }
 
-    public int readRealData(int realVariableIndex, double[] buffer) {
-        return readRealDataFromRawIndex(realVariableColumnIndices[realVariableIndex], buffer);
+    public int readUsedData(int indexInUsed, double[] buffer) {
+        for(int i = 0;i<realRowIndices.length;i++){
+            buffer[i] = getRawDoubleData(usedVariableColumnIndeices[indexInUsed],realRowIndices[i]);
+        }
+        return realRowIndices.length;
     }
 
-    public int readValidXData(int realXVariableIndex, double[] buffer) {
-        return readValidDataFromRawIndex(realXVariableColumnIndices[realXVariableIndex], buffer);
+    /*public int readValidOilXData(int indexInused, double[] buffer) {
+        return readValidDataFromRawIndex(oilXVariableColumnIndices[indexInused], buffer);
     }
 
-    public int readValidTData(double[] buffer) {
-        return readValidDataFromRawIndex(realYVariableColumnIndex, buffer);
+    public int readValidOilYData(double[] buffer) {
+        return readValidDataFromRawIndex(oilYVariableColumnIndex, buffer);
     }
+    
+    public int readValidLithXData(int indexInused,double [] buffer){
+        return readValidDataFromRawIndex(lithXVariableColumnIndices[indexInused], buffer);
+    }
+    
+    public int readValidLithYData(int indexInused,double [] buffer){
+        return readValidDataFromRawIndex(lithYVariableColumnIndex, buffer);
+    }*/
 
-    public int readValidData(int realVariableIndex, double[] buffer) {
+    /*public int readValidData(int realVariableIndex, double[] buffer) {
         return readValidDataFromRawIndex(realVariableColumnIndices[realVariableIndex], buffer);
-    }
+    }*/
 
-    public int readRealYString(String[] buffer) {
+    /*public int readRealYString(String[] buffer) {
         if (realYVariableColumnIndex < 0) {
             return 0;
         }
@@ -161,34 +224,55 @@ public class DataHelper {
             }
         }
         return m;
-    }
+    }*/
 
-    public void readRealRowXData(int rowIndex, double[] buffer) {
-        formRowIndices();
-        for (int i = 0; i < realXVariableColumnIndices.length; i++) {
-            buffer[i] = getRawDoubleData(realXVariableColumnIndices[i], realRowIndices[rowIndex]);
+    public void readRealRowOilXData(int rowIndex, double[] buffer) {
+        //formRowIndices();
+        for (int i = 0; i < oilXVariableColumnIndices.length; i++) {
+            buffer[i] = getRawDoubleData(oilXVariableColumnIndices[i], realRowIndices[rowIndex]);
+        }
+    }
+    
+    public void readRealRowLithXData(int rowIndex, double[] buffer) {
+        //formRowIndices();
+        for (int i = 0; i < lithXVariableColumnIndices.length; i++) {
+            buffer[i] = getRawDoubleData(oilXVariableColumnIndices[i], realRowIndices[rowIndex]);
         }
     }
 
-    public double readRealYData(int rowIndex) {
-        formRowIndices();
-        return getRawDoubleData(realYVariableColumnIndex, realRowIndices[rowIndex]);
+    public int readRealOilYData(int rowIndex) {
+        //formRowIndices();
+        
+        return oilStringIntMap.get(getRawStringData(oilYVariableColumnIndex, realRowIndices[rowIndex]));
     }
 
-    public String readRealYString(int rowIndex) {
-        if (realYVariableColumnIndex < 0) {
-            return "";
+    public String readRealOilYString(int rowIndex) {
+        if (oilYVariableColumnIndex < 0) {
+            return "Oil_Y不存在";
         }
-        formRowIndices();
-        return getRawStringData(realYVariableColumnIndex, realRowIndices[rowIndex]);
+        //formRowIndices();
+        return getRawStringData(oilYVariableColumnIndex, realRowIndices[rowIndex]);
+    }
+    
+    public double readRealLithYData(int rowIndex) {
+        //formRowIndices();
+        return getRawDoubleData(lithYVariableColumnIndex, realRowIndices[rowIndex]);
     }
 
-    public void readRealRowData(int rowIndex, double[] buffer) {
+    public String readRealLithYString(int rowIndex) {
+        if (oilYVariableColumnIndex < 0) {
+            return "Oil_Y不存在";
+        }
+        //formRowIndices();
+        return getRawStringData(lithYVariableColumnIndex, realRowIndices[rowIndex]);
+    }
+
+    /*public void readRealRowData(int rowIndex, double[] buffer) {
         formRowIndices();
         for (int i = 0; i < realVariableColumnIndices.length; i++) {
             buffer[i] = getRawDoubleData(realVariableColumnIndices[i], realRowIndices[rowIndex]);
         }
-    }
+    }*/
 
     private void formRowIndices() {
         if (realRowIndices != null) {
@@ -239,7 +323,7 @@ public class DataHelper {
         return "";
     }
 
-    private int readRealDataFromRawIndex(int index, double[] buffer) {
+    /*private int readRealDataFromRawIndex(int index, double[] buffer) {
         int m = 0;
         for (int i = 0; i < mlModel.dataRowSelectedFlags.length; i++) {
             if (mlModel.dataRowSelectedFlags[i]) {
@@ -248,9 +332,9 @@ public class DataHelper {
             }
         }
         return m;
-    }
+    }*/
 
-    //这个函数过滤掉了 -9999.0的值
+    //这个函数过滤掉了 -99999.0的值
     private int readValidDataFromRawIndex(int index, double[] buffer) {
         int m = 0;
         for (int i = 0; i < mlModel.dataRowSelectedFlags.length; i++) {
@@ -305,5 +389,26 @@ public class DataHelper {
         }
         return unitStr;
 
+    }
+    
+    public String getUsedCurveUnit(int index) {
+        String unitStr = "";
+        switch (mlModel.dataFrom) {
+            case MLDataModel.FROM_CURVE:
+                unitStr = curveHelper.getCurveUnit(usedVariableColumnIndeices[index]);
+                break;
+            case MLDataModel.FROM_TABLE:
+                unitStr = tableHelper.getFieldUnit(usedVariableColumnIndeices[index]);
+                break;
+            case MLDataModel.FROM_TEXT:
+                unitStr = textHelper.getColumnUnit(usedVariableColumnIndeices[index]);
+                break;
+        }
+        return unitStr;
+
+    }
+    
+    public int getUsedVIndexInImported(int index){
+        return usedVariableColumnIndeices[index];
     }
 }
