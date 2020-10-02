@@ -76,7 +76,7 @@ public class PredictingBPFunction extends Function {
         println("完成训练");
         String filePath = FunTools.getModelPath() + File.separator + FunTools.getModelFileName("Predict_BP", mlModel);
         neuralNet.save(filePath);
-        FunTools.saveModelAuxFile(true, filePath, mlModelHelper, normalization,this);
+        FunTools.saveModelAuxFile(filePath,normalization,this);
         double[] py = computeY(neuralNet, dataSet);
         printHighlight("R: " + MathBase.corrCoeff(desiredY, py) + "\n");
         println("Save Model: " + filePath);

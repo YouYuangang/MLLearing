@@ -90,4 +90,13 @@ public class RawCurveDataHelper {
         }
         return buffer[0];
     }
+    
+    public int getIndexByName(String name){
+        for(int i = 0;i<curve1Ds.length;i++){
+            if(curve1Ds[0].getName().equals(name)){
+                return i;
+            }
+        }
+        return -1;
+    }
 }

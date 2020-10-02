@@ -12,17 +12,21 @@ package cif.mllearning.functions;
  */
 public class Normalization {
 
-    private double[] xVarLowers;
-    private double[] xVarUppers;
-    private double yVarLower;
-    private double yVarUpper;
-    private double[] varLowers;
-    private double[] varUppers;
+    public double[] xVarLowers;
+    public double[] xVarUppers;
+    public double yVarLower;
+    public double yVarUpper;
+    public double[] varLowers;
+    public double[] varUppers;
+    public String[] names;
+    
+    
     
     public Normalization(int xVarCount, int varCount) {
         if (xVarCount > 0) {
             xVarLowers = new double[xVarCount];
             xVarUppers = new double[xVarCount];
+            names = new String[xVarCount];
         }
         if (varCount > 0) {
             varLowers = new double[varCount];
@@ -31,10 +35,12 @@ public class Normalization {
     }
 
     public void normalizeXVar(String variableName,int index, double[] data, double lower, double upper) {
+        names[index] = variableName;
         if(variableName.equals("RT")){
             if(lower<2){
                 lower = 2;
             }
+            
             lower = Math.log(lower);
             upper = Math.log(upper);
             xVarLowers[index] = lower;

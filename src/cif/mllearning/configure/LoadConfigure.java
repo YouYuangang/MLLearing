@@ -11,10 +11,13 @@ import com.alibaba.fastjson.JSONObject;
 import java.awt.Color;
 import java.awt.Frame;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JOptionPane;
@@ -28,12 +31,19 @@ import org.openide.windows.WindowManager;
 public class LoadConfigure {
     public static HashMap<Integer,Integer> clusterLayerRelation = new HashMap<>();
     public static ArrayList<ColorLayer> colorLayers = new ArrayList<ColorLayer>();
+    public static BufferedWriter bfw = null;
+    public static String trainedModelPath;
     
     static {
         StringBuilder confStr = new StringBuilder(1024);
         BufferedReader bfr = null;
         try {
             String cifInstallPath = Global.getInstallationPath();
+            trainedModelPath = cifInstallPath +File.separator+"modelSaveDir";//创建一个modelSaveDir文件夹保存训练的模型
+            File modelSaveDir = new File(trainedModelPath);
+            if(!modelSaveDir.exists()){
+                modelSaveDir.mkdir();
+            }
             String confPath = cifInstallPath + File.separator + "layers.json";
             File confFile = new File(confPath);
             if (!confFile.exists()) {
@@ -77,10 +87,20 @@ public class LoadConfigure {
                 }
             }
         }
-
+        try{
+            bfw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(Global.getInstallationPath()+ File.separator + "mylog.txt"))));
+        }catch(Exception e){
+            
+        }finally{
+            
+        }  
     }
-    public LoadConfigure(){
-        
+    public static void writeLog(String text){
+        try{
+            bfw.write(text);
+            bfw.flush();
+        }catch(Exception e){
+        }
     }
     public  String toString(){
         StringBuilder sb = new StringBuilder(1024);

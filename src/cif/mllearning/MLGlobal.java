@@ -50,6 +50,7 @@ public class MLGlobal {
 
     public static String STANDARD_CLUSTER_RESULT_TABLE_NAME = "StandardResult--Label";
     public static String STANDARD_CLUSTER_RESULT_CURVE_NAME = "Label";
+    public static String MLMODEL_FILENAME = "mlModelTemp.txt";
 
     public PagePanel dataPanel = new DataPanel();
     public PagePanel histogramPanel = new HistogramPanel();

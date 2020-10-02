@@ -107,7 +107,7 @@ public class ClassifyingSVMFunction extends Function {
         svm_model model = svm.svm_train(problem, param);
         String filePath = FunTools.getModelPath() + File.separator + FunTools.getModelFileName("Classify_SVM", mlModel);
         svm.svm_save_model(filePath, model);
-        FunTools.saveModelAuxFile(true, filePath, mlModelHelper, normalization,this);
+        FunTools.saveModelAuxFile(filePath,normalization,this);
         double[] py = new double[problem.y.length];
         for (int i = 0; i < problem.x.length; i++) {
             py[i] = svm.svm_predict(model, problem.x[i]);

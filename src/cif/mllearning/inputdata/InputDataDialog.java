@@ -18,6 +18,9 @@ import cif.dataengine.io.TableRecords;
 import cif.datautil.datatreeview.dialogs.SelectDataTreeNodeDialog;
 import cif.mllearning.base.MLDataModel;
 import cif.mllearning.base.CheckBoxTableModel;
+import cif.mllearning.base.RawCurveDataHelper;
+import cif.mllearning.base.RawTableDataHelper;
+import cif.mllearning.base.RawTextDataHelper;
 import cif.mllearning.base.Variable;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -107,6 +110,15 @@ public class InputDataDialog extends javax.swing.JDialog {
                 break;
             case MLDataModel.FROM_TEXT:
                 filePathTextField.setText(mlModel.inputFilePath == null ? "" : mlModel.inputFilePath);
+                if(mlModel.dataGridModel == null&&mlModel.inputFilePath!=null){
+                    try{
+                       dataGrid.openTextFile(new File(mlModel.inputFilePath),"\t"); 
+                       mlModel.dataGridModel = dataGridModel;
+                    }catch(IOException e){
+                        
+                    }
+                    
+                }
                 dataGridModel = mlModel.dataGridModel;
                 dataGrid.setModel(dataGridModel);
                 fillTextColumnToVariableTable();
@@ -447,18 +459,37 @@ public class InputDataDialog extends javax.swing.JDialog {
                 }
                 mlModel.curveStdep = stdep;
                 mlModel.curveEndep = endep;
+                mlModel.setVariableNames(variableTableModel.getSelectedNames());
+                RawCurveDataHelper rcdh = new RawCurveDataHelper(mlModel);
+                mlModel.dataRowSelectedFlags = new boolean[rcdh.getCurveSampleCount()];
+                for(int i = 0;i<mlModel.dataRowSelectedFlags.length;i++){
+                    mlModel.dataRowSelectedFlags[i] = true;
+                }
                 break;
             case MLDataModel.FROM_TABLE:
                 mlModel.inputDataPath = dataPath;
                 String[] strs = splitToDoubleWordsWithSpace((String) logTableComboBox.getSelectedItem());
                 mlModel.logTableName = strs[1];
+                mlModel.setVariableNames(variableTableModel.getSelectedNames());
+                RawTableDataHelper rtdh = new RawTableDataHelper(mlModel);
+                mlModel.dataRowSelectedFlags = new boolean[rtdh.getRecordCount()];
+                for(int i = 0;i<mlModel.dataRowSelectedFlags.length;i++){
+                    mlModel.dataRowSelectedFlags[i] = true;
+                }
                 break;
             case MLDataModel.FROM_TEXT:
                 mlModel.inputFilePath = filePathTextField.getText();
                 mlModel.dataGridModel = dataGridModel;
+                mlModel.setVariableNames(variableTableModel.getSelectedNames());
+                RawTextDataHelper rtextdh = new RawTextDataHelper(mlModel);
+                mlModel.dataRowSelectedFlags = new boolean[rtextdh.getRowCount()];
+                for(int i = 0;i<mlModel.dataRowSelectedFlags.length;i++){
+                    mlModel.dataRowSelectedFlags[i] = true;
+                }
                 break;
         }
-        mlModel.setVariableNames(variableTableModel.getSelectedNames());
+        
+        
         mlModel.classifyResult = null;
         mlModel.clusterResult = null;
         mlModel.predictResult = null;

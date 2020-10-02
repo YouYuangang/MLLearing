@@ -30,14 +30,8 @@ public class VariableTableModel extends AbstractTableModel {
 
     public void setLearningMode(int mode) {
         learningMode = mode;
-        if (mode != MLGlobal.PREDICTING_MODE) {
-            for (VariableEx variableEx : usedVariables) {
-                if (variableEx.variable.flag > 0) {
-                    variableEx.variable.flag = MLDataModel.X_VARIABLE_OIL;
-                }
-            }
-            return;
-        }
+        return;
+       
         /*if(mode == MLGlobal.PREDICTING_MODE){
             if(usedVariables!=null&&usedVariables.size()>0){
                 usedVariables.get(usedVariables.size()-1).variable.flag = MLDataModel.Y_VARIABLE;
@@ -105,44 +99,23 @@ public class VariableTableModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         Variable variable = usedVariables.get(rowIndex).variable;
         if (columnIndex == 0) {
-            switch (learningMode) {
-                case MLGlobal.PREDICTING_MODE:
-                    if(variable.flag == MLDataModel.X_VARIABLE_OIL){
-                        return "X";
-                    }else if(variable.flag == MLDataModel.Y_VARIABLE_OIL){
-                        return "Y";
-                    }
-                case MLGlobal.CLASSIFYING_MODE:
-                    if(variable.flag == MLDataModel.X_VARIABLE_OIL){
-                        return "X_OIL";
-                    }else if(variable.flag == MLDataModel.Y_VARIABLE_OIL){
-                        return "Y_OIL";
-                    }else if(variable.flag == MLDataModel.X_VARIABLE_LITH){
-                        return "X_LITH";
-                    }else if(variable.flag == MLDataModel.Y_VARIABLE_LITH){
-                        return "Y_LITH";
-                    }else if(variable.flag == MLDataModel.X_VARIABLE_ALL){
-                        return "X_ALL";
-                    }
-                default:
-                    return "X"+(rowIndex+1);
+
+            if (variable.flag == MLDataModel.X_VARIABLE_OIL) {
+                return "X_OIL";
+            } else if (variable.flag == MLDataModel.Y_VARIABLE_OIL) {
+                return "Y_OIL";
+            } else if (variable.flag == MLDataModel.X_VARIABLE_LITH) {
+                return "X_LITH";
+            } else if (variable.flag == MLDataModel.Y_VARIABLE_LITH) {
+                return "Y_LITH";
+            } else if (variable.flag == MLDataModel.X_VARIABLE_ALL) {
+                return "X_ALL";
+            }else{
+                return "没有这种用途的变量";
             }
         } else {
             return variable.name;
-        }
-        
-        /*switch (columnIndex) {
-            case 0:
-                if (learningMode == MLGlobal.CLUSTERING_MODE) {
-                    return rowIndex + 1;
-                } else {
-                    return rowIndex == usedVariables.size() - 1 ? "Y" : "X" + rowIndex;
-                }
-            case 1:
-                return variable.name;
-            default:
-                return "";
-        }*/
+        }   
     }
 
     @Override

@@ -101,6 +101,10 @@ public class HistogramPanel extends PagePanel {
 
         if (chartPanels == null || chartPanels.length != variableCount) {
             this.chartPanels = new ChartPanel[variableCount];
+        }else{
+            for(int i =0;i<chartPanels.length;i++){
+                chartPanels[i] = null;
+            }
         }
 
         this.buffer = new double[mlModel.dataRowSelectedFlags.length];
@@ -115,8 +119,9 @@ public class HistogramPanel extends PagePanel {
     }
 
     private void initChartPanels() {
+        
         HistogramDataset histogramDataset = new HistogramDataset();
-
+        
         for (int i = 0, j = 0; j < variableCount; i++, j++) {
             if (chartPanels[i] == null) {
                 chartPanels[i] = new ChartPanel(CreateHistChart.getChart(histogramDataset, ""));

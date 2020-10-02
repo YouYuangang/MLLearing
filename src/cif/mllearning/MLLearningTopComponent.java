@@ -35,8 +35,15 @@ import cif.mllearning.inputdata.InputDataDialog;
 import java.awt.Frame;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -105,6 +112,7 @@ public final class MLLearningTopComponent extends TopComponent {
         maskTabbedPaneEvent = false;
         loadLabelBtn.setVisible(false);
        LoadConfigure loadConfigure = new LoadConfigure();
+       
        /*variableTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -116,6 +124,8 @@ public final class MLLearningTopComponent extends TopComponent {
             }
         })*/;
         setSubTabbedPaneVisuable(false);
+        
+            
     }
 
     private void addLeftPagePanel(int index, PagePanel panel) {
@@ -147,7 +157,7 @@ public final class MLLearningTopComponent extends TopComponent {
         jScrollPane1 = new javax.swing.JScrollPane();
         variableTable = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
-        functionComboBox = new javax.swing.JComboBox<>();
+        functionComboBox = new javax.swing.JComboBox<String>();
         selectVariableButton = new javax.swing.JButton();
         yButton = new javax.swing.JButton();
         loadLabelBtn = new javax.swing.JButton();
@@ -439,31 +449,31 @@ public final class MLLearningTopComponent extends TopComponent {
         Frame parent = WindowManager.getDefault().getMainWindow();
         InputDataDialog dialog = new InputDataDialog(parent, true);
         dialog.setLocationRelativeTo(parent);
+        MLDataModelHelper.loadMlModelFromFile(mlModel);
         dialog.setMLModel(mlModel);
         dialog.setVisible(true);
         if (dialog.getReturnStatus() == InputDataDialog.RET_OK) {
-            if(mlModel.dataRowSelectedFlags!=null){
-                for(int i = 0;i<mlModel.dataRowSelectedFlags.length;i++){
-                    mlModel.dataRowSelectedFlags[i] = true;
-                
-                }
-            }
-            
             mlModel.predictResult = null;
             mlModel.classifyResult = null;
             mlModel.clusterResult = null;
-            selectPagePanel(mlGlobal.dataPanel);
+            
+            
             variableTableModel.refreshViewData();
             variableTableModel.fireTableDataChanged();
+            MLDataModelHelper.saveMlModelToFile(mlModel);
             UpdatePanelFlag.DataPanelUpdateFlag = true;
             UpdatePanelFlag.HistogramUpdateFlag = true;
             UpdatePanelFlag.CrossPlotUpdateFlag = true;
             UpdatePanelFlag.PlotPanelUpdateFlag = true;
-            updatePagePanels();
+            splitPagePane(false);
+            selectPagePanel(mlGlobal.dataPanel);
+            ((DataPanel)mlGlobal.dataPanel).setMLModel(mlModel);
+            
             
         }
     }//GEN-LAST:event_inputDataButtonActionPerformed
-
+    
+    
     private void selectVariableButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectVariableButtonActionPerformed
         Frame parent = WindowManager.getDefault().getMainWindow();
         SelectVariableDialog dialog = new SelectVariableDialog(parent, true);
@@ -489,7 +499,8 @@ public final class MLLearningTopComponent extends TopComponent {
             UpdatePanelFlag.HistogramUpdateFlag = true;
             UpdatePanelFlag.CrossPlotUpdateFlag = true;
             UpdatePanelFlag.PlotPanelUpdateFlag = true;
-            updatePagePanels();
+            
+            updateActivePagePanels();
         }
     }//GEN-LAST:event_selectVariableButtonActionPerformed
 
@@ -501,11 +512,12 @@ public final class MLLearningTopComponent extends TopComponent {
         ChooseLabelJDialog chooseXorYforVariable = new ChooseLabelJDialog(WindowManager.getDefault().getMainWindow(),true);
         chooseXorYforVariable.setTipText("将变量标为");
         chooseXorYforVariable.clearCombox();
-        chooseXorYforVariable.addTolabelComboBox("预测含油性的属性");
-        chooseXorYforVariable.addTolabelComboBox("含油性");
-        chooseXorYforVariable.addTolabelComboBox("预测岩性的属性");
-        chooseXorYforVariable.addTolabelComboBox("岩性");
-        chooseXorYforVariable.addTolabelComboBox("共用属性");
+        chooseXorYforVariable.addTolabelComboBox("X-预测含油性的属性");
+        chooseXorYforVariable.addTolabelComboBox("label-含油性");
+        chooseXorYforVariable.addTolabelComboBox("X-预测岩性的属性");
+        chooseXorYforVariable.addTolabelComboBox("label-岩性");
+        chooseXorYforVariable.addTolabelComboBox("X-预测含油性、岩性的属性");
+        chooseXorYforVariable.addTolabelComboBox("Y-通用");
         chooseXorYforVariable.setVisible(true);
         int indexOfSelected = chooseXorYforVariable.getChooseBoxIndex();
         int[] selectedRows = variableTable.getSelectedRows();
@@ -523,11 +535,11 @@ public final class MLLearningTopComponent extends TopComponent {
                 for(int i : selectedRows){
                     variableTableModel.setLabelForXandY(i, MLDataModel.Y_VARIABLE_OIL);
                     
+                    
                 }
             }else if(indexOfSelected == 2){
                 for(int i : selectedRows){
                     variableTableModel.setLabelForXandY(i, MLDataModel.X_VARIABLE_LITH);
-                    
                 }
             }else if(indexOfSelected == 3){
                 if(selectedRows.length > 1){
@@ -540,14 +552,26 @@ public final class MLLearningTopComponent extends TopComponent {
                 }  
             }else if(indexOfSelected == 4){
                 for(int i : selectedRows){
-                    variableTableModel.setLabelForXandY(i, MLDataModel.X_VARIABLE_ALL);
-                    
+                    variableTableModel.setLabelForXandY(i, MLDataModel.X_VARIABLE_ALL); 
                 }
+            }else if(indexOfSelected == 5){
+                if(selectedRows.length > 1){
+                    JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), "不能选多个变量为Y");
+                    return;
+                }
+                for(int i : selectedRows){
+                    variableTableModel.setLabelForXandY(i, MLDataModel.Y_VARIABLE_ALL);    
+                } 
             }
         }
         
         
         variableTableModel.fireTableDataChanged();
+        UpdatePanelFlag.HistogramUpdateFlag = true;
+        UpdatePanelFlag.CrossPlotUpdateFlag = true;
+        UpdatePanelFlag.PlotPanelUpdateFlag = true;
+        updateActivePagePanels();
+
         //int selectedIndex = variableTableModel.getRowCount() - 1;
         //variableTable.setRowSelectionInterval(selectedIndex, selectedIndex);
         
@@ -579,8 +603,42 @@ public final class MLLearningTopComponent extends TopComponent {
         isPagePaneSplited = toSplit;
     }
     private void mainTabbedPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_mainTabbedPaneStateChanged
+        PagePanel pagePanel = (PagePanel) mainTabbedPane.getSelectedComponent();
+        if(pagePanel == null){
+            return;
+        }
+        if (pagePanel.isUpdateRequired) {
+            if (pagePanel instanceof DataPanel) {
+                if (UpdatePanelFlag.DataPanelUpdateFlag) {
+                    DataPanel panel = (DataPanel) pagePanel;
+                    panel.setMLModel(mlModel);
+                    UpdatePanelFlag.DataPanelUpdateFlag = false;
+                }
+            } else if (pagePanel instanceof HistogramPanel) {
+                if (UpdatePanelFlag.HistogramUpdateFlag) {
+                    HistogramPanel panel = (HistogramPanel) pagePanel;
+                    panel.setMLModel(mlModel);
+                    UpdatePanelFlag.HistogramUpdateFlag = false;
+                    //panel.setSelectedVariableIndices(getSelectedVariableIndices());
+                }
+            } else if (pagePanel instanceof CrossPlotPanel) {
+                if (UpdatePanelFlag.CrossPlotUpdateFlag) {
+                    CrossPlotPanel panel = (CrossPlotPanel) pagePanel;
+                    panel.setMLModel(mlModel);
+                    UpdatePanelFlag.CrossPlotUpdateFlag = false;
+                    //panel.setSelectedVariableIndices(getSelectedVariableIndices());
+                }
+            } else if (pagePanel instanceof PlotPanel) {
+                if (UpdatePanelFlag.PlotPanelUpdateFlag) {
+                    PlotPanel panel = (PlotPanel) pagePanel;
+                    panel.setMLModel(mlModel);
+                    UpdatePanelFlag.PlotPanelUpdateFlag = false;
+                    //panel.setSelectedVariableIndices(getSelectedVariableIndices());
+                }
+            }
+        }
 
-            updatePagePanels();
+        //updatePagePanels();
     }//GEN-LAST:event_mainTabbedPaneStateChanged
 
     private void classificationToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_classificationToggleButtonActionPerformed
@@ -641,7 +699,7 @@ public final class MLLearningTopComponent extends TopComponent {
                     UpdatePanelFlag.HistogramUpdateFlag = false;
                     UpdatePanelFlag.CrossPlotUpdateFlag = true;
                     UpdatePanelFlag.PlotPanelUpdateFlag = true;
-                    updatePagePanels();
+                    updateActivePagePanels();
                 }
                 break;
             case MLGlobal.CLASSIFYING_MODE:
@@ -651,7 +709,7 @@ public final class MLLearningTopComponent extends TopComponent {
                     UpdatePanelFlag.HistogramUpdateFlag = false;
                     UpdatePanelFlag.CrossPlotUpdateFlag = true;
                     UpdatePanelFlag.PlotPanelUpdateFlag = true;
-                    updatePagePanels();
+                    updateActivePagePanels();
                 }
                 break;
             case MLGlobal.CLUSTERING_MODE:
@@ -662,7 +720,7 @@ public final class MLLearningTopComponent extends TopComponent {
                     UpdatePanelFlag.HistogramUpdateFlag = false;
                     UpdatePanelFlag.CrossPlotUpdateFlag = true;
                     UpdatePanelFlag.PlotPanelUpdateFlag = true;
-                    updatePagePanels();
+                    updateActivePagePanels();
                 }
                 break;
         }
@@ -747,7 +805,7 @@ public final class MLLearningTopComponent extends TopComponent {
                     JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow()," 采样率："+dataHepler.getDepthLevel()+"有效行数："+rowUsed);
                     
                     UpdatePanelFlag.DataPanelUpdateFlag = true;
-                    updatePagePanels();
+                    updateActivePagePanels();
       
                 }
                 break;
@@ -799,7 +857,7 @@ public final class MLLearningTopComponent extends TopComponent {
         UpdatePanelFlag.DataPanelUpdateFlag = true;
         UpdatePanelFlag.CrossPlotUpdateFlag = true;
         UpdatePanelFlag.PlotPanelUpdateFlag = true;
-        updatePagePanels();
+        updateActivePagePanels();
         
     }
 
@@ -820,18 +878,21 @@ public final class MLLearningTopComponent extends TopComponent {
     private void selectPagePanel(PagePanel panel) {
         if (mainTabbedPane.getComponentZOrder(panel) >= 0) {
             mainTabbedPane.setSelectedComponent(panel);
+        }else if(subTabbedPane.getComponentZOrder(panel)>=0){
+            subTabbedPane.setSelectedComponent(panel);
         }
     }
 
     private void variableTableRowSelected() {
-        updatePagePanels();
+        updateActivePagePanels();
     }
     
    
 
-    public void updatePagePanels(){
+    public void updateActivePagePanels(){
         int mainOrSubPagePane = 2;
         PagePanel[] panels = getActivePagePanel(mainOrSubPagePane);
+        
         for (PagePanel pagePanel : panels) {
             if (pagePanel instanceof DataPanel) {
                 if (UpdatePanelFlag.DataPanelUpdateFlag) {

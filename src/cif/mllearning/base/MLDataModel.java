@@ -26,7 +26,7 @@ public class MLDataModel {
     public final static int X_VARIABLE_LITH = 3;
     public final static int Y_VARIABLE_LITH = 4;
     public final static int X_VARIABLE_ALL = 5;
-    
+    public final static int Y_VARIABLE_ALL = 6;
     public int dataFrom = -1;
     public DataPath inputDataPath;
 
@@ -53,6 +53,7 @@ public class MLDataModel {
 
     //记录聚类数
     public int clusterCount = 0;
+    public HashMap<String,Integer> StringIntMapForOil = null;
     public HashMap<Integer,Integer> clusterLayerMap = new HashMap<>();
     
     public void setVariableNames(String[] names) {

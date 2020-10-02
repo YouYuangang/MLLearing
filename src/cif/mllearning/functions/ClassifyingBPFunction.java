@@ -6,7 +6,9 @@
 package cif.mllearning.functions;
 
 import cif.loglab.math.MathBase;
+import cif.mllearning.base.MLDataModel;
 import cif.mllearning.base.UpdatePanelFlag;
+import cif.mllearning.base.Variable;
 import cif.mllearning.configure.LoadConfigure;
 import java.awt.Frame;
 import java.io.BufferedWriter;
@@ -32,11 +34,13 @@ import org.openide.windows.WindowManager;
  */
 public class ClassifyingBPFunction extends Function {
    
-    private Normalization normalization;
+    private Normalization normalizationForOil;
+    private Normalization normalizationForLith;
+    
     private int hiddenNeuronCount = 16;
     private double learningRate = 0.05;
     private double maxError = 0.005;
-    private int maxIteration = 1000;
+    private int maxIteration = 200;
     
     private int[] desiredYOil = null;
     private int[] desiredYLith = null;
@@ -46,16 +50,14 @@ public class ClassifyingBPFunction extends Function {
     public int XcountLith = 0;
     public int YcountLith = 0;
     
+    public boolean oilFlag = false;
+    public boolean lithFlag = false;
+    
     @Override
     public boolean setParameters(Frame parentWindow) {
         BP_ANNDialog dialog = new BP_ANNDialog(parentWindow, true);
         dialog.setLocationRelativeTo(parentWindow);
-        /////////////////////////
-        
-        
-        int yCount = LoadConfigure.colorLayers.size();
-        /////////////////////////
-
+        int yCount = mlModel.StringIntMapForOil.size();
         Object[] paras = mlModel.getParameters(this.getClass().getSimpleName());
         hiddenNeuronCount = (int) (Math.sqrt(XcountOil + yCount) + 5);
         dialog.setHiddenNeuronCount(paras == null ? hiddenNeuronCount : (int) paras[0]);
@@ -77,45 +79,23 @@ public class ClassifyingBPFunction extends Function {
     }
 
     @Override
-    protected Integer doInBackground() throws Exception {
+    protected Integer doInBackground() throws Exception { 
+        Variable[] variables = mlModel.getVariables();
+        for(int i = 0;i<variables.length;i++){
+            if(variables[i].flag == MLDataModel.Y_VARIABLE_OIL){
+                oilFlag = true;
+            }
+            if(variables[i].flag == MLDataModel.Y_VARIABLE_LITH){
+                lithFlag = true;
+            }
+        }
         if (flag == Function.GENERATE_MODEL) {
-            printDataMessage();
-            DataSet dataSet = formLearningOilDataSet();
-            MultiLayerPerceptron neuralNet = new MultiLayerPerceptron(dataSet.getInputSize(), hiddenNeuronCount,hiddenNeuronCount-2, dataSet.getOutputSize());
-            MomentumBackpropagation learningRule = (MomentumBackpropagation) neuralNet.getLearningRule();
-            learningRule.setMaxIterations(maxIteration);
-            learningRule.addListener(new LearningEventListener() {
-                @Override
-                public void handleLearningEvent(LearningEvent event) {
-                    BackPropagation bp = (BackPropagation) event.getSource();
-                    String str = bp.getCurrentIteration() + ". iteration | Total Error: " + bp.getTotalNetworkError();
-                    progressPrint(str);
-                    println(str);
-                }
-            });
-            learningRule.setLearningRate(learningRate);
-            learningRule.setMaxError(maxError);
-            println("开始训练：");
-            neuralNet.learn(dataSet);
-            println("完成训练");
-            String filePath = FunTools.getModelPath() + File.separator + FunTools.getModelFileName("Classfy_BP", mlModel);
-            neuralNet.save(filePath);
-            
-           
-            FunTools.saveModelAuxFile(true, filePath, mlModelHelper, normalization,this);
-            
-            
-            
-            int[] py = computeY(neuralNet, dataSet);
-            int correctCount = FunTools.computeEquivalenceCount(desiredYOil, py);
-            StringBuilder sb = new StringBuilder();
-            sb.append("总数： ").append(py.length);
-            sb.append(", 正确个数: ").append(correctCount);
-            sb.append(", 正确率： ").append(String.format("%.2f", correctCount * 100.0 / py.length)).append("%\n");
-            printHighlight(sb.toString());
-            println("Save Model: " + filePath);
-            printLine();
-            return 0;
+            if(oilFlag){
+                startOilModelTrain();
+            }
+            if(lithFlag){
+                //startLithModelTrain();
+            }
         } else {
             DataSet needToClassify = formToClassifyDataSet();
             MultiLayerPerceptron neuralNet = (MultiLayerPerceptron)NeuralNetwork.createFromFile(modelPath);
@@ -134,7 +114,43 @@ public class ClassifyingBPFunction extends Function {
             UpdatePanelFlag.PlotPanelUpdateFlag = true;
             return 0;
         }
+        return 1;
+    }
+    
+    public void startOilModelTrain() {
+        printDataMessage();
+        DataSet dataSet = formLearningOilDataSet();
+        MultiLayerPerceptron neuralNet = new MultiLayerPerceptron(dataSet.getInputSize(), hiddenNeuronCount, hiddenNeuronCount - 2, dataSet.getOutputSize());
+        MomentumBackpropagation learningRule = (MomentumBackpropagation) neuralNet.getLearningRule();
+        learningRule.setMaxIterations(maxIteration);
+        learningRule.addListener(new LearningEventListener() {
+            @Override
+            public void handleLearningEvent(LearningEvent event) {
+                BackPropagation bp = (BackPropagation) event.getSource();
+                String str = bp.getCurrentIteration() + ". iteration | Total Error: " + bp.getTotalNetworkError();
+                progressPrint(str);
+                println(str);
+            }
+        });
+        learningRule.setLearningRate(learningRate);
+        learningRule.setMaxError(maxError);
+        println("开始训练：");
+        neuralNet.learn(dataSet);
+        println("完成训练");
+        //String filePath = FunTools.getModelPath() + File.separator + FunTools.getModelFileName("Classfy_BP", mlModel);
+        String filePath = LoadConfigure.trainedModelPath+File.separator+"oil_bp.model";
+        neuralNet.save(filePath);
+        FunTools.saveModelAuxFile(filePath,normalizationForOil,this);
 
+        int[] py = computeY(neuralNet, dataSet);
+        int correctCount = FunTools.computeEquivalenceCount(desiredYOil, py);
+        StringBuilder sb = new StringBuilder();
+        sb.append("总数： ").append(py.length);
+        sb.append(", 正确个数: ").append(correctCount);
+        sb.append(", 正确率： ").append(String.format("%.2f", correctCount * 100.0 / py.length)).append("%\n");
+        printHighlight(sb.toString());
+        println("Save Model: " + filePath);
+        printLine();
     }
 
     private void printDataMessage() {
@@ -162,21 +178,24 @@ public class ClassifyingBPFunction extends Function {
     private DataSet formLearningOilDataSet() {
         
         int xCount = dataHelper.getOilXVariableCount();
+        int yCount = mlModel.StringIntMapForOil.size();
+        this.XcountOil = xCount;
+        this.YcountOil = yCount;
         int rowCount = dataHelper.getRealRowCount();
-        normalization = new Normalization(xCount, -1);
         
+        normalizationForOil = new Normalization(xCount, -1);
+        
+        //获取desiredYOil
         if(dataHelper.oilYVariableColumnIndex>=0){
             desiredYOil = new int[rowCount];
             for(int i = 0;i<desiredYOil.length;i++){
-                dataHelper.readOilYData(dataHelper.oilYVariableColumnIndex,desiredYOil);
-            }
-        }else{
-            desiredYOil = new int[rowCount];
-            dataHelper.getLabeledY(desiredYOil);
+                String OilLabel = dataHelper.getRawStringData(dataHelper.oilYVariableColumnIndex, dataHelper.realRowIndices[i]);
+                desiredYOil[i] = mlModel.StringIntMapForOil.get(OilLabel);
+            } 
         }
         
         
-        int yCount = LoadConfigure.colorLayers.size();
+        
         DataSet dataSet = new DataSet(xCount, yCount);
 
         for (int i = 0; i < rowCount; i++) {
@@ -189,7 +208,7 @@ public class ClassifyingBPFunction extends Function {
         for (int col = 0; col < xCount; col++) {
             dataHelper.readOilXData(col, buffer);
             String variableName = dataHelper.getOilXVariableName(col);
-            normalization.normalizeXVar(variableName,col, buffer, MathBase.minimum(buffer), MathBase.maximum(buffer));
+            normalizationForOil.normalizeXVar(variableName,col, buffer, MathBase.minimum(buffer), MathBase.maximum(buffer));
             for (int row = 0; row < rowCount; row++) {
                 dataSet.get(row).getInput()[col] = buffer[row];
             }
@@ -205,9 +224,9 @@ public class ClassifyingBPFunction extends Function {
     private DataSet formToClassifyDataSet() {
         int xCount = dataHelper.getOilXVariableCount();
         int rowCount = dataHelper.getRealRowCount();
-        normalization = new Normalization(xCount, -1);
+        normalizationForOil = new Normalization(xCount, -1);
         
-        int yCount = LoadConfigure.colorLayers.size();
+        int yCount = mlModel.StringIntMapForOil.size();
         DataSet dataSet = new DataSet(xCount, yCount);
         
         for (int i = 0; i < rowCount; i++) {
@@ -216,11 +235,12 @@ public class ClassifyingBPFunction extends Function {
             DataSetRow dataSetRow = new DataSetRow(xData, yData);
             dataSet.add(dataSetRow);
         }
+        
         double[] buffer = new double[rowCount];
         for (int col = 0; col < xCount; col++) {
             dataHelper.readOilXData(col, buffer);
             String variableName = dataHelper.getOilXVariableName(col);
-            normalization.normalizeXVar(variableName,col, buffer, MathBase.minimum(buffer), MathBase.maximum(buffer));
+            normalizationForOil.normalizeXVar(variableName,col, buffer, MathBase.minimum(buffer), MathBase.maximum(buffer));
             for (int row = 0; row < rowCount; row++) {
                 dataSet.get(row).getInput()[col] = buffer[row];
             }

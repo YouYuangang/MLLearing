@@ -87,27 +87,16 @@ public class FunTools {
         return Global.getUserResourcePath(Global.PATH_ML_MODEL);
     }
 
-    public static void saveModelAuxFile(boolean isYExisted, String modelFilePath, MLDataModelHelper mlModelHelper, Normalization normalization,Function function) {
+    public static void saveModelAuxFile(String modelFilePath, Normalization normalization, Function function) {
         BufferedWriter outputWriter = null;
         try {
             outputWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(modelFilePath + "Aux"), "UTF-8"));
             StringBuilder sb = new StringBuilder();
-            if (isYExisted) {
-                String[] names = mlModelHelper.getOilXVariableNames();
-                sb.append("x,").append(names.length).append("\n");
-                for (int i = 0; i < names.length; i++) {
-                    sb.append(names[i]).append(",").append(normalization.getXVarLower(i)).append(",").append(normalization.getXVarUpper(i)).append("\n");
-                }
-                sb.append("y,1\n");
-                sb.append(mlModelHelper.getOilYVariableName()).append(",").append(normalization.getYVarLower()).append(",").append(normalization.getYVarUpper()).append("\n");
-            } else {
-                String[] names = mlModelHelper.getRealVariableNames();
-                sb.append("x,").append(names.length).append("\n");
-                function.println("realVariableLenth:"+names.length);
-                for (int i = 0; i < names.length; i++) {
-                    sb.append(names[i]).append(",").append(i).append("\n");
-                    
-                }
+            String[] names = normalization.names;
+            sb.append("x,").append(names.length).append("\n");
+            function.println("realVariableLenth:" + names.length);
+            for (int i = 0; i < names.length; i++) {
+                sb.append(names[i]).append(",").append(i).append("\n");
             }
             outputWriter.write(sb.toString());
             outputWriter.close();

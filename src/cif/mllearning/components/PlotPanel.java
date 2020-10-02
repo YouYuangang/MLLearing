@@ -113,6 +113,10 @@ public class PlotPanel extends PagePanel {
 
     public void setMLModel(MLDataModel mlModel) {
         this.mlModel = mlModel;
+        if(mlModel.dataFrom == MLDataModel.FROM_TEXT){
+            JOptionPane.showMessageDialog(this, "暂不支持从文本绘图");
+            return;
+        }
         if (mlModel.getVariables() == null) {
             JOptionPane.showMessageDialog(this, "请选择数据！");
             return;
