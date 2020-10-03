@@ -5,6 +5,8 @@
  */
 package cif.mllearning.functions;
 
+import java.util.HashMap;
+
 /**
  *
  * @author wangcaizhi
@@ -19,6 +21,7 @@ public class Normalization {
     public double[] varLowers;
     public double[] varUppers;
     public String[] names;
+    public HashMap<String,Integer> StringIntMap = null;
     
     
     

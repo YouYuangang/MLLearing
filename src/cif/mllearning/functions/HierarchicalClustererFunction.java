@@ -67,8 +67,8 @@ public class HierarchicalClustererFunction extends Function {
             clusterResult[i] = hc.clusterInstance(dataSet.get(i));
         }
 
-        mlModel.clusterResult = clusterResult;
-        mlModel.clusterCount = clusterCount;
+        mlModel.clusterResultOil = clusterResult;
+        mlModel.clusterCountOil = clusterCount;
         printLine();
 
         return 1;

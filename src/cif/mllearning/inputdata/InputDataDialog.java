@@ -490,9 +490,7 @@ public class InputDataDialog extends javax.swing.JDialog {
         }
         
         
-        mlModel.classifyResult = null;
-        mlModel.clusterResult = null;
-        mlModel.predictResult = null;
+        mlModel.clearResult();
         doClose(RET_OK);
     }//GEN-LAST:event_okButtonActionPerformed
 

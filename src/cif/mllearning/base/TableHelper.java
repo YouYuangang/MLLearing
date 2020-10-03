@@ -32,7 +32,7 @@ public class TableHelper {
      * @return 
      */
     public int fillDataLabelFromTable(String tableName) {
-        for(int i = 0;i<mlModel.dataRowSelectedFlags.length;i++){
+        /*for(int i = 0;i<mlModel.dataRowSelectedFlags.length;i++){
             mlModel.dataRowSelectedFlags[i] = false;
         }
         LogCategory category = mlModel.inputDataPath.getCategory();
@@ -77,31 +77,33 @@ public class TableHelper {
                 }
             }
         }
-        return rowUsed;
+        return rowUsed;*/
+        return 0;
     }
     /**
      * 根据提供的tableName即分类结果所在表格，填充mlModel.classifyResult
      * @param tableName
      * @return 
      */
-    public int fillClassifyResultFromTable(String tableName){
+    public int fillClassifyResultOilFromTable(String tableName){
         DataHelper dataHelper = new DataHelper(mlModel);
         int rowUsed = dataHelper.getRawDataCount();
-        mlModel.classifyResult = new int[rowUsed];
-        for(int i = 0;i<mlModel.classifyResult.length;i++){
-            mlModel.classifyResult[i] = 0;
+        mlModel.classifyResultOil = new String[rowUsed];
+        for(int i = 0;i<mlModel.classifyResultOil.length;i++){
+            mlModel.classifyResultOil[i] = " ";
         }
         LogCategory category = mlModel.inputDataPath.getCategory();
         LogTable labelTable = category.getLogCommonTable(tableName);
         if(labelTable == null){
-            JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), "不存在分类结果表");
+            JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), "不存在含油性分类结果表");
+            return 0;
         }
         int row = labelTable.getRowCount();
         int col = labelTable.getColumnCount();
         TableRecords tableRecord = new TableRecords();
         labelTable.readTableRecords(tableRecord);
         int resIndex = 0;
-        int label = 0;
+        String label = " ";
         int maxLabel = 0;
         float depth;
         int count = 0;
@@ -109,11 +111,11 @@ public class TableHelper {
         for (int i = 0; i < row; i++) {
             resIndex = 0;
             depth = tableRecord.getRecordFloatData(i, 0);
-            label = tableRecord.getRecordIntData(i, 2);
+            label = tableRecord.getRecordStringData(i, 2);
             resIndex = (int)((depth-mlModel.curveStdep)/dataHelper.getDepthLevel());
             
-            if(resIndex>=0&&resIndex<mlModel.classifyResult.length){
-                mlModel.classifyResult[resIndex] = label;
+            if(resIndex>=0&&resIndex<mlModel.classifyResultOil.length){
+                mlModel.classifyResultOil[resIndex] = label;
                 count++;
             }
         }
@@ -124,12 +126,12 @@ public class TableHelper {
      * @param tableName
      * @return 
      */
-    public int fillClusterResultFromTable(String tableName){
+    public int fillClusterResultOilFromTable(String tableName){
         DataHelper dataHelper = new DataHelper(mlModel);
         int rowUsed = dataHelper.getRawDataCount();
-        mlModel.clusterResult = new int[rowUsed];
-        for(int i =0;i<mlModel.clusterResult.length;i++){
-            mlModel.clusterResult[i] = -1;
+        mlModel.clusterResultOil = new int[rowUsed];
+        for(int i =0;i<mlModel.clusterResultOil.length;i++){
+            mlModel.clusterResultOil[i] = -1;
         }
         LogCategory category = mlModel.inputDataPath.getCategory();
         LogTable clusterTable = category.getLogCommonTable(tableName);
@@ -154,8 +156,8 @@ public class TableHelper {
                 maxLabel=label;
             }
             resIndex = (int)((depth-mlModel.curveStdep)/dataHelper.getDepthLevel());
-            if(resIndex>=0&&resIndex<mlModel.clusterResult.length){
-                mlModel.clusterResult[resIndex] = label;
+            if(resIndex>=0&&resIndex<mlModel.clusterResultOil.length){
+                mlModel.clusterResultOil[resIndex] = label;
                 count++;
             }
         }
@@ -164,7 +166,7 @@ public class TableHelper {
         return maxLabel;
     }
     
-    public int saveToTableFromClassifyRes(String tableName) {
+    public int saveToTableFromClassifyResOil(String tableName) {
         LogCategory logCategory = mlModel.inputDataPath.getCategory();
         if (logCategory.getLogCommonTable(tableName) != null) {
             logCategory.deleteLogging(tableName);
@@ -177,8 +179,8 @@ public class TableHelper {
         tableFields.setName(1, "结束深度");
         tableFields.setDataType(1, Global.DATA_DEPTH);
         tableFields.setUnit(1, "米");
-        tableFields.setName(2, "分类结果");
-        tableFields.setDataType(2, Global.DATA_INT);
+        tableFields.setName(2, "含油性分类结果");
+        tableFields.setDataType(2, Global.DATA_STRING);
         tableFields.setUnit(2, "");
         
         TableRecords tableRecords = new TableRecords();
@@ -194,7 +196,7 @@ public class TableHelper {
             if(indexInClassifyRes<mlModel.dataRowSelectedFlags.length){
                 tableRecords.setRecordDoubleData(i, 0, mlModel.curveStdep+indexInClassifyRes*dataHelper.getDepthLevel());
                 tableRecords.setRecordDoubleData(i, 1, mlModel.curveStdep+(indexInClassifyRes+1)*dataHelper.getDepthLevel());
-                tableRecords.setRecordIntData(i, 2, mlModel.classifyResult[indexInClassifyRes]);
+                tableRecords.setRecordStringData(i, 2, mlModel.classifyResultOil[indexInClassifyRes]);
                 indexInClassifyRes++;
             }
         }
@@ -202,7 +204,7 @@ public class TableHelper {
         return 1;
     }
     
-    public int saveToTableFromClusterRes(String tableName) {
+    public int saveToTableFromClusterResOil(String tableName) {
         LogCategory logCategory = mlModel.inputDataPath.getCategory();
         if (logCategory.getLogCommonTable(tableName) != null) {
             logCategory.deleteLogging(tableName);
@@ -231,7 +233,7 @@ public class TableHelper {
             if(indexInClassifyRes<mlModel.dataRowSelectedFlags.length){
                 tableRecords.setRecordDoubleData(i, 0, mlModel.curveStdep+indexInClassifyRes*dataHelper.getDepthLevel());
                 tableRecords.setRecordDoubleData(i, 1, mlModel.curveStdep+(indexInClassifyRes+1)*dataHelper.getDepthLevel());
-                tableRecords.setRecordIntData(i, 2, mlModel.clusterResult[indexInClassifyRes]);
+                tableRecords.setRecordIntData(i, 2, mlModel.clusterResultOil[indexInClassifyRes]);
                 indexInClassifyRes++;
             }
         }

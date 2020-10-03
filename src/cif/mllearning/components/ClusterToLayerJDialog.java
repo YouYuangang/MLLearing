@@ -67,7 +67,7 @@ public class ClusterToLayerJDialog extends javax.swing.JDialog {
     public void setModel(MLDataModel mlModel){
         if(mlModel!=null){
             this.mlModel = mlModel;
-            String[] values = new String[LoadConfigure.colorLayers.size()+1];
+            /*String[] values = new String[LoadConfigure.colorLayers.size()+1];
             values[0] = new String("未设置");
             for(int i =0;i<LoadConfigure.colorLayers.size();i++){
                 values[i+1] = LoadConfigure.colorLayers.get(i).nameOfLayer;
@@ -80,7 +80,7 @@ public class ClusterToLayerJDialog extends javax.swing.JDialog {
             //tableModel.setModel(mlModel);
             clusterTable.getColumnModel().getColumn(1).setCellRenderer(new TableRender());
             clusterTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(box));
-            
+            */
             
         }
         
@@ -157,7 +157,7 @@ public class ClusterToLayerJDialog extends javax.swing.JDialog {
                 return;
             }
         }
-        for(int i = 0;i<rowLen;i++){
+        /*for(int i = 0;i<rowLen;i++){
             String nameOfLayer = (String)(tableModel.getValueAt(i, 1));
             for(int j = 0;j<LoadConfigure.colorLayers.size();j++){
                 if(nameOfLayer.equals(LoadConfigure.colorLayers.get(j).nameOfLayer)){
@@ -166,7 +166,7 @@ public class ClusterToLayerJDialog extends javax.swing.JDialog {
             
                 }
             }
-        }
+        }*/
         doClose(R_OK);
         
     }//GEN-LAST:event_okBtnActionPerformed

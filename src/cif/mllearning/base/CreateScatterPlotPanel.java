@@ -163,7 +163,7 @@ public class CreateScatterPlotPanel {
         XYDataset dataset;
         
 
-        if (mlModel.learningMode == MLGlobal.CLUSTERING_MODE && mlModel.clusterResult != null) {
+        if (mlModel.learningMode == MLGlobal.CLUSTERING_MODE && mlModel.clusterResultOil!= null) {
             dataset = plotData.createClusterDataset(index1, index2);
         } else {
             dataset = plotData.createDataset(index1, index2);
@@ -172,7 +172,7 @@ public class CreateScatterPlotPanel {
 //        JFreeChart localJFreeChart = createChart(dataset, plotData.getVariableName(index1), plotData.getVariableName(index2));       
         JFreeChart localJFreeChart = createChart(dataset, plotData.getVariableNameAndUnit(index1), plotData.getVariableNameAndUnit(index2));
 
-        if (mlModel.learningMode != MLGlobal.CLUSTERING_MODE || mlModel.clusterResult == null) {
+        if (mlModel.learningMode != MLGlobal.CLUSTERING_MODE || mlModel.clusterResultOil == null) {
             localJFreeChart.getLegend().visible = false;
         }
 

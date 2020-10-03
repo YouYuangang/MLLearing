@@ -47,15 +47,32 @@ public class MLDataModel {
     public int learningMode;
 
     //保存聚类结果
-    public int[] clusterResult = null;
-    public int[] classifyResult = null;
+    public int[] clusterResultOil = null;
+    public int [] clusterResultLith= null;
+    
+    public String[] classifyResultOil = null;
+    public String[] classifyResultLith = null;
+    
     public double[] predictResult = null;
 
     //记录聚类数
-    public int clusterCount = 0;
+    public int clusterCountOil = 0;
+    public int clusterCountLith = 0;
     public HashMap<String,Integer> StringIntMapForOil = null;
-    public HashMap<Integer,Integer> clusterLayerMap = new HashMap<>();
+    public HashMap<String,Integer> StringIntMapForLith = null;
     
+    public void clearResult() {
+        clusterResultOil = null;
+        clusterResultLith = null;
+        classifyResultOil = null;
+        classifyResultLith = null;
+        predictResult = null;
+
+        clusterCountOil = 0;
+        clusterCountLith = 0;
+        StringIntMapForOil = null;
+        StringIntMapForLith = null;
+    }
     public void setVariableNames(String[] names) {
         variables = new Variable[names.length];
         for (int i = 0; i < variables.length; i++) {

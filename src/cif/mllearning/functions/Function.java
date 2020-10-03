@@ -20,7 +20,6 @@ public abstract class Function extends SwingWorker<Integer, Integer> {
     public static final int GENERATE_MODEL = 0;
     public static final int RUN_MODEL = 1;
     public int flag = 0;
-    public String modelPath = "";
     
     protected MLDataModel mlModel;
     protected MLDataModelHelper mlModelHelper;

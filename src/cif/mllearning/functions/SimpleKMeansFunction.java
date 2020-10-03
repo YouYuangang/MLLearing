@@ -115,8 +115,8 @@ public class SimpleKMeansFunction extends Function {
                clusterResult2[i] = 100;
            }
        }
-        mlModel.clusterResult = clusterResult2;
-        mlModel.clusterCount = clusterCount;
+        mlModel.clusterResultOil = clusterResult2;
+        mlModel.clusterCountOil = clusterCount;
         
         
         /**

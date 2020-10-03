@@ -242,4 +242,13 @@ public class MLDataModelHelper {
         }
     }
 
+    public String getLithYVariableName() {
+        for(Variable varX:mlModel.getVariables()){
+            if(varX.flag == MLDataModel.Y_VARIABLE_LITH){
+                return varX.name;
+            }
+        }
+        return "没有岩性标签";
+    }
+
 }

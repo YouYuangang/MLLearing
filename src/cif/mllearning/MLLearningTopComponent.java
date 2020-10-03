@@ -453,11 +453,7 @@ public final class MLLearningTopComponent extends TopComponent {
         dialog.setMLModel(mlModel);
         dialog.setVisible(true);
         if (dialog.getReturnStatus() == InputDataDialog.RET_OK) {
-            mlModel.predictResult = null;
-            mlModel.classifyResult = null;
-            mlModel.clusterResult = null;
-            
-            
+            mlModel.clearResult();
             variableTableModel.refreshViewData();
             variableTableModel.fireTableDataChanged();
             MLDataModelHelper.saveMlModelToFile(mlModel);
@@ -658,15 +654,7 @@ public final class MLLearningTopComponent extends TopComponent {
             try {
                 function = (Function) mlGlobal.getFunctionProxys(learningMode)[index].classType.newInstance();
                 function.setRunModel(Function.RUN_MODEL);
-                JFileChooser jfc = new JFileChooser(new File(FunTools.getModelPath()));
-                int retStatus = jfc.showDialog(this, "选择");
-                if(retStatus == JFileChooser.APPROVE_OPTION){
-                    File moldelFile = jfc.getSelectedFile();
-                    function.modelPath = moldelFile.getAbsolutePath();
-                    FunTools.checkXsAreRightAndOrder(moldelFile.getAbsolutePath()+"Aux", mlModel, variableTableModel,mlGlobal);
-                    executeFunction(function, Function.RUN_MODEL);
-                }
-                
+                executeFunction(function, Function.RUN_MODEL);
             } catch (InstantiationException | IllegalAccessException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -690,7 +678,7 @@ public final class MLLearningTopComponent extends TopComponent {
 
     private void clearClusterBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearClusterBtnActionPerformed
         // TODO add your handling code here:
-        switch(learningMode){
+        /*switch(learningMode){
             case MLGlobal.PREDICTING_MODE :
                 if(mlModel.predictResult!=null){
                     mlModel.predictResult = null;
@@ -723,7 +711,7 @@ public final class MLLearningTopComponent extends TopComponent {
                     updateActivePagePanels();
                 }
                 break;
-        }
+        }*/
     }//GEN-LAST:event_clearClusterBtnActionPerformed
 
     private void functionComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_functionComboBoxActionPerformed
@@ -759,10 +747,10 @@ public final class MLLearningTopComponent extends TopComponent {
         TableHelper tableHelper = new TableHelper(mlModel);
         switch(learningMode){
             case MLGlobal.CLASSIFYING_MODE:
-                tableHelper.saveToTableFromClassifyRes("分类结果");
+                tableHelper.saveToTableFromClassifyResOil("含油性分类结果");
                 break;
             case MLGlobal.CLUSTERING_MODE:
-                tableHelper.saveToTableFromClusterRes("聚类结果");
+                tableHelper.saveToTableFromClusterResOil("含油性聚类结果");
                 break;
             default:
                 
@@ -780,8 +768,6 @@ public final class MLLearningTopComponent extends TopComponent {
         int i = 0;
         DataHelper dataHepler = new DataHelper(mlModel);
         switch(learningMode){
-            
-                
             case MLGlobal.PREDICTING_MODE:
                 
                 break;

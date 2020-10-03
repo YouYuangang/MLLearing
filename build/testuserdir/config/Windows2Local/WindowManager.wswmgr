@@ -3,10 +3,10 @@
 <windowmanager version="2.1">
     <main-window>
   <joined-properties
-   x="76"
-   y="32"
-   width="1678"
-   height="1008"
+   x="-8"
+   y="-8"
+   width="1382"
+   height="744"
    relative-x="0.0"
    relative-y="0.0"
    relative-width="0.0"
@@ -40,7 +40,7 @@
   </constraints>
   <bounds x="633" y="259" width="806" height="475" />
     </editor-area>
-    <screen width="1920" height="1080"/>
+    <screen width="1366" height="768"/>
     <active-mode name="editor"/>
     <toolbar configuration="Standard" preferred-icon-size="24"/>
     <tc-list>

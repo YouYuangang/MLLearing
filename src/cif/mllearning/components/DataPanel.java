@@ -199,9 +199,6 @@ public class DataPanel extends PagePanel {
     private void initComponents() {
 
         jToolBar1 = new javax.swing.JToolBar();
-        labelAs = new javax.swing.JButton();
-        clearLabelBtn = new javax.swing.JButton();
-        jSeparator3 = new javax.swing.JToolBar.Separator();
         filterDataBtn = new javax.swing.JButton();
         enableButton = new javax.swing.JButton();
         disableButton = new javax.swing.JButton();
@@ -213,31 +210,6 @@ public class DataPanel extends PagePanel {
 
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
-
-        labelAs.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cif/mllearning/icons/labelAs.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(labelAs, org.openide.util.NbBundle.getMessage(DataPanel.class, "DataPanel.labelAs.text")); // NOI18N
-        labelAs.setFocusable(false);
-        labelAs.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        labelAs.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        labelAs.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                labelAsActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(labelAs);
-
-        clearLabelBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cif/mllearning/icons/clearLable.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(clearLabelBtn, org.openide.util.NbBundle.getMessage(DataPanel.class, "DataPanel.clearLabelBtn.text")); // NOI18N
-        clearLabelBtn.setFocusable(false);
-        clearLabelBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        clearLabelBtn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        clearLabelBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clearLabelBtnActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(clearLabelBtn);
-        jToolBar1.add(jSeparator3);
 
         filterDataBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cif/mllearning/icons/filterData.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(filterDataBtn, org.openide.util.NbBundle.getMessage(DataPanel.class, "DataPanel.filterDataBtn.text")); // NOI18N
@@ -371,49 +343,15 @@ public class DataPanel extends PagePanel {
         }
     }//GEN-LAST:event_filterDataBtnActionPerformed
 
-    private void labelAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_labelAsActionPerformed
-        // TODO add your handling code here:
-        int[] rows = dataTable.getSelectedRows();
-        if (rows.length > 0) {
-            Frame parent = WindowManager.getDefault().getMainWindow();
-            ChooseLabelJDialog chooseLabelJDialog = new ChooseLabelJDialog(parent, true);
-            chooseLabelJDialog.setLocationRelativeTo(parent);
-            chooseLabelJDialog.setVisible(true);
-            if (chooseLabelJDialog.retStatu == ChooseLabelJDialog.OK) {
-                for (int row : rows) {
-                    mlModel.dataRowSelectedFlags[row] = true;
-                    mlModel.dataLabelAs[row] = chooseLabelJDialog.getChooseBoxIndex();
-                    //tableModel.fireTableCellUpdated(row, 0);
-                }
-            }
-
-            tableModel.fireTableDataChanged();
-        }
-
-    }//GEN-LAST:event_labelAsActionPerformed
-
-    private void clearLabelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearLabelBtnActionPerformed
-        // TODO add your handling code here:
-        if(mlModel.dataLabelAs!=null){
-            for(int i = 0;i<mlModel.dataLabelAs.length;i++){
-                mlModel.dataLabelAs[i] = -1;
-            }
-            tableModel.fireTableDataChanged();
-        }
-    }//GEN-LAST:event_clearLabelBtnActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton clearLabelBtn;
     private javax.swing.JTable dataTable;
     private javax.swing.JButton disableButton;
     private javax.swing.JButton enableAllButton;
     private javax.swing.JButton enableButton;
     private javax.swing.JButton filterDataBtn;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar jToolBar1;
-    private javax.swing.JButton labelAs;
     // End of variables declaration//GEN-END:variables
 
     @Override

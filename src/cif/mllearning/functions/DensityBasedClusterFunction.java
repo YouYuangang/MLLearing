@@ -106,8 +106,8 @@ public class DensityBasedClusterFunction extends Function {
         
         
 
-        mlModel.clusterResult = clusterResult;
-        mlModel.clusterCount = clusterCount;
+        mlModel.clusterResultOil = clusterResult;
+        mlModel.clusterCountOil = clusterCount;
         printLine();
         return 1;
     }

@@ -47,6 +47,7 @@ public class DataHelper {
         }
         formRowIndices();
         formColumnIndices();
+        generateStringIntMap();
         
     }
     public double getDepthLevel(){
@@ -103,24 +104,29 @@ public class DataHelper {
                 usedVariableColumnIndeices[usedVarIndex++] = i;
             }
         }
-        gnerateStringIntMapForOil(mlModel);
+        
+        
     }
     /*public String getRealXVariableName(int realIndex){
         return mlModel.getVariables()[realXVariableColumnIndices[realIndex]].name;
     }*/
-     public  void gnerateStringIntMapForOil(MLDataModel mlModel){
+     public void generateStringIntMap(){
+         if(oilYVariableColumnIndex>=0){
+             gnerateStringIntMapForOil();
+         }
+         if(lithYVariableColumnIndex>=0){
+             gnerateStringIntMapForLith();
+         }
+         
+     }
+     public  void gnerateStringIntMapForOil(){
         HashMap<String,Integer> stringIntMap = new HashMap<>();
-        int index = -1;
-        for(int i =0;i<mlModel.getVariables().length;i++){
-            if(mlModel.getVariables()[i].flag == MLDataModel.Y_VARIABLE_OIL){
-                index = i;
-            }
-        }
+        
         int rowCount = getRealRowCount();
         String[] label = new String[rowCount];
         int idForLabel = 0;
         for(int i = 0;i<label.length;i++){
-            label[i] = getRawStringData(index, i);
+            label[i] = getRawStringData(oilYVariableColumnIndex,realRowIndices[i]);
             if(stringIntMap.containsKey(label[i])){
                 continue;
             }else{
@@ -131,10 +137,36 @@ public class DataHelper {
         LoadConfigure.writeLog(stringIntMap.toString());
     }
      
+    public  void gnerateStringIntMapForLith(){
+        HashMap<String,Integer> stringIntMap = new HashMap<>();
+        
+        int rowCount = getRealRowCount();
+        String[] label = new String[rowCount];
+        int idForLabel = 0;
+        for(int i = 0;i<label.length;i++){
+            label[i] = getRawStringData(lithYVariableColumnIndex,realRowIndices[i]);
+            if(stringIntMap.containsKey(label[i])){
+                continue;
+            }else{
+                stringIntMap.put(label[i],idForLabel++);
+            }
+        }
+        mlModel.StringIntMapForLith = stringIntMap;
+        LoadConfigure.writeLog(stringIntMap.toString());
+    }
+    
     public String getUsedDataByName(String name,int indexInUsedRow){
         int variableIndexInRaw = -1;
         variableIndexInRaw = getVariableIndexInRaw(name);
         return getRawStringData(variableIndexInRaw,realRowIndices[indexInUsedRow]);
+    }
+    
+    public void getUsedDoubleDataByName(String name,double[] buffer){
+        int varIndexInRaw = -1;
+        varIndexInRaw = getVariableIndexInRaw(name);
+        for(int i = 0;i<buffer.length;i++){
+            buffer[i] = Double.parseDouble(getRawStringData(varIndexInRaw,realRowIndices[i]));
+        }
     }
     
     public int getVariableIndexInRaw(String name){
@@ -434,5 +466,12 @@ public class DataHelper {
     
     public int getUsedVIndexInImported(int index){
         return usedVariableColumnIndeices[index];
+    }
+
+    public int readLithXData(int col, double[] buffer) {
+        for(int i = 0;i<realRowIndices.length;i++){
+            buffer[i] = getRawDoubleData(lithXVariableColumnIndices[col],realRowIndices[i]);
+        }
+        return realRowIndices.length;
     }
 }

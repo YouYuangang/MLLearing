@@ -32,7 +32,7 @@ public class ClusterResTableModel extends AbstractTableModel{
         if(mlModel==null){
             return 0;
         }
-        return mlModel.clusterCount; //To change body of generated methods, choose Tools | Templates.
+        return mlModel.clusterCountOil; //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -47,12 +47,7 @@ public class ClusterResTableModel extends AbstractTableModel{
         if(columnIndex==0){
             return String.valueOf(rowIndex);
         }else if(columnIndex==1){
-            String[] layersNames = new String[LoadConfigure.colorLayers.size()];
-            int i = 0;
-            for(ColorLayer layer:LoadConfigure.colorLayers){
-                layersNames[i] = layer.nameOfLayer;
-            }
-            return layersNames;
+            return "null";
         }else{
             return "null";
         }

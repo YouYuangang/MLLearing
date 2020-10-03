@@ -11,6 +11,8 @@ import cif.mllearning.base.MLDataModel;
 import cif.mllearning.base.RawTableDataHelper;
 import cif.mllearning.base.RawTextDataHelper;
 import cif.mllearning.configure.LoadConfigure;
+import java.util.HashMap;
+import java.util.Iterator;
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -91,36 +93,53 @@ class DataPanelTableModel extends AbstractTableModel {
         int colCount = 0;
         switch (dataFrom) {
             case MLDataModel.FROM_CURVE:
-                colCount = 2+curveHelper.getCurveCount()+1;
-                
-                break;
+                if (mlModel.learningMode == MLGlobal.PREDICTING_MODE) {
+                    colCount = 2 + curveHelper.getCurveCount() + 1;
+                    break;
+                } else {
+                    colCount = 2 + curveHelper.getCurveCount() + 2;
+                    break;
+                }
             case MLDataModel.FROM_TABLE:
-                colCount = 1+tableHelper.getFieldCount()+1;
-                break;
+                if (mlModel.learningMode == MLGlobal.PREDICTING_MODE) {
+                    colCount = 1 + tableHelper.getFieldCount() + 1;
+                    break;
+                } else {
+                    colCount = 1 + tableHelper.getFieldCount() + 2;
+                    break;
+                }
             case MLDataModel.FROM_TEXT:
-                colCount = 1+textHelper.getColumnCount()+1;
-                break;
+                if (mlModel.learningMode == MLGlobal.PREDICTING_MODE) {
+                    colCount = 1 + textHelper.getColumnCount() + 1;
+                    break;
+                } else {
+                    colCount = 1 + textHelper.getColumnCount() + 2;
+                    break;
+                }
             default:
                 return 0;
         }
         
-        switch (mlModel.learningMode) {
+        /*switch (mlModel.learningMode) {
             case MLGlobal.CLASSIFYING_MODE:
-                if (mlModel.classifyResult != null) {
+                if (mlModel.classifyResultOil != null) {
+                    ++colCount;
+                }
+                if (mlModel.classifyResultLith != null) {
                     ++colCount;
                 }
                 break;
             case MLGlobal.CLUSTERING_MODE:
-                if (mlModel.clusterResult != null) {
+                if (mlModel.clusterResultOil != null) {
                     ++colCount;
                 }
                 break;
             case MLGlobal.PREDICTING_MODE:
-                if (mlModel.predictResult != null) {
+                if (mlModel.predictResultOil != null) {
                     ++colCount;
                 }
                 break;
-        }
+        }*/
 
         return colCount;
     }
@@ -149,31 +168,7 @@ class DataPanelTableModel extends AbstractTableModel {
 //    }
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        /*if (columnIndex == 0) {
-            return mlModel.dataRowSelectedFlags[rowIndex] ? ("  "+(rowIndex+1)) : ("X "+(rowIndex+1));
-        } else {
 
-            if (columnIndex == getColumnCount() - 1) {
-                switch (mlModel.learningMode) {
-                    case MLGlobal.CLASSIFYING_MODE:
-                        if (mlModel.classifyResult != null) {
-                            return mlModel.classifyResult[rowIndex];
-                        }
-                        break;
-                    case MLGlobal.CLUSTERING_MODE:
-                        if (mlModel.clusterResult != null) {
-                            return mlModel.clusterResult[rowIndex];
-                        }
-                        break;
-                    case MLGlobal.PREDICTING_MODE:
-                        if (mlModel.predictResult != null) {
-                            return mlModel.predictResult[rowIndex];
-                        }
-                        break;
-                }
-            }*/
-
-            
             switch (dataFrom) {
                 case MLDataModel.FROM_CURVE:
                     if (columnIndex == 0) {
@@ -189,18 +184,65 @@ class DataPanelTableModel extends AbstractTableModel {
                         return String.format("%.4f", curveHelper.getCurveData(columnIndex - 2, rowIndex));
                     }else if(columnIndex == 0+2+mlModel.getVariables().length)
                     {
-                        if(mlModel.dataLabelAs[rowIndex] == 0 ){
-                            return "无";  
-                        }else{
-                            int layerIndex = mlModel.dataLabelAs[rowIndex];
-                            return LoadConfigure.colorLayers.get(layerIndex).nameOfLayer;
+                        if(mlModel.learningMode == MLGlobal.PREDICTING_MODE){
+                            if(mlModel.predictResult!=null){
+                                return mlModel.predictResult[rowIndex];
+                            }else{
+                                return " ";
+                            }
+                            
+                        }else if(mlModel.learningMode == MLGlobal.CLASSIFYING_MODE){
+                            if(mlModel.classifyResultOil!=null){
+                                return mlModel.classifyResultOil[rowIndex];
+                            }else{
+                                return " ";
+                            }
+                            
+                        }else if(mlModel.learningMode == MLGlobal.CLUSTERING_MODE){
+                            if(mlModel.clusterResultOil!=null&&mlModel.StringIntMapForOil!=null){
+                                int indexOfText = mlModel.clusterResultLith[rowIndex];
+                                Iterator<String> iteratorKey = mlModel.StringIntMapForOil.keySet().iterator();
+                                while(iteratorKey.hasNext()){
+                                    String temp = iteratorKey.next();
+                                    if(mlModel.StringIntMapForLith.get(temp)  == indexOfText){
+                                        return temp;
+                                    }
+                                }
+                            }else{
+                                return " ";
+                            }
                         }
                     }else if(columnIndex == 0+2+mlModel.getVariables().length+1){
-                        if(mlModel.learningMode == MLGlobal.CLASSIFYING_MODE){
-                            int layerIndex = mlModel.classifyResult[rowIndex];
-                            return LoadConfigure.colorLayers.get(layerIndex).nameOfLayer;
-                        }else if(mlModel.learningMode == MLGlobal.CLUSTERING_MODE){
-                            return ""+mlModel.clusterResult[rowIndex];
+                        if (mlModel.learningMode == MLGlobal.PREDICTING_MODE) {
+
+                            return " ";
+                        }else if(mlModel.learningMode == MLGlobal.CLASSIFYING_MODE){
+                            if(mlModel.classifyResultLith!=null&&mlModel.StringIntMapForLith!=null){
+                                int indexOfText = mlModel.clusterResultLith[rowIndex];
+                                Iterator<String> iteratorKey = mlModel.StringIntMapForLith.keySet().iterator();
+                                while(iteratorKey.hasNext()){
+                                    String temp = iteratorKey.next();
+                                    if(mlModel.StringIntMapForLith.get(temp)  == indexOfText){
+                                        return temp;
+                                    }
+                                }
+                            }else{
+                                return " ";
+                            }
+                            
+                        }else{
+                           if(mlModel.clusterResultLith!=null&&mlModel.StringIntMapForLith!=null){
+                                int indexOfText = mlModel.clusterResultLith[rowIndex];
+                                Iterator<String> iteratorKey = mlModel.StringIntMapForLith.keySet().iterator();
+                                while(iteratorKey.hasNext()){
+                                    String temp = iteratorKey.next();
+                                    if(mlModel.StringIntMapForLith.get(temp)  == indexOfText){
+                                        return temp;
+                                    }
+                                }
+                            }else{
+                                return " ";
+                            } 
                         }
                     }else{
                         return "";
@@ -224,11 +266,67 @@ class DataPanelTableModel extends AbstractTableModel {
                     }else if((columnIndex>=0+1)&&(columnIndex<0+1+textHelper.getColumnCount())){
                        return textHelper.getTextData(rowIndex, columnIndex-1); 
                     }else if(columnIndex == 0+1+textHelper.getColumnCount()){
-                        return "无";
+                        if(mlModel.learningMode == MLGlobal.PREDICTING_MODE){
+                            if(mlModel.predictResult!=null){
+                                return mlModel.predictResult[rowIndex];
+                            }else{
+                                return " ";
+                            }
+                            
+                        }else if(mlModel.learningMode == MLGlobal.CLASSIFYING_MODE){
+                            if(mlModel.classifyResultOil!=null){
+                                return mlModel.classifyResultOil[rowIndex];
+                            }else{
+                                return " ";
+                            }
+                            
+                        }else if(mlModel.learningMode == MLGlobal.CLUSTERING_MODE){
+                            if(mlModel.clusterResultOil!=null&&mlModel.StringIntMapForOil!=null){
+                                int indexOfText = mlModel.clusterResultLith[rowIndex];
+                                Iterator<String> iteratorKey = mlModel.StringIntMapForOil.keySet().iterator();
+                                while(iteratorKey.hasNext()){
+                                    String temp = iteratorKey.next();
+                                    if(mlModel.StringIntMapForLith.get(temp)  == indexOfText){
+                                        return temp;
+                                    }
+                                }
+                            }else{
+                                return " ";
+                            }
+                        }
                     }else if(columnIndex == 0+1+textHelper.getColumnCount()+1){
-                        return "未实现的功能";
+                        if (mlModel.learningMode == MLGlobal.PREDICTING_MODE) {
+                            return " ";
+                        }else if(mlModel.learningMode == MLGlobal.CLASSIFYING_MODE){
+                            if(mlModel.classifyResultLith!=null&&mlModel.StringIntMapForLith!=null){
+                                int indexOfText = mlModel.clusterResultLith[rowIndex];
+                                Iterator<String> iteratorKey = mlModel.StringIntMapForLith.keySet().iterator();
+                                while(iteratorKey.hasNext()){
+                                    String temp = iteratorKey.next();
+                                    if(mlModel.StringIntMapForLith.get(temp)  == indexOfText){
+                                        return temp;
+                                    }
+                                }
+                            }else{
+                                return " ";
+                            }
+                            
+                        }else{
+                           if(mlModel.clusterResultLith!=null&&mlModel.StringIntMapForLith!=null){
+                                int indexOfText = mlModel.clusterResultLith[rowIndex];
+                                Iterator<String> iteratorKey = mlModel.StringIntMapForLith.keySet().iterator();
+                                while(iteratorKey.hasNext()){
+                                    String temp = iteratorKey.next();
+                                    if(mlModel.StringIntMapForLith.get(temp)  == indexOfText){
+                                        return temp;
+                                    }
+                                }
+                            }else{
+                                return " ";
+                            } 
+                        }
                     }else{
-                        return "未实现的功能";
+                        return " ";
                     }
             
             }
@@ -275,17 +373,23 @@ class DataPanelTableModel extends AbstractTableModel {
                     return nameUnitToString(curveHelper.getCurveName(column - 2), curveHelper.getCurveUnit(column - 2));
                 }
                 if (column == 0 + 2 + mlModel.getVariables().length) {
-                    return "标签";    
-                }
-                if(column == 0 + 2 + mlModel.getVariables().length +1){
-                    
                     if (mlModel.learningMode == MLGlobal.PREDICTING_MODE) {
                         return "模型预测值";
                     } else if (mlModel.learningMode == MLGlobal.CLASSIFYING_MODE) {
-                        return "分类结果";
+                        return "含油性分类结果";
                     } else if (mlModel.learningMode == MLGlobal.CLUSTERING_MODE) {
-                        return "聚类结果";
-                    }
+                        return "含油性聚类结果";
+                    }   
+                }
+                if(column == 0 + 2 + mlModel.getVariables().length +1){
+                    if (mlModel.learningMode == MLGlobal.PREDICTING_MODE) {
+                        return "模型预测值";
+                    } else if (mlModel.learningMode == MLGlobal.CLASSIFYING_MODE) {
+                        return "岩性分类结果";
+                    } else if (mlModel.learningMode == MLGlobal.CLUSTERING_MODE) {
+                        return "岩性聚类结果";
+                    } 
+                    
                 }
                 return "";
             }
@@ -293,30 +397,42 @@ class DataPanelTableModel extends AbstractTableModel {
                 if(column>=(0+1)&&column<(0+1+mlModel.getVariables().length)){
                    return nameUnitToString(tableHelper.getFieldName(column-1), tableHelper.getFieldUnit(column-1)); 
                 }else if(column == 0+1+mlModel.getVariables().length){
-                    return "标签";
+                    if (mlModel.learningMode == MLGlobal.PREDICTING_MODE) {
+                        return "模型预测值";
+                    } else if (mlModel.learningMode == MLGlobal.CLASSIFYING_MODE) {
+                        return "含油性分类结果";
+                    } else if (mlModel.learningMode == MLGlobal.CLUSTERING_MODE) {
+                        return "含油性聚类结果";
+                    } 
                 }else if(column == 0+1+mlModel.getVariables().length+1){
                     if (mlModel.learningMode == MLGlobal.PREDICTING_MODE) {
                         return "模型预测值";
                     } else if (mlModel.learningMode == MLGlobal.CLASSIFYING_MODE) {
-                        return "分类结果";
+                        return "岩性分类结果";
                     } else if (mlModel.learningMode == MLGlobal.CLUSTERING_MODE) {
-                        return "聚类结果";
-                    }
+                        return "岩性聚类结果";
+                    } 
                 } 
             }
             case MLDataModel.FROM_TEXT:{
                 if(column>=(0+1)&&column<(0+1+mlModel.getVariables().length)){
                     return nameUnitToString(textHelper.getColumnName(column-1), textHelper.getColumnUnit(column-1));
                 }else if(column == 0+1+mlModel.getVariables().length){
-                    return "标签";
+                    if (mlModel.learningMode == MLGlobal.PREDICTING_MODE) {
+                        return "模型预测值";
+                    } else if (mlModel.learningMode == MLGlobal.CLASSIFYING_MODE) {
+                        return "含油性分类结果";
+                    } else if (mlModel.learningMode == MLGlobal.CLUSTERING_MODE) {
+                        return "含油性聚类结果";
+                    } 
                 }else if(column == 0+1+mlModel.getVariables().length+1){
                     if (mlModel.learningMode == MLGlobal.PREDICTING_MODE) {
                         return "模型预测值";
                     } else if (mlModel.learningMode == MLGlobal.CLASSIFYING_MODE) {
-                        return "分类结果";
+                        return "岩性分类结果";
                     } else if (mlModel.learningMode == MLGlobal.CLUSTERING_MODE) {
-                        return "聚类结果";
-                    }
+                        return "岩性聚类结果";
+                    } 
                 }
             }
             

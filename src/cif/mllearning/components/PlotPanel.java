@@ -240,12 +240,12 @@ public class PlotPanel extends PagePanel {
         }*/
 
         //创建 聚类结果表及添加其typeCurve
-        if (mlModel.clusterResult != null) {
+        /*if (mlModel.clusterResult != null) {
             createClusterResultTable(logCategory, standardClusterResultColIndex, MLGlobal.CLUSTER_RESULT_TABLE_NAME);
             clusterResultTypeCurve = addTrackAndTypeCurve(MLGlobal.CLUSTER_RESULT_TABLE_NAME,
                     MLGlobal.CLUSTER_RESULT_TABLE_NAME, dataSourceIndex);
 
-        }
+        }*/
     }
 
     //添加道以及对应的类别曲线
@@ -267,7 +267,7 @@ public class PlotPanel extends PagePanel {
         typeCurveHead.setScaleType(ScaleType.Custom);
 
         //判断当前传入曲线名是什么，然后依据这个做出后续的判断
-        int clusterCount = mlModel.clusterCount;
+        int clusterCount = mlModel.clusterCountOil;
         if (curveName == MLGlobal.STANDARD_CLUSTER_RESULT_CURVE_NAME) {
             clusterCount = stanadardCluterCount + 1;
         }
@@ -278,8 +278,8 @@ public class PlotPanel extends PagePanel {
         return typeCurve;
     }
 public int loadAndPaintClassifyRes(String tableName,int dataSourceIndex){
-        TableHelper tableHelper = new TableHelper(mlModel);
-        tableHelper.fillClassifyResultFromTable(tableName);
+        /*TableHelper tableHelper = new TableHelper(mlModel);
+        tableHelper.fillClassifyResultOilFromTable(tableName);
         
         Track track = canvas.addTrack(AppConstants.TRACK_TYPE_BKANK, true);
         track.setTrackWidth(20);
@@ -305,13 +305,13 @@ public int loadAndPaintClassifyRes(String tableName,int dataSourceIndex){
         }
         typeCurve.setCategoryItems(categoryList);
         typeCurve.setDrawLabel(false);
-        canvas.update(true, true);
+        canvas.update(true, true);*/
         return 1;
     }
 
 public int loadAndPaintClusterRes(String tableName,int dataSourceIndex){
         TableHelper tableHelper = new TableHelper(mlModel);
-        int clusterCount = tableHelper.fillClusterResultFromTable(tableName);
+        int clusterCount = tableHelper.fillClusterResultOilFromTable(tableName);
         
         Track track = canvas.addTrack(AppConstants.TRACK_TYPE_BKANK, true);
         track.setTrackWidth(20);
@@ -351,7 +351,7 @@ public int loadAndPaintClusterRes(String tableName,int dataSourceIndex){
 
         //颜色渐变的一个问题，如何设置颜色？
         //渐变色的东西，我还不确定这个应该怎么写，后面留着
-        ArrayList<CategoryItem> categoryList = new ArrayList<>();
+        /*ArrayList<CategoryItem> categoryList = new ArrayList<>();
         int gap = 255 / clusterCount;
         
         for (int i = 0; i < clusterCount; i++) {
@@ -375,7 +375,8 @@ public int loadAndPaintClusterRes(String tableName,int dataSourceIndex){
         item.setWidth(100);
         item.setBackgroundColor(new Color(255,255,255));
         categoryList.add(item);
-        return categoryList;
+        return categoryList;*/
+        return new ArrayList<CategoryItem>();
     }
 
     /**
@@ -467,7 +468,7 @@ public int loadAndPaintClusterRes(String tableName,int dataSourceIndex){
     private double calAccuracy() {
 //       standardClusterReusltTrack.get
 
-        if (standardClusterResultColIndex < 0 || mlModel.clusterResult == null) {
+        /*if (standardClusterResultColIndex < 0 || mlModel.clusterResult == null) {
             return -1;
         }
 
@@ -480,10 +481,10 @@ public int loadAndPaintClusterRes(String tableName,int dataSourceIndex){
                 ++counts[row][col];
             }
             
-        }
+        }*/
 
         //
-        int mapCount = 0;
+        /*int mapCount = 0;
         mapping = new int[standardClusterResultColIndex];
         for (int i = 0; i < stanadardCluterCount; i++) {
             int maxVal = maxValueAt(counts[i]);
@@ -491,7 +492,7 @@ public int loadAndPaintClusterRes(String tableName,int dataSourceIndex){
             mapCount += counts[i][maxVal];
         }
 
-        return (double) mapCount / (double) tableModel.getColumnCount();
+        return (double) mapCount / (double) tableModel.getColumnCount();*/
 
 //        
 //       ArrayList<CategoryItem> standardList = standardClusterResultTypeCurve.getCategories();
@@ -515,6 +516,7 @@ public int loadAndPaintClusterRes(String tableName,int dataSourceIndex){
 //        }
 //
 //        return (double) mappingCount / (double) tableModel.getColumnCount();
+          return 0;
     }
 
     /**

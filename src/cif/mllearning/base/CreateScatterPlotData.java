@@ -89,7 +89,7 @@ public class CreateScatterPlotData {
         double[] array2 = Arrays.copyOf(data, len);
 
         XYSeriesCollection localXYSeriesCollection = new XYSeriesCollection();
-        XYSeries[] localXYSeries = new XYSeries[mlModel.clusterCount];
+        XYSeries[] localXYSeries = new XYSeries[mlModel.clusterCountOil];
         for (int i = 0; i < localXYSeries.length; i++) {
             localXYSeries[i] = new XYSeries("Type" + i);
         }
@@ -100,7 +100,7 @@ public class CreateScatterPlotData {
 //                localXYSeries[mlModel.clusterResult[i]].add(array1[i], array2[i]);
 //            }
             if(mlModel.dataRowSelectedFlags[i]==true){
-                int whichCluster = mlModel.clusterResult[i];
+                int whichCluster = mlModel.clusterResultOil[i];
                 XYSeries whichSeries = localXYSeries[whichCluster];
                 whichSeries.add(array1[tempIndex], array2[tempIndex]);
                 tempIndex++;

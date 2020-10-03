@@ -27,9 +27,7 @@ public class ChooseLabelJDialog extends javax.swing.JDialog {
     public ChooseLabelJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        for(ColorLayer layer : LoadConfigure.colorLayers){
-            labelComboBox.addItem(layer.nameOfLayer);
-        }
+        
     }
     private void doClose(int retStatus) {
         this.retStatu = retStatus;

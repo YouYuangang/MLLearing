@@ -98,6 +98,11 @@ public class FunTools {
             for (int i = 0; i < names.length; i++) {
                 sb.append(names[i]).append(",").append(i).append("\n");
             }
+            sb.append("label,"+normalization.StringIntMap.size()+"\n");
+            for(HashMap.Entry<String,Integer> entry:normalization.StringIntMap.entrySet()){
+                sb.append(entry.getKey()+","+entry.getValue()+"\n");
+            }
+            
             outputWriter.write(sb.toString());
             outputWriter.close();
         } catch (UnsupportedEncodingException ex) {

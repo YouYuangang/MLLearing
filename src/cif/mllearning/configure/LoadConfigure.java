@@ -29,14 +29,24 @@ import org.openide.windows.WindowManager;
  */
 
 public class LoadConfigure {
-    public static HashMap<Integer,Integer> clusterLayerRelation = new HashMap<>();
-    public static ArrayList<ColorLayer> colorLayers = new ArrayList<ColorLayer>();
+    public static String OIL_MODEL_NAME_BP = "oil_bp.model";
+    public final static String LITH_MODEL_NAME_BP = "lith_bp.mode";
+    public final static String OIL_RES_TABLE_CLASSIFY = "含油性分类结果";
+    public final static String OIL_RES_TABLE_CLUSTER = "含油性聚类结果";
+    public final static String[] OIL_FEILDSNAME_CLASSIY = new String[]{"开始深度","结束深度","分类结果"};
+    public final static String[] OIL_FEILDSNAME_CLUSTER = new String[]{"开始深度","结束深度","聚类结果"};
+    
+    public final static String LITH_RES_TABLE_CLASSIFY = "岩性分类结果";
+    public final static String LITH_RES_TABLE_CLUSTER = "岩性聚类结果";
+    public final static String[] LITH_FEILDSNAME_CLASSIY = new String[]{"开始深度","结束深度","分类结果"};
+    public final static String[] LITH_FEILDSNAME_CLUSTER = new String[]{"开始深度","结束深度","聚类结果"};
+    
     public static BufferedWriter bfw = null;
     public static String trainedModelPath;
     
     static {
-        StringBuilder confStr = new StringBuilder(1024);
-        BufferedReader bfr = null;
+        //StringBuilder confStr = new StringBuilder(1024);
+        //BufferedReader bfr = null;
         try {
             String cifInstallPath = Global.getInstallationPath();
             trainedModelPath = cifInstallPath +File.separator+"modelSaveDir";//创建一个modelSaveDir文件夹保存训练的模型
@@ -44,7 +54,9 @@ public class LoadConfigure {
             if(!modelSaveDir.exists()){
                 modelSaveDir.mkdir();
             }
-            String confPath = cifInstallPath + File.separator + "layers.json";
+            //日志输出流用于debug;
+            bfw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(Global.getInstallationPath()+ File.separator + "mylog.txt"))));
+            /*String confPath = cifInstallPath + File.separator + "layers.json";
             File confFile = new File(confPath);
             if (!confFile.exists()) {
                 Frame parent = WindowManager.getDefault().getMainWindow();
@@ -75,38 +87,26 @@ public class LoadConfigure {
                     JOptionPane.showMessageDialog(parent, "解析配置文件出错");
                 }
 
-            }
+            }*/
 
         } catch (Exception e) {
 
         } finally {
-            if (bfr != null) {
+            /*if (bfr != null) {
                 try {
                     bfr.close();
                 } catch (Exception e) {
                 }
-            }
+            }*/
         }
-        try{
-            bfw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(Global.getInstallationPath()+ File.separator + "mylog.txt"))));
-        }catch(Exception e){
-            
-        }finally{
-            
-        }  
+        
     }
     public static void writeLog(String text){
         try{
-            bfw.write(text);
+            bfw.write(text+"\n");
             bfw.flush();
         }catch(Exception e){
         }
     }
-    public  String toString(){
-        StringBuilder sb = new StringBuilder(1024);
-        for(int i = 0;i<colorLayers.size();i++){
-            sb.append(colorLayers.get(i).toString());
-        }
-        return sb.toString();
-    }
+    
 }

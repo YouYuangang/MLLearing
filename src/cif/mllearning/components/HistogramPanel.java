@@ -576,9 +576,7 @@ public class HistogramPanel extends PagePanel {
                 mlModel.dataRowSelectedFlags[i] = true;
             }
         }
-        mlModel.predictResult = null;
-        mlModel.classifyResult = null;
-        mlModel.clusterResult = null;
+        mlModel.clearResult();
         
         //updateCharts(xData, yData, bins);
         //updateData();
