@@ -5,6 +5,7 @@
  */
 package cif.mllearning.components;
 
+import cif.mllearning.base.TableHelper;
 import javax.swing.JOptionPane;
 
 /**
@@ -82,8 +83,8 @@ public class PlotTopPanel extends javax.swing.JPanel {
 
     private void loadResultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadResultActionPerformed
         // TODO add your handling code here:
-        plotPanel.loadAndPaintClassifyRes("分类结果",plotPanel.dataSourceIndex);
-        plotPanel.loadAndPaintClusterRes("聚类结果",plotPanel.dataSourceIndex);
+        plotPanel.loadAndPaintOilClassifyRes(TableHelper.OIL_RES_TABLE_CLASSIFY,plotPanel.dataSourceIndex);
+        plotPanel.loadAndPaintOilClusterRes(TableHelper.OIL_RES_TABLE_CLUSTER,plotPanel.dataSourceIndex);
     }//GEN-LAST:event_loadResultActionPerformed
 
 

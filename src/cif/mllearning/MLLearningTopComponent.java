@@ -110,7 +110,7 @@ public final class MLLearningTopComponent extends TopComponent {
         updateMainPagePanels();
         updateFunctions();
         maskTabbedPaneEvent = false;
-        loadLabelBtn.setVisible(false);
+        
        LoadConfigure loadConfigure = new LoadConfigure();
        
        /*variableTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -157,10 +157,9 @@ public final class MLLearningTopComponent extends TopComponent {
         jScrollPane1 = new javax.swing.JScrollPane();
         variableTable = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
-        functionComboBox = new javax.swing.JComboBox<String>();
+        functionComboBox = new javax.swing.JComboBox<>();
         selectVariableButton = new javax.swing.JButton();
         yButton = new javax.swing.JButton();
-        loadLabelBtn = new javax.swing.JButton();
         tabbedPaneSplitPane = new javax.swing.JSplitPane();
         mainTabbedPane = new javax.swing.JTabbedPane();
         jPanel2 = new javax.swing.JPanel();
@@ -219,13 +218,6 @@ public final class MLLearningTopComponent extends TopComponent {
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(loadLabelBtn, org.openide.util.NbBundle.getMessage(MLLearningTopComponent.class, "MLLearningTopComponent.loadLabelBtn.text")); // NOI18N
-        loadLabelBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loadLabelBtnActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -241,8 +233,6 @@ public final class MLLearningTopComponent extends TopComponent {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(loadLabelBtn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(yButton, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(selectVariableButton)))
@@ -260,9 +250,7 @@ public final class MLLearningTopComponent extends TopComponent {
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(selectVariableButton)
                         .addComponent(jLabel1))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(yButton)
-                        .addComponent(loadLabelBtn)))
+                    .addComponent(yButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 425, Short.MAX_VALUE)
                 .addContainerGap())
@@ -428,16 +416,7 @@ public final class MLLearningTopComponent extends TopComponent {
         mlModel.learningMode=mode;
         variableTableModel.setLearningMode(learningMode);
         variableTableModel.fireTableStructureChanged();
-        if(mode == MLGlobal.PREDICTING_MODE){
-            loadLabelBtn.setVisible(false);
-            yButton.setVisible(true);
-        }else if(mode == MLGlobal.CLASSIFYING_MODE){
-            loadLabelBtn.setVisible(true);
-            yButton.setVisible(true);
-        }else{
-            loadLabelBtn.setVisible(false);
-            yButton.setVisible(false);
-        }
+        
         UpdatePanelFlag.DataPanelUpdateFlag = true;
         UpdatePanelFlag.HistogramUpdateFlag = true;
         UpdatePanelFlag.CrossPlotUpdateFlag = true;
@@ -601,13 +580,17 @@ public final class MLLearningTopComponent extends TopComponent {
     private void mainTabbedPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_mainTabbedPaneStateChanged
         PagePanel pagePanel = (PagePanel) mainTabbedPane.getSelectedComponent();
         if(pagePanel == null){
+            LoadConfigure.writeLog("mainTabbedPaneStateChanged:选中的Panel为空无法更新");
             return;
         }
+ 
         if (pagePanel.isUpdateRequired) {
+            LoadConfigure.writeLog("mainTabbedPaneStateChanged:选中的Panel为:"+pagePanel.toString()+"需要更新，尝试更新");
             if (pagePanel instanceof DataPanel) {
                 if (UpdatePanelFlag.DataPanelUpdateFlag) {
                     DataPanel panel = (DataPanel) pagePanel;
-                    panel.setMLModel(mlModel);
+                    panel.setMLModel(mlModel);            
+                    LoadConfigure.writeLog(UpdatePanelFlag.reasonForDataPanelUpdate);
                     UpdatePanelFlag.DataPanelUpdateFlag = false;
                 }
             } else if (pagePanel instanceof HistogramPanel) {
@@ -747,57 +730,16 @@ public final class MLLearningTopComponent extends TopComponent {
         TableHelper tableHelper = new TableHelper(mlModel);
         switch(learningMode){
             case MLGlobal.CLASSIFYING_MODE:
-                tableHelper.saveToTableFromClassifyResOil("含油性分类结果");
+                tableHelper.saveToTableFromClassifyResOil(TableHelper.OIL_RES_TABLE_CLASSIFY);
                 break;
             case MLGlobal.CLUSTERING_MODE:
-                tableHelper.saveToTableFromClusterResOil("含油性聚类结果");
+                tableHelper.saveToTableFromClusterResOil(TableHelper.OIL_RES_TABLE_CLUSTER);
                 break;
             default:
                 
         }
         
     }//GEN-LAST:event_saveActionPerformed
-
-    private void loadLabelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadLabelBtnActionPerformed
-        // TODO add your handling code here:
-        if(mlModel.getVariables()==null){
-            JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), "请先导入数据！");
-            return;
-        }
-        LogCategory category = null;
-        int i = 0;
-        DataHelper dataHepler = new DataHelper(mlModel);
-        switch(learningMode){
-            case MLGlobal.PREDICTING_MODE:
-                
-                break;
-                
-            case MLGlobal.CLASSIFYING_MODE:
-                category = mlModel.inputDataPath.getCategory();
-                
-                ChooseClassLabelJDialog chooseClassLabelJDialog = new ChooseClassLabelJDialog(WindowManager.getDefault().getMainWindow(),true);
-                
-                LogTable table = null;
-                for(i = 0;i<category.getLogCommonTableCount();i++){
-                    table = category.getLogCommonTable(i);
-                    chooseClassLabelJDialog.addItem(table.getName());
-                }
-                chooseClassLabelJDialog.setVisible(true);
-                if(chooseClassLabelJDialog.retStatu == Global.RET_OK){
-                    String choosedLabel = chooseClassLabelJDialog.getSelectedTable();
-                    TableHelper tableHelper = new TableHelper(mlModel);
-                    int rowUsed = tableHelper.fillDataLabelFromTable(choosedLabel);
-                   
-                    JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow()," 采样率："+dataHepler.getDepthLevel()+"有效行数："+rowUsed);
-                    
-                    UpdatePanelFlag.DataPanelUpdateFlag = true;
-                    updateActivePagePanels();
-      
-                }
-                break;
-                
-        }
-    }//GEN-LAST:event_loadLabelBtnActionPerformed
 
     private void executeFunction(Function function,int runModelflag) {
         Frame parent = WindowManager.getDefault().getMainWindow();
@@ -974,7 +916,6 @@ public final class MLLearningTopComponent extends TopComponent {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
-    private javax.swing.JButton loadLabelBtn;
     private javax.swing.JSplitPane mainSplitPane;
     private javax.swing.JTabbedPane mainTabbedPane;
     private javax.swing.JToolBar mainToolBar;

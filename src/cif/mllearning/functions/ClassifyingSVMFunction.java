@@ -6,6 +6,7 @@
 package cif.mllearning.functions;
 
 import cif.loglab.math.MathBase;
+import cif.mllearning.configure.LoadConfigure;
 import java.awt.Frame;
 import java.io.File;
 import java.util.HashMap;
@@ -26,10 +27,16 @@ public class ClassifyingSVMFunction extends Function {
     private final svm_parameter param = new svm_parameter();
     private final static String[] SVR_TYPES = new String[]{"C_SVC", "NU-SVC"};
     private final static String[] KERNEL_TYPES = new String[]{"线性核", "多项式核", "RBF函数", "Sigmoid核"};
-    private Normalization normalization;
+    private Normalization normalizationOil;
+    private Normalization normalizationLith;
     private String[] desiredY;
     private HashMap<String, Integer> itemCodeTable;
-
+    
+    public final static String OILMODEL_FILENAME_SVM = "oil_svm.model";
+    public final static String LITHMODEL_FILENAME_SVM = "lith_svm.model";
+    
+    public boolean trainOilFlag = false;
+    public boolean trainLithFlag = false;
     public ClassifyingSVMFunction() {
         param.svm_type = svm_parameter.C_SVC;
         param.kernel_type = svm_parameter.RBF;
@@ -98,36 +105,38 @@ public class ClassifyingSVMFunction extends Function {
 
     @Override
     protected Integer doInBackground() throws Exception {
-        printDataMessage();
-        svm_problem problem = buildSVMProblem();
-        String error_msg = svm.svm_check_parameter(problem, param);
-        if (error_msg != null) {
-            printError("ERROR: " + error_msg + "\n");
+        if (RUN_MODEL == Function.GENERATE_MODEL) {
+            if (dataHelper.oilYVariableColumnIndex >= 0&&dataHelper.getOilXVariableCount()>=2) {
+                trainOilFlag = true;
+            }
+            if (dataHelper.lithYVariableColumnIndex >= 0&&dataHelper.getLithXVariableCount()>=2) {
+                trainLithFlag = true;
+            }
+            if (trainOilFlag) {
+                trainOilModel();
+            }
+            if (trainLithFlag) {
+                trainLithModel();
+            }
+        }else{
+            if(oilClassifyCanGoOn()){
+                doOilClassify();
+            }
+            if(lithClassifyCanGoOn()){
+                doLithClassify();
+            }
         }
-        svm_model model = svm.svm_train(problem, param);
-        String filePath = FunTools.getModelPath() + File.separator + FunTools.getModelFileName("Classify_SVM", mlModel);
-        svm.svm_save_model(filePath, model);
-        FunTools.saveModelAuxFile(filePath,normalization,this);
-        double[] py = new double[problem.y.length];
-        for (int i = 0; i < problem.x.length; i++) {
-            py[i] = svm.svm_predict(model, problem.x[i]);
-        }
-        int correctCount = FunTools.computeEquivalenceCount(problem.y, py);
-        StringBuilder sb = new StringBuilder();
-        sb.append("总数： ").append(py.length);
-        sb.append(", 正确个数: ").append(correctCount);
-        sb.append(", 正确率： ").append(String.format("%.2f", correctCount * 100.0 / py.length)).append("%\n");
-        printHighlight(sb.toString());
-        println("Save Model: " + filePath);
-        printLine();
-        return 0;
+        
+        
+        
     }
 
-    private svm_problem buildSVMProblem() {
+    private svm_problem buildSVMProblemForOil() {
         svm_problem problem = new svm_problem();
         int rowCount = dataHelper.getRealRowCount();
         int xVarCount = dataHelper.getOilXVariableCount();
-        normalization = new Normalization(xVarCount, -1);
+        normalizationOil = new Normalization(xVarCount, -1);
+        normalizationOil.StringIntMap = dataHelper.stringIntMapForOil;
         problem.l = rowCount;
         problem.x = new svm_node[rowCount][xVarCount];
         problem.y = new double[rowCount];
@@ -136,7 +145,7 @@ public class ClassifyingSVMFunction extends Function {
         for (int col = 0; col < xVarCount; col++) {
             dataHelper.readOilXData(col, buffer);
             String variableName = dataHelper.getOilXVariableName(col);
-            normalization.normalizeXVar(variableName,col, buffer, MathBase.minimum(buffer), MathBase.maximum(buffer));
+            normalizationOil.normalizeXVar(variableName,col, buffer, MathBase.minimum(buffer), MathBase.maximum(buffer));
             for (int row = 0; row < rowCount; row++) {
                 problem.x[row][col] = new svm_node();
                 problem.x[row][col].index = col;
@@ -148,17 +157,85 @@ public class ClassifyingSVMFunction extends Function {
             desiredY[i] = dataHelper.readRealOilYString(i);
         }
         
-        itemCodeTable = FunTools.createItemCodeTable(desiredY);
+        
         for (int row = 0; row < rowCount; row++) {
-            problem.y[row] = itemCodeTable.get(desiredY[row]);
+            problem.y[row] = dataHelper.stringIntMapForOil.get(desiredY[row]);
         }
         return problem;
     }
-
-    private void printDataMessage() {
-        printHighlight("Variables:\n");
+    private void trainOilModel(){
+        printOilDataMessage();
+        svm_problem problem = buildSVMProblemForOil();
+        String error_msg = svm.svm_check_parameter(problem, param);
+        if (error_msg != null) {
+            printError("ERROR: " + error_msg + "\n");
+        }
+        svm_model model = svm.svm_train(problem, param);
+        String modelFile = LoadConfigure.trainedModelPath + File.separator + OILMODEL_FILENAME_SVM;
+        try {
+            svm.svm_save_model(modelFile, model);
+        } catch (Exception e) {
+            LoadConfigure.writeLog("ClassifyingSVMFunction.trainOilModel.176:保存模型出错！");
+        }
+        
+        FunTools.saveModelAuxFile(modelFile,normalizationOil,this);
+        double[] py = new double[problem.y.length];
+        for (int i = 0; i < problem.x.length; i++) {
+            py[i] = svm.svm_predict(model, problem.x[i]);
+        }
+        int correctCount = FunTools.computeEquivalenceCount(problem.y, py);
+        StringBuilder sb = new StringBuilder();
+        sb.append("总数： ").append(py.length);
+        sb.append(", 正确个数: ").append(correctCount);
+        sb.append(", 正确率： ").append(String.format("%.2f", correctCount * 100.0 / py.length)).append("%\n");
+        printHighlight(sb.toString());
+        println("Save Model: " + modelFile);
+        printLine();
+        
+    }
+    private void printOilDataMessage() {
+        printHighlight("SVM开始含油性模型训练：Variables:\n");
         String[] xVarNames = mlModelHelper.getOilXVariableNames();
         String yVarName = mlModelHelper.getOilYVariableName();
+        println("X: " + mlModelHelper.formString(xVarNames, "\t"));
+        println("Y: " + yVarName);
+        println("Number of Points: " + dataHelper.getRealRowCount());
+    }
+    
+    private void trainLithModel(){
+        printLithDataMessage();
+        svm_problem problem = buildSVMProblemForLith();
+        String error_msg = svm.svm_check_parameter(problem, param);
+        if (error_msg != null) {
+            printError("ERROR: " + error_msg + "\n");
+        }
+        svm_model model = svm.svm_train(problem, param);
+        String modelFile = LoadConfigure.trainedModelPath + File.separator + LITHMODEL_FILENAME_SVM;
+        try {
+            svm.svm_save_model(modelFile, model);
+        } catch (Exception e) {
+            LoadConfigure.writeLog("ClassifyingSVMFunction.trainLithModel.176:保存模型出错！");
+        }
+        
+        FunTools.saveModelAuxFile(modelFile,normalizationLith,this);
+        double[] py = new double[problem.y.length];
+        for (int i = 0; i < problem.x.length; i++) {
+            py[i] = svm.svm_predict(model, problem.x[i]);
+        }
+        int correctCount = FunTools.computeEquivalenceCount(problem.y, py);
+        StringBuilder sb = new StringBuilder();
+        sb.append("总数： ").append(py.length);
+        sb.append(", 正确个数: ").append(correctCount);
+        sb.append(", 正确率： ").append(String.format("%.2f", correctCount * 100.0 / py.length)).append("%\n");
+        printHighlight(sb.toString());
+        println("Save Model: " + modelFile);
+        printLine();
+        
+    }
+    private void printLithDataMessage() {
+        printHighlight("SVM开始岩性模型训练：Variables:\n");
+        String[] xVarNames = mlModelHelper.getLithXVariableNames();
+        String yVarName = mlModelHelper.getLithYVariableName();
         println("X: " + mlModelHelper.formString(xVarNames, "\t"));
         println("Y: " + yVarName);
         println("Number of Points: " + dataHelper.getRealRowCount());

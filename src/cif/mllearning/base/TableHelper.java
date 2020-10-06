@@ -22,6 +22,15 @@ import org.openide.windows.WindowManager;
 public class TableHelper {
     public MLDataModel mlModel;
     public DataHelper dataHelper;
+    public final static String OIL_RES_TABLE_CLASSIFY = "含油性分类";
+    public final static String OIL_RES_TABLE_CLUSTER = "含油性聚类";
+    public final static String[] OIL_FEILDSNAME_CLASSIY = new String[]{"开始深度","结束深度","含油性分类"};
+    public final static String[] OIL_FEILDSNAME_CLUSTER = new String[]{"开始深度","结束深度","含油性聚类"};
+    
+    public final static String LITH_RES_TABLE_CLASSIFY = "岩性分类";
+    public final static String LITH_RES_TABLE_CLUSTER = "岩性聚类";
+    public final static String[] LITH_FEILDSNAME_CLASSIY = new String[]{"开始深度","结束深度","岩性分类"};
+    public final static String[] LITH_FEILDSNAME_CLUSTER = new String[]{"开始深度","结束深度","岩性聚类"};
     public TableHelper(MLDataModel mlModel){
         this.mlModel = mlModel;
         dataHelper = new DataHelper(mlModel);
@@ -85,27 +94,27 @@ public class TableHelper {
      * @param tableName
      * @return 
      */
-    public int fillClassifyResultOilFromTable(String tableName){
-        DataHelper dataHelper = new DataHelper(mlModel);
+    public int fillOilClassifyResultFromTable(String tableName){
+        DataHelper dataHelper = new DataHelper(mlModel); 
+        LogCategory category = mlModel.inputDataPath.getCategory();
+        LogTable labelTable = category.getLogCommonTable(tableName);
+        if(labelTable == null){
+            JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), "不存在含油性分类结果表");
+            return -1;
+        }
         int rowUsed = dataHelper.getRawDataCount();
         mlModel.classifyResultOil = new String[rowUsed];
         for(int i = 0;i<mlModel.classifyResultOil.length;i++){
             mlModel.classifyResultOil[i] = " ";
         }
-        LogCategory category = mlModel.inputDataPath.getCategory();
-        LogTable labelTable = category.getLogCommonTable(tableName);
-        if(labelTable == null){
-            JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), "不存在含油性分类结果表");
-            return 0;
-        }
         int row = labelTable.getRowCount();
         int col = labelTable.getColumnCount();
         TableRecords tableRecord = new TableRecords();
         labelTable.readTableRecords(tableRecord);
-        int resIndex = 0;
-        String label = " ";
-        int maxLabel = 0;
         float depth;
+        int resIndex = 0;//深度对应的索引
+        
+        String label = " ";     
         int count = 0;
         
         for (int i = 0; i < row; i++) {
@@ -119,6 +128,8 @@ public class TableHelper {
                 count++;
             }
         }
+        UpdatePanelFlag.DataPanelUpdateFlag = true;
+        UpdatePanelFlag.reasonForDataPanelUpdate = "dataPanel更新：从表格加载含油性分类表";
         return count;
     }
     /**
@@ -127,17 +138,18 @@ public class TableHelper {
      * @return 
      */
     public int fillClusterResultOilFromTable(String tableName){
+        
+        LogCategory category = mlModel.inputDataPath.getCategory();
+        LogTable clusterTable = category.getLogCommonTable(tableName);     
+        if(clusterTable == null){
+            JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), "不存在聚类结果表");
+            return -1;
+        }
         DataHelper dataHelper = new DataHelper(mlModel);
         int rowUsed = dataHelper.getRawDataCount();
         mlModel.clusterResultOil = new int[rowUsed];
         for(int i =0;i<mlModel.clusterResultOil.length;i++){
             mlModel.clusterResultOil[i] = -1;
-        }
-        LogCategory category = mlModel.inputDataPath.getCategory();
-        LogTable clusterTable = category.getLogCommonTable(tableName);
-        
-        if(clusterTable == null){
-            JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), "不存在聚类结果表");
         }
         int row = clusterTable.getRowCount();
         int col = clusterTable.getColumnCount();
@@ -173,13 +185,13 @@ public class TableHelper {
         }
         TableFields tableFields = new TableFields();
         tableFields.init(3);
-        tableFields.setName(0, "开始深度");
+        tableFields.setName(0, OIL_FEILDSNAME_CLASSIY[0]);
         tableFields.setDataType(0, Global.DATA_DEPTH);
         tableFields.setUnit(0, "米");
-        tableFields.setName(1, "结束深度");
+        tableFields.setName(1, OIL_FEILDSNAME_CLASSIY[1]);
         tableFields.setDataType(1, Global.DATA_DEPTH);
         tableFields.setUnit(1, "米");
-        tableFields.setName(2, "含油性分类结果");
+        tableFields.setName(2, OIL_FEILDSNAME_CLASSIY[2]);
         tableFields.setDataType(2, Global.DATA_STRING);
         tableFields.setUnit(2, "");
         
@@ -205,18 +217,22 @@ public class TableHelper {
     }
     
     public int saveToTableFromClusterResOil(String tableName) {
+        if(mlModel.clusterResultOil == null){
+            LoadConfigure.writeLog("218 TableHelper.saveToTableFromClusterResOil:没有含油性聚类结果，无法保存");
+            return -1;
+        }
         LogCategory logCategory = mlModel.inputDataPath.getCategory();
         if (logCategory.getLogCommonTable(tableName) != null) {
             logCategory.deleteLogging(tableName);
         }
         TableFields tableFields = new TableFields();
         tableFields.init(3);
-        tableFields.setName(0, "开始深度");
+        tableFields.setName(0, OIL_FEILDSNAME_CLUSTER[0]);
         tableFields.setDataType(0, Global.DATA_DEPTH);
-        tableFields.setName(1, "结束深度");
+        tableFields.setName(1, OIL_FEILDSNAME_CLUSTER[1]);
         tableFields.setDataType(1, Global.DATA_DEPTH);
         tableFields.setUnit(1, "米");
-        tableFields.setName(2, "聚类结果");
+        tableFields.setName(2, OIL_FEILDSNAME_CLUSTER[2]);
         tableFields.setDataType(2, Global.DATA_INT);
         tableFields.setUnit(2, "");
         

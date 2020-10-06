@@ -56,7 +56,8 @@ public class InputDataDialog extends javax.swing.JDialog {
     private final CheckBoxTableModel variableTableModel = new CheckBoxTableModel();
     private DataPath dataPath;
     private MLDataModel mlModel;
-
+    
+    private HashSet<String> defaultSelectedcurvesName = new HashSet<String>();
     /**
      * Creates new form InputDataDialog
      */
@@ -708,6 +709,12 @@ public class InputDataDialog extends javax.swing.JDialog {
 
     private void fillCurvesToVariableTable(DataPath dataPath) {
         LogCategory category = dataPath.getCategory();
+        defaultSelectedcurvesName.clear();
+        String[] selectedNamesLastTime = variableTableModel.getSelectedNames();
+        if(selectedNamesLastTime!=null){
+            for(String temp:selectedNamesLastTime)
+            defaultSelectedcurvesName.add(temp);
+        }
         variableTableModel.removeAll();
         for (int i = 0; i < category.getLogCurve1DCount(); i++) {
             Logging logging = category.getLogCurve1D(i);
@@ -716,23 +723,17 @@ public class InputDataDialog extends javax.swing.JDialog {
             Double interval = logging.getLoggingProperties().getDepthLevel();
             variableTableModel.add(logging.getName(),false,String.format("%.2f",sDepth),String.format("%.2f",eDepth),String.format("%.2f",interval));
         }
-        defaultSelectedCurves();
+        SelecteDefaultdCurves();
         variableTableModel.fireTableDataChanged();
     }
-    private void defaultSelectedCurves(){
-        HashSet<String> curvesName = new HashSet<String>();
-        curvesName.add("AC");
-        curvesName.add("RT");
-        curvesName.add("POR");
-        curvesName.add("SW");
+    private void SelecteDefaultdCurves(){
         for(int i = 0;i<variableTableModel.getRowCount();i++){
             String name = variableTableModel.getName(i).toUpperCase();
-            if(curvesName.contains(name)){
+            if(defaultSelectedcurvesName.contains(name)){
                 variableTableModel.select(i);
             }
             
-        };
-        
+        };  
     }
     private void fillDepthTextFields(DataPath dataPath) {
         LogCategory category = dataPath.getCategory();

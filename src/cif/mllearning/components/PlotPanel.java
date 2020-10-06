@@ -36,6 +36,8 @@ import java.awt.Frame;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import org.openide.windows.WindowManager;
@@ -277,10 +279,14 @@ public class PlotPanel extends PagePanel {
 
         return typeCurve;
     }
-public int loadAndPaintClassifyRes(String tableName,int dataSourceIndex){
-        /*TableHelper tableHelper = new TableHelper(mlModel);
-        tableHelper.fillClassifyResultOilFromTable(tableName);
-        
+//根据表名绘制
+public int loadAndPaintOilClassifyRes(String tableName,int dataSourceIndex){
+        TableHelper tableHelper = new TableHelper(mlModel);
+        int retSta = tableHelper.fillOilClassifyResultFromTable(tableName);
+        if(mlModel.classifyResultOil == null||retSta<0){
+            LoadConfigure.writeLog("PlotPanel:286,没有含油性分类结果，无法绘制");
+            return 0;
+        }
         Track track = canvas.addTrack(AppConstants.TRACK_TYPE_BKANK, true);
         track.setTrackWidth(20);
         TypeCurveInfo typeCurveInfo = new TypeCurveInfo();
@@ -289,30 +295,39 @@ public int loadAndPaintClassifyRes(String tableName,int dataSourceIndex){
         typeCurveHead.setDataPathIndex(dataSourceIndex);
         typeCurveHead.setName(tableName);
         typeCurveHead.setLabel(tableName);
-        typeCurve.setStartDepthName("开始深度");
-        typeCurve.setEndDepthName("结束深度");
-        typeCurve.setCategoryName("分类结果");
+        typeCurve.setStartDepthName(TableHelper.OIL_FEILDSNAME_CLASSIY[0]);
+        typeCurve.setEndDepthName(TableHelper.OIL_FEILDSNAME_CLASSIY[1]);
+        typeCurve.setCategoryName(TableHelper.OIL_FEILDSNAME_CLASSIY[2]);
         typeCurveHead.setScaleType(ScaleType.Custom);
         
+        HashSet<String> oilMap = new HashSet<String>();
+        for(int i = 0;i<mlModel.classifyResultOil.length;i++){
+            oilMap.add(mlModel.classifyResultOil[i]);
+        }
         ArrayList<CategoryItem> categoryList = new ArrayList<>();
-        for (int i = 0; i < LoadConfigure.colorLayers.size(); i++) {
+        Iterator<String> iterator = oilMap.iterator();
+        while(iterator.hasNext()){
+            String nameOfLayer = iterator.next();
             CategoryItem item = new CategoryItem();
-            item.setPropertyValue(i + "");
-            Color temp = new Color(LoadConfigure.colorLayers.get(i).red,LoadConfigure.colorLayers.get(i).green,LoadConfigure.colorLayers.get(i).blue);
-            item.setBackgroundColor(temp);
+            item.setPropertyValue(nameOfLayer);
+            item.setBackgroundColor(LoadConfigure.nameColorMap.get(nameOfLayer));
             item.setWidth(100);
             categoryList.add(item);
         }
+        
         typeCurve.setCategoryItems(categoryList);
         typeCurve.setDrawLabel(false);
-        canvas.update(true, true);*/
+        canvas.update(true, true);
         return 1;
     }
 
-public int loadAndPaintClusterRes(String tableName,int dataSourceIndex){
+public int loadAndPaintOilClusterRes(String tableName,int dataSourceIndex){
         TableHelper tableHelper = new TableHelper(mlModel);
         int clusterCount = tableHelper.fillClusterResultOilFromTable(tableName);
-        
+        if(mlModel.clusterResultOil == null){
+            LoadConfigure.writeLog("PlotPanel 327:没有含油性聚类结果，无法绘制");
+            return -1;
+        }
         Track track = canvas.addTrack(AppConstants.TRACK_TYPE_BKANK, true);
         track.setTrackWidth(20);
         TypeCurveInfo typeCurveInfo = new TypeCurveInfo();
@@ -321,9 +336,9 @@ public int loadAndPaintClusterRes(String tableName,int dataSourceIndex){
         typeCurveHead.setDataPathIndex(dataSourceIndex);
         typeCurveHead.setName(tableName);
         typeCurveHead.setLabel(tableName);
-        typeCurve.setStartDepthName("开始深度");
-        typeCurve.setEndDepthName("结束深度");
-        typeCurve.setCategoryName("聚类结果");
+        typeCurve.setStartDepthName(TableHelper.OIL_FEILDSNAME_CLUSTER[0]);
+        typeCurve.setEndDepthName(TableHelper.OIL_FEILDSNAME_CLUSTER[1]);
+        typeCurve.setCategoryName(TableHelper.OIL_FEILDSNAME_CLUSTER[2]);
         typeCurveHead.setScaleType(ScaleType.Custom);
         
         ArrayList<CategoryItem> categoryList = new ArrayList<>();

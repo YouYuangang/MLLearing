@@ -31,6 +31,8 @@ public class DataHelper {
     private int[] usedVariableColumnIndeices;
     public int[] realRowIndices = null;
     
+    public HashMap<String,Integer> stringIntMapForOil = null;
+    public HashMap<String,Integer> stringIntMapForLith = null;
    
     public DataHelper(MLDataModel mlModel) {
         this.mlModel = mlModel;
@@ -133,6 +135,7 @@ public class DataHelper {
                 stringIntMap.put(label[i],idForLabel++);
             }
         }
+        this.stringIntMapForOil = stringIntMap;
         mlModel.StringIntMapForOil = stringIntMap;
         LoadConfigure.writeLog(stringIntMap.toString());
     }
@@ -151,6 +154,7 @@ public class DataHelper {
                 stringIntMap.put(label[i],idForLabel++);
             }
         }
+        this.stringIntMapForLith = stringIntMap;
         mlModel.StringIntMapForLith = stringIntMap;
         LoadConfigure.writeLog(stringIntMap.toString());
     }

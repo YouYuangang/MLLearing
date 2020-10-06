@@ -39,7 +39,9 @@ import org.openide.windows.WindowManager;
  * @create 2019.3.30
  */
 public class ClassifyingBPFunction extends Function {
-   
+    public static final String OIL_MODEL_NAME_BP = "oil_bp.model";
+    public static final String LITH_MODEL_NAME_BP = "lith_bp.mode";
+    
     private Normalization normalizationForOil;
     private Normalization normalizationForLith;
     
@@ -165,8 +167,8 @@ public class ClassifyingBPFunction extends Function {
     public String[] lithClassifyCanGoOn(){
         String[] neededXs = null;
        BufferedReader bfr = null;
-       File lithModelConfFile = new File(LoadConfigure.trainedModelPath+File.separator+LoadConfigure.LITH_MODEL_NAME_BP+"Aux");
-       File lithModelFile = new File(LoadConfigure.trainedModelPath+File.separator+LoadConfigure.LITH_MODEL_NAME_BP);
+       File lithModelConfFile = new File(LoadConfigure.trainedModelPath+File.separator+LITH_MODEL_NAME_BP+"Aux");
+       File lithModelFile = new File(LoadConfigure.trainedModelPath+File.separator+LITH_MODEL_NAME_BP);
        if(!lithModelConfFile.exists()||!lithModelFile.exists()){
            LoadConfigure.writeLog("ClassifyingBPFunction 169:岩性模型或其配置文件不存在");
            return null;
@@ -215,8 +217,8 @@ public class ClassifyingBPFunction extends Function {
     public String[] oilClassifyCanGoOn(){
        String[] neededXs = null;
        BufferedReader bfr = null;
-       File oilModelConfFile = new File(LoadConfigure.trainedModelPath+File.separator+LoadConfigure.OIL_MODEL_NAME_BP+"Aux");
-       File oilModelFile = new File(LoadConfigure.trainedModelPath+File.separator+LoadConfigure.OIL_MODEL_NAME_BP);
+       File oilModelConfFile = new File(LoadConfigure.trainedModelPath+File.separator+OIL_MODEL_NAME_BP+"Aux");
+       File oilModelFile = new File(LoadConfigure.trainedModelPath+File.separator+OIL_MODEL_NAME_BP);
        if(!oilModelConfFile.exists()||!oilModelFile.exists()){
            LoadConfigure.writeLog("classifyingBPFuntction 218:含油性模型或其配置文件不存在");
            return null;
@@ -285,7 +287,7 @@ public class ClassifyingBPFunction extends Function {
         neuralNet.learn(dataSet);
         println("完成训练");
         //String filePath = FunTools.getModelPath() + File.separator + FunTools.getModelFileName("Classfy_BP", mlModel);
-        String filePath = LoadConfigure.trainedModelPath+File.separator+LoadConfigure.OIL_MODEL_NAME_BP;
+        String filePath = LoadConfigure.trainedModelPath+File.separator+OIL_MODEL_NAME_BP;
         neuralNet.save(filePath);
         FunTools.saveModelAuxFile(filePath,normalizationForOil,this);
 
@@ -321,7 +323,7 @@ public class ClassifyingBPFunction extends Function {
         neuralNet.learn(dataSet);
         println("完成训练");
         //String filePath = FunTools.getModelPath() + File.separator + FunTools.getModelFileName("Classfy_BP", mlModel);
-        String filePath = LoadConfigure.trainedModelPath+File.separator+LoadConfigure.LITH_MODEL_NAME_BP;
+        String filePath = LoadConfigure.trainedModelPath+File.separator+LITH_MODEL_NAME_BP;
         neuralNet.save(filePath);
         FunTools.saveModelAuxFile(filePath,normalizationForLith,this);
 
