@@ -83,8 +83,10 @@ public class PlotTopPanel extends javax.swing.JPanel {
 
     private void loadResultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadResultActionPerformed
         // TODO add your handling code here:
-        plotPanel.loadAndPaintOilClassifyRes(TableHelper.OIL_RES_TABLE_CLASSIFY,plotPanel.dataSourceIndex);
-        plotPanel.loadAndPaintOilClusterRes(TableHelper.OIL_RES_TABLE_CLUSTER,plotPanel.dataSourceIndex);
+        //plotPanel.loadAndPaintOilClassifyRes(TableHelper.OIL_RES_TABLE_CLASSIFY,plotPanel.dataSourceIndex);
+        //plotPanel.loadAndPaintOilClusterRes(TableHelper.OIL_RES_TABLE_CLUSTER,plotPanel.dataSourceIndex);
+        plotPanel.loadAndPaintOilClassifyRes(plotPanel.oilResNameAllMethods[0]);
+        plotPanel.loadAndPaintOilClassifyRes(plotPanel.oilResNameAllMethods[1]);
     }//GEN-LAST:event_loadResultActionPerformed
 
 

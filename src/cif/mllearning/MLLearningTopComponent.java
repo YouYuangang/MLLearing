@@ -26,6 +26,7 @@ import cif.mllearning.components.PlotPanel;
 import cif.mllearning.components.ProgressDialog;
 import cif.mllearning.configure.LoadConfigure;
 import cif.mllearning.functions.ClassifyingBPFunction;
+import cif.mllearning.functions.ClassifyingSVMFunction;
 import cif.mllearning.functions.FunTools;
 import cif.mllearning.functions.Function;
 import cif.mllearning.functions.FunctionProxy;
@@ -711,7 +712,7 @@ public final class MLLearningTopComponent extends TopComponent {
         try {
             function = (Function) mlGlobal.getFunctionProxys(learningMode)[index].classType.newInstance();
             function.setRunModel(Function.GENERATE_MODEL);
-            if(function instanceof ClassifyingBPFunction){
+            if(function instanceof ClassifyingBPFunction||function instanceof ClassifyingSVMFunction){
                 executeFunction(function,Function.GENERATE_MODEL);
             }else{
                 JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), "未实现");

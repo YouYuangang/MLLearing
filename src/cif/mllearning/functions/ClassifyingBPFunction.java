@@ -9,6 +9,7 @@ import cif.loglab.math.MathBase;
 import cif.mllearning.base.DataHelper;
 import cif.mllearning.base.MLDataModel;
 import cif.mllearning.base.MLDataModelHelper;
+import cif.mllearning.base.TableHelper;
 import cif.mllearning.base.UpdatePanelFlag;
 import cif.mllearning.base.Variable;
 import cif.mllearning.configure.LoadConfigure;
@@ -34,45 +35,66 @@ import org.neuroph.nnet.learning.MomentumBackpropagation;
 import org.openide.windows.WindowManager;
 
 /**
- *
- * @author wangcaizhi
- * @create 2019.3.30
+ *在dobackground方法中，如果是生成模式则产生模型，如果是运行模式则运行模型
+ * 在生成模式中，需要形成X数据，并整理Y数据，Y数据需要处理，将文本map到int，然后训练
+ * 在运行模式中，需要读入模型配置文件，检查当前是否导入了模型需要的变量，并读入网络输出int
+ * 到实际标签String的关系，形成Map;
+ * 
+ * @author Y.G. YOU
+ * @create 2020.10.08
+ * 
  */
 public class ClassifyingBPFunction extends Function {
-    public static final String OIL_MODEL_NAME_BP = "oil_bp.model";
-    public static final String LITH_MODEL_NAME_BP = "lith_bp.mode";
-    
-    private Normalization normalizationForOil;
-    private Normalization normalizationForLith;
-    
+    //网络默认参数
     private int hiddenNeuronCount = 16;
     private double learningRate = 0.05;
     private double maxError = 0.005;
     private int maxIteration = 200;
     
-    private int[] desiredYOil = null;
-    private int[] desiredYLith = null;
-    
+    //网络输入输出节点数
     public int XcountOil = 0;
     public int YcountOil = 0;
     public int XcountLith = 0;
     public int YcountLith = 0;
     
-    public boolean oilTrainFlag = false;//是否进行含油性模型训练
-    public boolean lithTrainFlag = false;//是否进行岩性模型训练
+    //是否进行含油性模型训练
+    public boolean oilTrainFlag = false;
+    //是否进行岩性模型训练
+    public boolean lithTrainFlag = false;
     
+    //保存用到变量的名字，进行数据归一化
+    private Normalization normalizationForOil;
+    private Normalization normalizationForLith;
+    
+    //样本标签文本到int的map
+    public HashMap<String,Integer> stringIntMapForOil = null;
+    public HashMap<String,Integer> stringIntMapForLith = null;
+    
+    //样本标签对应的int
+    private int[] desiredYOil = null;
+    private int[] desiredYLith = null;
+    
+   //生成模型后，将模型保存到磁盘，下面常量提供名字
+    public static final String OIL_MODEL_NAME_BP = "oil_bp.model";
+    public static final String LITH_MODEL_NAME_BP = "lith_bp.mode"; 
+ 
+    //模型文件，运行时需要加载它们
     public File oilModelFile = null;
     public File lithModelFile = null;
     
+    //运行后将结果保存到当前井次的通用表，下面常量提供名字
+    public static final String OIL_CLASSIFY_TABLENAME_BP = "oilClassifyByBP";
+    public static final String LITH_CLASSIFY_TABLENAME_BP = "lithClassifyByBP";
     
-    public HashMap<String,Integer> stringIntMapForOil = null;//将网络输出对应到文本的map
-    public HashMap<String,Integer> stringIntMapForLith = null;
+    //将运行结果保存到当前井次的通用表格
+    public TableHelper tableHelper = null;
     
     @Override
     public void setMLModel(MLDataModel mlModel) {
         this.mlModel = mlModel;
         mlModelHelper = new MLDataModelHelper(mlModel);
         dataHelper = new DataHelper(mlModel);
+        tableHelper = new TableHelper(mlModel,dataHelper);
         if(flag == Function.GENERATE_MODEL){
             this.XcountOil = dataHelper.getOilXVariableCount();
             this.XcountLith = dataHelper.getLithXVariableCount();
@@ -153,17 +175,48 @@ public class ClassifyingBPFunction extends Function {
             for(int i =0;i<mlModel.classifyResultOil.length;i++){
                 if(mlModel.dataRowSelectedFlags[i]){ 
                     mlModel.classifyResultOil[i] = intStringMap.get(yByModel[j++]);
+                }else{
+                    mlModel.classifyResultOil[i] = "无效数据";
                 }
             }
             printHighlight("数据处理完成！含油性分析完成！");
+            //保存结果到当前井次
+            tableHelper.saveToTableFromClassifyResOil(OIL_CLASSIFY_TABLENAME_BP);
             UpdatePanelFlag.DataPanelUpdateFlag = true;
             UpdatePanelFlag.HistogramUpdateFlag = true;
             UpdatePanelFlag.CrossPlotUpdateFlag = true;
             UpdatePanelFlag.PlotPanelUpdateFlag = true;    
     }
-    public void doClasifyLith(String[] needXsLith){
+    
+    public void doClasifyLith(String[] needXsLith) {
+        DataSet needToClassify = formOilToClassifyDataSet(needXsLith);
+        MultiLayerPerceptron neuralNet = (MultiLayerPerceptron) NeuralNetwork.createFromFile(lithModelFile);
+        int[] yByModel = computeY(neuralNet, needToClassify);
+
+        //转换为整型对文本
+        HashMap<Integer, String> intStringMap = new HashMap<>();
+        for (HashMap.Entry<String, Integer> entry : stringIntMapForLith.entrySet()) {
+            intStringMap.put(entry.getValue(), entry.getKey());
+        }
         
+        mlModel.classifyResultLith = new String[mlModel.dataRowSelectedFlags.length];
+        int j = 0;
+        for (int i = 0; i < mlModel.classifyResultLith.length; i++) {
+            if (mlModel.dataRowSelectedFlags[i]) {
+                mlModel.classifyResultLith[i] = intStringMap.get(yByModel[j++]);
+            }else{
+                mlModel.classifyResultLith[i] = "无效数据";
+            }
+        }
+        printHighlight("数据处理完成！含油性分析完成！");
+        //保存结果到当前井次
+        tableHelper.saveToTableFromClassifyResOil(LITH_CLASSIFY_TABLENAME_BP);
+        UpdatePanelFlag.DataPanelUpdateFlag = true;
+        UpdatePanelFlag.HistogramUpdateFlag = true;
+        UpdatePanelFlag.CrossPlotUpdateFlag = true;
+        UpdatePanelFlag.PlotPanelUpdateFlag = true;
     }
+    
     public String[] lithClassifyCanGoOn(){
         String[] neededXs = null;
        BufferedReader bfr = null;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><module codename="cif.mllearning">
-    <module_version install_time="1601868543393" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1602171940799" last="true" origin="installer" specification_version="1.0">
         <file crc="1924208854" name="config/Modules/cif-mllearning.xml"/>
-        <file crc="4265428763" name="modules/cif-mllearning.jar"/>
+        <file crc="3081675181" name="modules/cif-mllearning.jar"/>
         <file crc="4135575409" name="modules/ext/jcommon-1.0.23.jar"/>
         <file crc="3721340431" name="modules/ext/jfreechart-1.0.19.jar"/>
         <file crc="148271499" name="modules/ext/libsvm.jar"/>

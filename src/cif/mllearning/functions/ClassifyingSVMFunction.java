@@ -6,10 +6,20 @@
 package cif.mllearning.functions;
 
 import cif.loglab.math.MathBase;
+import cif.mllearning.base.DataHelper;
+import cif.mllearning.base.MLDataModel;
+import cif.mllearning.base.MLDataModelHelper;
+import cif.mllearning.base.TableHelper;
+import cif.mllearning.base.UpdatePanelFlag;
+import cif.mllearning.base.Variable;
 import cif.mllearning.configure.LoadConfigure;
 import java.awt.Frame;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.HashSet;
 import libsvm.svm;
 import libsvm.svm_model;
 import libsvm.svm_node;
@@ -19,24 +29,47 @@ import libsvm.svm_problem;
 /**
  *
  * @author wangcaizhi
+ * @author Y.G. You
  * @create 2019.3.30
- *
+ * 
  */
 public class ClassifyingSVMFunction extends Function {
-
+    //SVM参数
     private final svm_parameter param = new svm_parameter();
     private final static String[] SVR_TYPES = new String[]{"C_SVC", "NU-SVC"};
     private final static String[] KERNEL_TYPES = new String[]{"线性核", "多项式核", "RBF函数", "Sigmoid核"};
-    private Normalization normalizationOil;
-    private Normalization normalizationLith;
-    private String[] desiredY;
-    private HashMap<String, Integer> itemCodeTable;
     
+    //生成的模型保存的名字
     public final static String OILMODEL_FILENAME_SVM = "oil_svm.model";
     public final static String LITHMODEL_FILENAME_SVM = "lith_svm.model";
     
+    //结果保存到通用表用的名字
+    public final static String OIL_CLASSIFY_BY_SVM =  "oilClassifyBySVM";
+    public final static String LITH_CLASSIFY_BY_SVM = "lithClassifyBySVM";
+    
+    //保存用到的变量名字，并归一化
+    private Normalization normalizationOil;
+    private Normalization normalizationLith;
+    
+    //样本的分类标签
+    private String[] desiredY;
+    
+    
+    //是否进行含油性模型训练、岩性模型训练
     public boolean trainOilFlag = false;
     public boolean trainLithFlag = false;
+    
+    //模型保存的文件
+    public File oilModelFile = null;
+    public File lithModelFile = null;
+    
+    public TableHelper tableHelper = null;
+    
+    //标签String与int对应关系
+    public HashMap<String,Integer> stringIntMapForOil = null;
+    public HashMap<String,Integer> stringIntMapForLith = null;
+    
+    
     public ClassifyingSVMFunction() {
         param.svm_type = svm_parameter.C_SVC;
         param.kernel_type = svm_parameter.RBF;
@@ -53,6 +86,14 @@ public class ClassifyingSVMFunction extends Function {
         param.nr_weight = 0;
         param.weight_label = new int[0];
         param.weight = new double[0];
+    }
+    
+    @Override
+    public void setMLModel(MLDataModel mlModel) {
+        this.mlModel = mlModel;
+        mlModelHelper = new MLDataModelHelper(mlModel);
+        dataHelper = new DataHelper(mlModel);
+        tableHelper = new TableHelper(mlModel);
     }
 
     @Override
@@ -105,7 +146,7 @@ public class ClassifyingSVMFunction extends Function {
 
     @Override
     protected Integer doInBackground() throws Exception {
-        if (RUN_MODEL == Function.GENERATE_MODEL) {
+        if (flag == Function.GENERATE_MODEL) {
             if (dataHelper.oilYVariableColumnIndex >= 0&&dataHelper.getOilXVariableCount()>=2) {
                 trainOilFlag = true;
             }
@@ -119,15 +160,19 @@ public class ClassifyingSVMFunction extends Function {
                 trainLithModel();
             }
         }else{
-            if(oilClassifyCanGoOn()){
-                doOilClassify();
+            String[] needOilX = oilClassifyCanGoOn();
+            String[] needLithX = lithClassifyCanGoOn();
+            
+            if(needOilX!=null&&needOilX.length>0){
+                
+                doOilClassify(needOilX);
             }
-            if(lithClassifyCanGoOn()){
-                doLithClassify();
+            if(needLithX!=null&&needLithX.length>0){
+                //doLithClassify(needLithX);
             }
         }
         
-        
+        return 0;
         
     }
 
@@ -152,12 +197,11 @@ public class ClassifyingSVMFunction extends Function {
                 problem.x[row][col].value = buffer[row];
             }
         }
+        
         desiredY = new String[rowCount];
         for(int i = 0;i<desiredY.length;i++){
             desiredY[i] = dataHelper.readRealOilYString(i);
         }
-        
-        
         for (int row = 0; row < rowCount; row++) {
             problem.y[row] = dataHelper.stringIntMapForOil.get(desiredY[row]);
         }
@@ -182,6 +226,7 @@ public class ClassifyingSVMFunction extends Function {
         double[] py = new double[problem.y.length];
         for (int i = 0; i < problem.x.length; i++) {
             py[i] = svm.svm_predict(model, problem.x[i]);
+            LoadConfigure.writeLog(""+py[i]);
         }
         int correctCount = FunTools.computeEquivalenceCount(problem.y, py);
         StringBuilder sb = new StringBuilder();
@@ -240,4 +285,202 @@ public class ClassifyingSVMFunction extends Function {
         println("Y: " + yVarName);
         println("Number of Points: " + dataHelper.getRealRowCount());
     }
+    public svm_problem buildSVMProblemForLith(){
+        svm_problem problem = new svm_problem();
+        int rowCount = dataHelper.getRealRowCount();
+        int xVarCount = dataHelper.getLithXVariableCount();
+        normalizationLith = new Normalization(xVarCount, -1);
+        normalizationLith.StringIntMap = dataHelper.stringIntMapForLith;
+        problem.l = rowCount;
+        problem.x = new svm_node[rowCount][xVarCount];
+        problem.y = new double[rowCount];
+        double[] buffer = new double[rowCount];
+        printHighlight("Data Statistics:\n");
+        for (int col = 0; col < xVarCount; col++) {
+            dataHelper.readLithXData(col, buffer);
+            String variableName = dataHelper.getLithXVariableName(col);
+            normalizationLith.normalizeXVar(variableName,col, buffer, MathBase.minimum(buffer), MathBase.maximum(buffer));
+            for (int row = 0; row < rowCount; row++) {
+                problem.x[row][col] = new svm_node();
+                problem.x[row][col].index = col;
+                problem.x[row][col].value = buffer[row];
+            }
+        }
+        desiredY = new String[rowCount];
+        for(int i = 0;i<desiredY.length;i++){
+            desiredY[i] = dataHelper.readRealLithYString(i);
+        }
+        
+        
+        for (int row = 0; row < rowCount; row++) {
+            problem.y[row] = dataHelper.stringIntMapForLith.get(desiredY[row]);
+        }
+        return problem;
+    }
+    /**
+     * 判断是否存在含油性分类的模型，导入的数据是否存在模型需要的变量。如果两者都满足，则返回需要的变量数组，
+     * 并加载文本与网络输出的对应关系；如果任一条件不满足，返回null表示无法继续操作。
+     * @return string[]
+     */
+    public String[] oilClassifyCanGoOn(){
+       String[] neededXs = null;
+       BufferedReader bfr = null;
+       File oilModelConfFile = new File(LoadConfigure.trainedModelPath+File.separator+OILMODEL_FILENAME_SVM+"Aux");
+       File oilModelFile = new File(LoadConfigure.trainedModelPath+File.separator+OILMODEL_FILENAME_SVM);
+       if(!oilModelConfFile.exists()||!oilModelFile.exists()){
+           LoadConfigure.writeLog("ClassfigyingSVMFunction 288:含油性模型或其配置文件不存在");
+           return null;
+       }else{
+           this.oilModelFile = oilModelFile;
+       }
+       //
+       try{
+           bfr = new BufferedReader(new InputStreamReader(new FileInputStream(oilModelConfFile),"UTF-8"));
+           //读取模型需要的变量
+           String tempLine = bfr.readLine();
+           String[] tempStrArr = tempLine.split(",");
+           int xcount = Integer.parseInt(tempStrArr[1]);
+           neededXs = new String[xcount];
+           for(int i = 0;i<xcount;i++){
+               tempLine = bfr.readLine();
+               tempStrArr = tempLine.split(",");
+               neededXs[i] = tempStrArr[0];
+           }
+           //读取文本整型对应关系
+           tempLine = bfr.readLine();
+           tempStrArr = tempLine.split(",");
+           stringIntMapForOil = new HashMap<>();
+           int stringIntCount = Integer.parseInt(tempStrArr[1]);
+           for(int i = 0;i<stringIntCount;i++){
+               tempLine = bfr.readLine();
+               tempStrArr = tempLine.split(",");
+               stringIntMapForOil.put(tempStrArr[0],Integer.parseInt(tempStrArr[1]));    
+           }
+           mlModel.StringIntMapForOil = stringIntMapForOil;
+       }catch(Exception e){
+           LoadConfigure.writeLog("svm.324:读入含油性svm模型出错");
+       }
+       HashSet<String> varNameSet = new HashSet<>();
+       for(Variable varT:mlModel.getVariables()){
+           varNameSet.add(varT.name);
+       }
+       for(int i = 0;i<neededXs.length;i++){
+           if(!varNameSet.contains(neededXs[i])){
+               LoadConfigure.writeLog("缺少SVM模型需要的变量");
+               return null;
+           }
+       }
+       return neededXs; 
+    }
+    /**
+     * 判断是否存在岩性分类的模型，导入的数据是否存在模型需要的变量。如果两者都满足，则返回需要的变量数组，
+     * 并加载文本与网络输出的对应关系；如果任一条件不满足，返回null表示无法继续操作。
+     * @return string[]
+     */
+    public String[] lithClassifyCanGoOn(){
+        String[] neededXs = null;
+       BufferedReader bfr = null;
+       File lithModelConfFile = new File(LoadConfigure.trainedModelPath+File.separator+LITHMODEL_FILENAME_SVM+"Aux");
+       File lithModelFile = new File(LoadConfigure.trainedModelPath+File.separator+LITHMODEL_FILENAME_SVM);
+       if(!lithModelConfFile.exists()||!lithModelFile.exists()){
+           LoadConfigure.writeLog("ClassfigyingSVMFunction 344:岩性模型或其配置文件不存在");
+           return null;
+       }else{
+           this.lithModelFile = lithModelFile;
+       }
+       //
+       try{
+           bfr = new BufferedReader(new InputStreamReader(new FileInputStream(lithModelConfFile),"UTF-8"));
+           //读取模型需要的变量
+           String tempLine = bfr.readLine();
+           String[] tempStrArr = tempLine.split(",");
+           int xcount = Integer.parseInt(tempStrArr[1]);
+           neededXs = new String[xcount];
+           for(int i = 0;i<xcount;i++){
+               tempLine = bfr.readLine();
+               tempStrArr = tempLine.split(",");
+               neededXs[i] = tempStrArr[0];
+           }
+           //读取文本整型对应关系
+           tempLine = bfr.readLine();
+           tempStrArr = tempLine.split(",");
+           stringIntMapForLith = new HashMap<>();
+           int stringIntCount = Integer.parseInt(tempStrArr[1]);
+           for(int i = 0;i<stringIntCount;i++){
+               tempLine = bfr.readLine();
+               tempStrArr = tempLine.split(",");
+               stringIntMapForLith.put(tempStrArr[0],Integer.parseInt(tempStrArr[1]));    
+           }
+           mlModel.StringIntMapForLith = stringIntMapForLith;
+       }catch(Exception e){
+           LoadConfigure.writeLog("svm.324:读入岩性svm模型出错");
+       }
+       HashSet<String> varNameSet = new HashSet<>();
+       for(Variable varT:mlModel.getVariables()){
+           varNameSet.add(varT.name);
+       }
+       for(int i = 0;i<neededXs.length;i++){
+           if(!varNameSet.contains(neededXs[i])){
+               LoadConfigure.writeLog("svm.391缺少SVM模型需要的变量");
+               return null;
+           }
+       }
+       return neededXs; 
+    }
+    private void doOilClassify(String[] needXs){
+        svm_model model = null;
+        svm_problem problem = new svm_problem();
+        int rowCount = dataHelper.getRealRowCount();
+        int xVarCount = needXs.length;
+        Normalization tempNormalization = new Normalization(xVarCount, -1);
+        problem.l = rowCount;
+        problem.x = new svm_node[rowCount][xVarCount];
+        problem.y = new double[rowCount];
+        double[] buffer = new double[rowCount];
+        printHighlight("Data Statistics:\n");
+        for (int col = 0; col < xVarCount; col++) {
+            dataHelper.getUsedDoubleDataByName(needXs[col], buffer); 
+            tempNormalization.normalizeXVar(needXs[col], col, buffer, MathBase.minimum(buffer), MathBase.maximum(buffer));
+            for (int row = 0; row < rowCount; row++) {
+                problem.x[row][col] = new svm_node();
+                problem.x[row][col].index = col;
+                problem.x[row][col].value = buffer[row];
+                
+            }
+            
+        }
+        try{
+           model = svm.svm_load_model(oilModelFile.getAbsolutePath()); 
+           
+        }catch(Exception e){
+            LoadConfigure.writeLog("***svm.420:加载模型出错");
+        }
+        if(model == null){
+            LoadConfigure.writeLog("***svm.421:加载模型出错");
+            return;
+        }
+        double[] py = new double[problem.y.length];
+        for (int i = 0; i < problem.x.length; i++) {
+           
+            py[i] = svm.svm_predict(model, problem.x[i]);
+            
+        }
+        mlModel.classifyResultOil = new String[dataHelper.getRawDataCount()];
+        HashMap<Integer,String>  intStringMap = new HashMap<>();
+        for(HashMap.Entry<String,Integer> temp:stringIntMapForOil.entrySet()){
+            intStringMap.put(temp.getValue(), temp.getKey());
+        }
+        
+        int indexInPy = 0;
+        for(int i = 0;i<mlModel.classifyResultOil.length;i++){
+            if(mlModel.dataRowSelectedFlags[i]){
+                mlModel.classifyResultOil[i] = intStringMap.get((int)py[indexInPy++]);
+            }else{
+                mlModel.classifyResultOil[i] = "无效数据";  
+            }
+        } 
+        tableHelper.saveToTableFromClassifyResOil(OIL_CLASSIFY_BY_SVM);
+        UpdatePanelFlag.DataPanelUpdateFlag = true;
+    }
+    
 }

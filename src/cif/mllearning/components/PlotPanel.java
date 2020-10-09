@@ -17,6 +17,8 @@ import cif.mllearning.base.MLDataModel;
 import cif.mllearning.base.TableHelper;
 import cif.mllearning.base.Variable;
 import cif.mllearning.configure.LoadConfigure;
+import cif.mllearning.functions.ClassifyingBPFunction;
+import cif.mllearning.functions.ClassifyingSVMFunction;
 import com.flyfox.baseplot.data.PlotDataSource;
 import com.flyfox.baseplot.data.PlotDataSourceManager;
 import com.flyfox.logplot.canvas.LogPlotCanvas;
@@ -63,19 +65,17 @@ public class PlotPanel extends PagePanel {
     private int standardClusterResultColIndex = -1;
     private double accuracy;
 
-    private int[] mapping;
+    public String[] oilResNameAllMethods = new String[]{ClassifyingBPFunction.OIL_CLASSIFY_TABLENAME_BP,ClassifyingSVMFunction.OIL_CLASSIFY_BY_SVM};
+    
 
     /**
      * Creates new form PlotPanel
      */
     public PlotPanel() {
         initComponents();
-
         this.setLayout(new BorderLayout());
         this.add(new PlotTopPanel(this), BorderLayout.NORTH);
-        
-        
-        JButton testButton = new JButton("删除table测试");
+        /*JButton testButton = new JButton("删除table测试");
         //this.add(testButton,BorderLayout.NORTH);
         testButton.addMouseListener(new MouseListener(){
             @Override
@@ -108,9 +108,7 @@ public class PlotPanel extends PagePanel {
                 //To change body of generated methods, choose Tools | Templates.
             }
             
-        });
-        
-
+        });*/
     }
 
     public void setMLModel(MLDataModel mlModel) {
@@ -125,7 +123,9 @@ public class PlotPanel extends PagePanel {
         }
         this.dataHelper = new DataHelper(mlModel);
         this.tableModel.setMLModel(mlModel);
-
+        
+        
+        
         initCanvas();
     }
 
@@ -136,14 +136,14 @@ public class PlotPanel extends PagePanel {
             this.add(canvas, BorderLayout.CENTER);
 
         }
+        
         canvas.clearAll();
-
         canvas.setDepth(mlModel.curveStdep, mlModel.curveEndep);
-
-        // 获取plot数据源
+        // 设置plot数据源
         PlotDataSourceManager plotDataSourceManager = canvas.getWell().getDataSourceManager();
         PlotDataSource plotDataSource = plotDataSourceManager.addDataSource(mlModel.inputDataPath.toString(), mlModel.inputDataPath.toString());
         dataSourceIndex = plotDataSourceManager.getDataSources().indexOf(plotDataSource);
+        
         
         Variable[] variables = mlModel.getVariables();
         Variable yVariable = null;
@@ -279,8 +279,9 @@ public class PlotPanel extends PagePanel {
 
         return typeCurve;
     }
+    
 //根据表名绘制
-public int loadAndPaintOilClassifyRes(String tableName,int dataSourceIndex){
+public int loadAndPaintOilClassifyRes(String tableName){
         TableHelper tableHelper = new TableHelper(mlModel);
         int retSta = tableHelper.fillOilClassifyResultFromTable(tableName);
         if(mlModel.classifyResultOil == null||retSta<0){
@@ -294,7 +295,7 @@ public int loadAndPaintOilClassifyRes(String tableName,int dataSourceIndex){
         TypeCurveHead typeCurveHead = typeCurve.getCurveHead();
         typeCurveHead.setDataPathIndex(dataSourceIndex);
         typeCurveHead.setName(tableName);
-        typeCurveHead.setLabel(tableName);
+        typeCurveHead.setLabel(tableName.substring(tableName.indexOf("By")));
         typeCurve.setStartDepthName(TableHelper.OIL_FEILDSNAME_CLASSIY[0]);
         typeCurve.setEndDepthName(TableHelper.OIL_FEILDSNAME_CLASSIY[1]);
         typeCurve.setCategoryName(TableHelper.OIL_FEILDSNAME_CLASSIY[2]);

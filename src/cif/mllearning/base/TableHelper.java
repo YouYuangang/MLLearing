@@ -35,6 +35,10 @@ public class TableHelper {
         this.mlModel = mlModel;
         dataHelper = new DataHelper(mlModel);
     }
+    public TableHelper(MLDataModel mlModel,DataHelper dataHelper){
+        this.mlModel = mlModel;
+        this.dataHelper = dataHelper;
+    }
     /**
      * 根据解释结论表给数据打标签，tableName为解释结论表的名字，通过这个表填充mlModel.dataLabelAs[] 数组
      * @param tableName
@@ -177,8 +181,17 @@ public class TableHelper {
         JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), "聚类中心个数"+maxLabel);
         return maxLabel;
     }
-    
+    /**
+     * 将mlModel的mlModel.classifyResultOil结果存在当前井次的通用表格中，
+     * 表格名字由tableName提供
+     * @param tableName 提供用来保存结果的表格的名字。
+     * @return 成功返回1，失败返回-1
+     */
     public int saveToTableFromClassifyResOil(String tableName) {
+        if(mlModel.classifyResultOil == null){
+            LoadConfigure.writeLog("218 TableHelper.saveToTableFromClassifyResOil:"+tableName+":没有含油性分类结果，无法保存");
+            return -1;
+        }
         LogCategory logCategory = mlModel.inputDataPath.getCategory();
         if (logCategory.getLogCommonTable(tableName) != null) {
             logCategory.deleteLogging(tableName);
@@ -194,12 +207,9 @@ public class TableHelper {
         tableFields.setName(2, OIL_FEILDSNAME_CLASSIY[2]);
         tableFields.setDataType(2, Global.DATA_STRING);
         tableFields.setUnit(2, "");
-        
         TableRecords tableRecords = new TableRecords();
         tableRecords.init(dataHelper.getRealRowCount(), tableFields);
-        
         int indexInClassifyRes = 0;
-        
         //填充数据
         for (int i = 0; i < tableRecords.getRecordsNum(); i++) {
             while(indexInClassifyRes<mlModel.dataRowSelectedFlags.length&&mlModel.dataRowSelectedFlags[indexInClassifyRes]==false){
@@ -215,10 +225,15 @@ public class TableHelper {
         logCategory.createTable(tableName, "", Global.LOGGING_COMMON_TABLE, tableRecords);
         return 1;
     }
-    
+    /**
+     * 将mlModel的mlModel.classifyResultOil结果存在当前井次的通用表格中，
+     * 表格名字由tableName提供
+     * @param tableName 提供用来保存结果的表格的名字。
+     * @return 成功返回1，失败返回-1；
+     */
     public int saveToTableFromClusterResOil(String tableName) {
         if(mlModel.clusterResultOil == null){
-            LoadConfigure.writeLog("218 TableHelper.saveToTableFromClusterResOil:没有含油性聚类结果，无法保存");
+            LoadConfigure.writeLog("218 TableHelper.saveToTableFromClusterResOil:"+tableName+":没有含油性聚类结果，无法保存");
             return -1;
         }
         LogCategory logCategory = mlModel.inputDataPath.getCategory();
@@ -239,21 +254,23 @@ public class TableHelper {
         TableRecords tableRecords = new TableRecords();
         tableRecords.init(dataHelper.getRealRowCount(), tableFields);
         
-        int indexInClassifyRes = 0;
+        int indexInClusterRes = 0;
         
         //填充数据
         for (int i = 0; i < tableRecords.getRecordsNum(); i++) {
-            while(indexInClassifyRes<mlModel.dataRowSelectedFlags.length&&mlModel.dataRowSelectedFlags[indexInClassifyRes]==false){
-                indexInClassifyRes++;
+            while(indexInClusterRes<mlModel.dataRowSelectedFlags.length&&mlModel.dataRowSelectedFlags[indexInClusterRes]==false){
+                indexInClusterRes++;
             }
-            if(indexInClassifyRes<mlModel.dataRowSelectedFlags.length){
-                tableRecords.setRecordDoubleData(i, 0, mlModel.curveStdep+indexInClassifyRes*dataHelper.getDepthLevel());
-                tableRecords.setRecordDoubleData(i, 1, mlModel.curveStdep+(indexInClassifyRes+1)*dataHelper.getDepthLevel());
-                tableRecords.setRecordIntData(i, 2, mlModel.clusterResultOil[indexInClassifyRes]);
-                indexInClassifyRes++;
+            if(indexInClusterRes<mlModel.dataRowSelectedFlags.length){
+                tableRecords.setRecordDoubleData(i, 0, mlModel.curveStdep+indexInClusterRes*dataHelper.getDepthLevel());
+                tableRecords.setRecordDoubleData(i, 1, mlModel.curveStdep+(indexInClusterRes+1)*dataHelper.getDepthLevel());
+                tableRecords.setRecordIntData(i, 2, mlModel.clusterResultOil[indexInClusterRes]);
+                indexInClusterRes++;
             }
         }
         logCategory.createTable(tableName, "", Global.LOGGING_COMMON_TABLE, tableRecords);
         return 1;
     }
+    
+    
 }

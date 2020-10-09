@@ -1,4 +1,4 @@
-#Mon Oct 05 11:29:34 CST 2020
+#Fri Oct 09 00:20:23 CST 2020
 cif.appdesigner.AutoUpdate-Show-In-Client=true
 org.netbeans.core.ui.OpenIDE-Module-Install=\u0000
 org.netbeans.core.nativeaccess.OpenIDE-Module-Layer=\u0000
@@ -286,8 +286,8 @@ org.netbeans.modules.options.keymap.OpenIDE-Module-Layer=org/netbeans/modules/op
 cif.contourapp.OpenIDE-Module-Install=\u0000
 cif.basemodule.OpenIDE-Module-Install=\u0000
 cif.formatconversion.OpenIDE-Module-Deprecated=\u0000
-cif.base.AutoUpdate-Show-In-Client=true
 net.java.html.sound.AutoUpdate-Show-In-Client=\u0000
+cif.base.AutoUpdate-Show-In-Client=true
 org.openide.execution.OpenIDE-Module-Hide-Classpath-Packages=\u0000
 org.netbeans.modules.masterfs.nio2.OpenIDE-Module-Hide-Classpath-Packages=\u0000
 cif.dataeditor.OpenIDE-Module-Description=\u0000
@@ -694,8 +694,8 @@ org.netbeans.core.execution.AutoUpdate-Show-In-Client=false
 cif.cifplusnode.OpenIDE-Module-Deprecated=\u0000
 cif.geo.wellsection.AutoUpdate-Show-In-Client=true
 cif.logesanalysis.OpenIDE-Module-Layer=\u0000
-com.flyfox.reservoirplot.AutoUpdate-Show-In-Client=true
 org.netbeans.swing.plaf.AutoUpdate-Show-In-Client=false
+com.flyfox.reservoirplot.AutoUpdate-Show-In-Client=true
 cif.iconeditor.OpenIDE-Module-Deprecated=\u0000
 net.java.html.boot.script.AutoUpdate-Show-In-Client=\u0000
 org.netbeans.core.io.ui.OpenIDE-Module-Layer=org/netbeans/core/io/ui/layer.xml
@@ -822,8 +822,8 @@ cif.tool.OpenIDE-Module-Layer=\u0000
 org.netbeans.swing.outline.AutoUpdate-Show-In-Client=false
 org.netbeans.core.execution.OpenIDE-Module-Layer=\u0000
 org.netbeans.modules.progress.ui.OpenIDE-Module-Description=\u0000
-cif.helpwrapper.AutoUpdate-Show-In-Client=true
 org.netbeans.modules.masterfs.linux.AutoUpdate-Show-In-Client=false
+cif.helpwrapper.AutoUpdate-Show-In-Client=true
 com.flyfox.depthcor.OpenIDE-Module-Deprecated=\u0000
 org.openide.awt.OpenIDE-Module-Hide-Classpath-Packages=\u0000
 org.openide.filesystems.compat8.OpenIDE-Module-Description=\u0000

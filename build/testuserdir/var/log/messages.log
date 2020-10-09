@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
->Log Session: Monday, October 5, 2020 11:29:04 AM CST
+>Log Session: Thursday, October 8, 2020 11:45:42 PM CST
 >System Info: 
   Product Version         = CIFLog 2.0
   Operating System        = Windows 7 version 6.1 running on amd64
@@ -201,7 +201,7 @@ INFO [org.netbeans.core.startup.NbEvents]: 开启模块:
 	cif.paysummary [1.0 190819]
 	cif.normalization [1.0 190819]
 	cif.mulprocessor [1.0 190819]
-	cif.mllearning [1.0 201005]
+	cif.mllearning [1.0 201008]
 	cif.methods [1.0 190819]
 	cif.logsplice [1.0 190819]
 	cif.basemodule [1.0 190819]
@@ -246,10 +246,12 @@ Heap memory usage: initial 128.0MB maximum 1801.0MB
 Non heap memory usage: initial 2.4MB maximum -1b
 Garbage collector: PS Scavenge (Collections=8 Total time spent=0s)
 Garbage collector: PS MarkSweep (Collections=2 Total time spent=0s)
-Classes: loaded=5538 total loaded=5539 unloaded 0
+Classes: loaded=5560 total loaded=5560 unloaded 0
 INFO [org.netbeans.core.ui.warmup.DiagnosticTask]: Total memory 8,495,538,176
 INFO [null]: 总物理内存8,495,538,176
 WARNING [org.openide.filesystems.Ordering]: Found same position 100 for both Menu/Tools/ResourceManage and Menu/Tools/org-openide-actions-ToolsAction.shadow
 WARNING [org.openide.filesystems.Ordering]: Not all children in Menu/Window/ marked with the position attribute: [cif-mllearning-MLLearningTopComponent.shadow, cif-stattable-StatTableTopComponent.shadow, com-sgt-modul3d-topcomponent-MainViewTopComponent.shadow], but some are: [TaskPaneAction.shadow, WelcomeAction.shadow, javax-swing-JSeparator.instance, org-netbeans-core-windows-actions-ToggleFullScreenAction.instance, Separator3.instance, ConfigureWindow, org-netbeans-core-windows-actions-ResetWindowsAction.shadow, Separator4.instance, CloseWindowAction.shadow, CloseAllDocumentsAction.shadow, CloseAllButThisAction.shadow, DocumentsAction.shadow]
 WARNING [org.openide.filesystems.Ordering]: Not all children in Menu/Help/ marked with the position attribute: [检查更新], but some are: [cif-helpwrapper-helper-HelperAction.shadow, cif-helpwrapper-helper-HelperAction-separatorAfter.instance, cif-helpwrapper-logger-PlatformLoggerAction.shadow, cif-projectmanager-LicenseAction-separatorBefore.instance, cif-projectmanager-LicenseAction.shadow, cif-helpwrapper-logger-PlatformLoggerAction-separatorAfter.instance, cif-helpwrapper-about-AboutAction.shadow]
 WARNING [org.openide.filesystems.Ordering]: Relative ordering attribute cif-helpwrapper-updater-UpdateAction1.shadow/cif-helpwrapper-updater-ImportPacket.shadow on Menu/Help/检查更新 is deprecated in favor of numeric position attributes
+WARNING [org.netbeans.modules.progress.spi.InternalHandle]: Cannot switch to silent mode when not running at org.netbeans.core.ui.warmup.MenuWarmUpTask$NbWindowsAdapter$1HandleBridge.run(MenuWarmUpTask.java:269)
+WARNING [null]: Last record repeated 4 more times.
