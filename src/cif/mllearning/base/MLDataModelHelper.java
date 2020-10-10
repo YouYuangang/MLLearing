@@ -5,9 +5,8 @@
  */
 package cif.mllearning.base;
 
-import cif.base.Global;
+
 import cif.dataengine.DataPath;
-import cif.mllearning.MLGlobal;
 import cif.mllearning.configure.LoadConfigure;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -17,14 +16,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.HashMap;
-import javax.swing.JOptionPane;
-import org.openide.windows.WindowManager;
+
 
 /**
  *
  * @author wangcaizhi
+ * @author Y.G. YOU
  * @create 2019.3.22
+ * @update 2020.10.9
  */
 public class MLDataModelHelper {
 
@@ -34,112 +33,114 @@ public class MLDataModelHelper {
         this.mlModel = mlModel;
     }
 
-    /*public int getRealXVariableCount() {
-        int xVarCount = 0;
-        Variable[] variables = mlModel.getVariables();
-        for (Variable variable : variables) {
-            if (variable.flag == MLDataModel.X_VARIABLE) {
-                xVarCount++;
-            }
-        }
-        return xVarCount;
-    }*/
-    public static void saveMlModelToFile(MLDataModel mlModel){
-        String cifInstallPath = Global.getInstallationPath();
-        String confPath = cifInstallPath + File.separator + MLGlobal.MLMODEL_FILENAME;
+    public static void saveMlModelToFile(MLDataModel mlModel) {
+
+        String confPath = LoadConfigure.MLLEARNING_CONFIG_PATH + File.separator + MLDataModel.MLMODEL_FILENAME;
         FileOutputStream ops = null;
         BufferedWriter bfw = null;
-        try{
+        try {
             ops = new FileOutputStream(confPath);
-            bfw = new BufferedWriter(new OutputStreamWriter(ops,"UTF-8"));
-            bfw.write("dataFrom,"+mlModel.dataFrom);
+            bfw = new BufferedWriter(new OutputStreamWriter(ops, "UTF-8"));
+            bfw.write("dataFrom," + mlModel.dataFrom);
             bfw.newLine();
-            if(mlModel.dataFrom == MLDataModel.FROM_CURVE||mlModel.dataFrom == MLDataModel.FROM_TABLE){
-                bfw.write("dataPath,"+mlModel.inputDataPath);
-            }else{
-                bfw.write("filePath,"+mlModel.inputFilePath);
+            if (mlModel.dataFrom == MLDataModel.FROM_CURVE || mlModel.dataFrom == MLDataModel.FROM_TABLE) {
+                bfw.write("dataPath," + mlModel.inputDataPath);
+            } else {
+                bfw.write("filePath," + mlModel.inputFilePath);
             }
             bfw.newLine();
-            bfw.write("x,"+mlModel.getVariables().length);
+            bfw.write("x," + mlModel.getVariables().length);
             bfw.newLine();
-            for(int i = 0;i<mlModel.getVariables().length;i++){
+            for (int i = 0; i < mlModel.getVariables().length; i++) {
                 bfw.write(mlModel.getVariables()[i].name);
                 bfw.newLine();
             }
-            if(mlModel.dataFrom == MLDataModel.FROM_CURVE){
-                bfw.write(""+mlModel.curveStdep+","+mlModel.curveEndep);
+            if (mlModel.dataFrom == MLDataModel.FROM_CURVE) {
+                bfw.write("" + mlModel.curveStdep + "," + mlModel.curveEndep);
             }
-            
-        }catch(IOException e){
-            JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), "保存mlModel出错");
-        }finally{
-            try{
-                if(bfw!=null){
+
+        } catch (IOException e) {
+            LoadConfigure.writeErrorLog("写入mlModel文件出错");
+            return;
+        } finally {
+            try {
+                if (bfw != null) {
                     bfw.close();
                 }
-                
-            }catch(Exception e){
-                
+                return;
+            } catch (Exception e) {
+                LoadConfigure.writeErrorLog("写入mlModel文件,关闭流出错");
+                return;
             }
-            
+
         }
     }
-    public static boolean loadMlModelFromFile(MLDataModel mlModel){
-        String cifInstallPath = Global.getInstallationPath();
-        String confPath = cifInstallPath + File.separator + MLGlobal.MLMODEL_FILENAME;
+
+    public static boolean loadMlModelFromFile(MLDataModel mlModel) {
+        String confPath = LoadConfigure.MLLEARNING_CONFIG_PATH + File.separator + MLDataModel.MLMODEL_FILENAME;
         FileInputStream fis = null;
         BufferedReader bfr = null;
         File file = new File(confPath);
-        if(!file.exists()){
+        if (!file.exists()) {
             return false;
         }
-        try{
+        try {
             fis = new FileInputStream(file);
-            bfr = new BufferedReader(new InputStreamReader(fis,"UTF-8"));
-            
+            bfr = new BufferedReader(new InputStreamReader(fis, "UTF-8"));
+
+            //读取数据来源
             String temp = bfr.readLine();
             String[] atemp = temp.split(",");
             mlModel.dataFrom = Integer.parseInt(atemp[1]);
-            
+
+            //读取inputDataPath或inputFilePath
             temp = bfr.readLine();
             atemp = temp.split(",");
-            if(mlModel.dataFrom == MLDataModel.FROM_CURVE||mlModel.dataFrom == MLDataModel.FROM_TABLE){
+            if (mlModel.dataFrom == MLDataModel.FROM_CURVE || mlModel.dataFrom == MLDataModel.FROM_TABLE) {
                 mlModel.inputDataPath = new DataPath(atemp[1]);
-            }else{
+            } else {
                 mlModel.inputFilePath = atemp[1];
             }
+
             
+            //上次选中曲线的个数
             temp = bfr.readLine();
             atemp = temp.split(",");
             int xcount = Integer.parseInt(atemp[1]);
+
+            
+            //读入上次选中的名称
             mlModel.variables = new Variable[xcount];
-            for(int i =0;i<xcount;i++){
+            for (int i = 0; i < xcount; i++) {
                 temp = bfr.readLine();
-                mlModel.variables[i] = new Variable(temp,MLDataModel.X_VARIABLE_OIL);
+                mlModel.variables[i] = new Variable(temp, MLDataModel.X_VARIABLE_OIL);
             }
-            if(mlModel.dataFrom == MLDataModel.FROM_CURVE){
+
+            
+            if (mlModel.dataFrom == MLDataModel.FROM_CURVE) {
                 temp = bfr.readLine();
                 atemp = atemp = temp.split(",");
+                mlModel.curveStdep = Double.parseDouble(atemp[0]);
+                mlModel.curveEndep = Double.parseDouble(atemp[1]);
             }
-            mlModel.curveStdep = Double.parseDouble(atemp[0]);
-            mlModel.curveEndep = Double.parseDouble(atemp[1]);
             return true;
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), "导入mlModel出错");
+        } catch (Exception e) {
+            LoadConfigure.writeErrorLog("读入mlModel文本出错！");
             return false;
-        }finally{
-            if(bfr!=null){
-                try{
+        } finally {
+            if (bfr != null) {
+                try {
                     bfr.close();
-                }catch(IOException e){
-                    
+                } catch (IOException e) {
+                    LoadConfigure.writeErrorLog("读入mlModel文本,关闭流出错！");
                 }
             }
-            
-        } 
+
+        }
     }
-   
-    public int getOilXVariableCount(){
+
+    
+    public int getOilXVariableCount() {
         int xVarCount = 0;
         Variable[] variables = mlModel.getVariables();
         for (Variable variable : variables) {
@@ -149,7 +150,9 @@ public class MLDataModelHelper {
         }
         return xVarCount;
     }
-    public int getLithXVariableCount(){
+
+    
+    public int getLithXVariableCount() {
         int xVarCount = 0;
         Variable[] variables = mlModel.getVariables();
         for (Variable variable : variables) {
@@ -160,6 +163,7 @@ public class MLDataModelHelper {
         return xVarCount;
     }
 
+    
     public int getRealVariableCount() {
         int varCount = 0;
         Variable[] variables = mlModel.getVariables();
@@ -171,19 +175,7 @@ public class MLDataModelHelper {
         return varCount;
     }
 
-    /*public String[] getRealXVariableNames() {
-        String[] names = new String[getRealXVariableCount()];
-        Variable[] variables = mlModel.getVariables();
-        int index = 0;
-        for (Variable variable : variables) {
-            if (variable.flag == MLDataModel.X_VARIABLE) {
-                names[index++] = variable.name;
-            }
-        }
-        return names;
-    }*/
-    
-    public String[] getOilXVariableNames(){
+    public String[] getOilXVariableNames() {
         String[] names = new String[getOilXVariableCount()];
         Variable[] variables = mlModel.getVariables();
         int index = 0;
@@ -194,8 +186,8 @@ public class MLDataModelHelper {
         }
         return names;
     }
-    
-    public String[] getLithXVariableNames(){
+
+    public String[] getLithXVariableNames() {
         String[] names = new String[getLithXVariableCount()];
         Variable[] variables = mlModel.getVariables();
         int index = 0;
@@ -243,8 +235,8 @@ public class MLDataModelHelper {
     }
 
     public String getLithYVariableName() {
-        for(Variable varX:mlModel.getVariables()){
-            if(varX.flag == MLDataModel.Y_VARIABLE_LITH){
+        for (Variable varX : mlModel.getVariables()) {
+            if (varX.flag == MLDataModel.Y_VARIABLE_LITH) {
                 return varX.name;
             }
         }

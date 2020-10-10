@@ -215,7 +215,7 @@ public class ClassifyingSVMFunction extends Function {
             printError("ERROR: " + error_msg + "\n");
         }
         svm_model model = svm.svm_train(problem, param);
-        String modelFile = LoadConfigure.trainedModelPath + File.separator + OILMODEL_FILENAME_SVM;
+        String modelFile = LoadConfigure.MODEL_SAVED_PATH + File.separator + OILMODEL_FILENAME_SVM;
         try {
             svm.svm_save_model(modelFile, model);
         } catch (Exception e) {
@@ -226,7 +226,6 @@ public class ClassifyingSVMFunction extends Function {
         double[] py = new double[problem.y.length];
         for (int i = 0; i < problem.x.length; i++) {
             py[i] = svm.svm_predict(model, problem.x[i]);
-            LoadConfigure.writeLog(""+py[i]);
         }
         int correctCount = FunTools.computeEquivalenceCount(problem.y, py);
         StringBuilder sb = new StringBuilder();
@@ -255,7 +254,7 @@ public class ClassifyingSVMFunction extends Function {
             printError("ERROR: " + error_msg + "\n");
         }
         svm_model model = svm.svm_train(problem, param);
-        String modelFile = LoadConfigure.trainedModelPath + File.separator + LITHMODEL_FILENAME_SVM;
+        String modelFile = LoadConfigure.MODEL_SAVED_PATH + File.separator + LITHMODEL_FILENAME_SVM;
         try {
             svm.svm_save_model(modelFile, model);
         } catch (Exception e) {
@@ -325,8 +324,8 @@ public class ClassifyingSVMFunction extends Function {
     public String[] oilClassifyCanGoOn(){
        String[] neededXs = null;
        BufferedReader bfr = null;
-       File oilModelConfFile = new File(LoadConfigure.trainedModelPath+File.separator+OILMODEL_FILENAME_SVM+"Aux");
-       File oilModelFile = new File(LoadConfigure.trainedModelPath+File.separator+OILMODEL_FILENAME_SVM);
+       File oilModelConfFile = new File(LoadConfigure.MODEL_SAVED_PATH+File.separator+OILMODEL_FILENAME_SVM+"Aux");
+       File oilModelFile = new File(LoadConfigure.MODEL_SAVED_PATH+File.separator+OILMODEL_FILENAME_SVM);
        if(!oilModelConfFile.exists()||!oilModelFile.exists()){
            LoadConfigure.writeLog("ClassfigyingSVMFunction 288:含油性模型或其配置文件不存在");
            return null;
@@ -380,8 +379,8 @@ public class ClassifyingSVMFunction extends Function {
     public String[] lithClassifyCanGoOn(){
         String[] neededXs = null;
        BufferedReader bfr = null;
-       File lithModelConfFile = new File(LoadConfigure.trainedModelPath+File.separator+LITHMODEL_FILENAME_SVM+"Aux");
-       File lithModelFile = new File(LoadConfigure.trainedModelPath+File.separator+LITHMODEL_FILENAME_SVM);
+       File lithModelConfFile = new File(LoadConfigure.MODEL_SAVED_PATH+File.separator+LITHMODEL_FILENAME_SVM+"Aux");
+       File lithModelFile = new File(LoadConfigure.MODEL_SAVED_PATH+File.separator+LITHMODEL_FILENAME_SVM);
        if(!lithModelConfFile.exists()||!lithModelFile.exists()){
            LoadConfigure.writeLog("ClassfigyingSVMFunction 344:岩性模型或其配置文件不存在");
            return null;
@@ -428,6 +427,7 @@ public class ClassifyingSVMFunction extends Function {
        return neededXs; 
     }
     private void doOilClassify(String[] needXs){
+        print("SVM:开始含油性分类\n");
         svm_model model = null;
         svm_problem problem = new svm_problem();
         int rowCount = dataHelper.getRealRowCount();
@@ -437,7 +437,7 @@ public class ClassifyingSVMFunction extends Function {
         problem.x = new svm_node[rowCount][xVarCount];
         problem.y = new double[rowCount];
         double[] buffer = new double[rowCount];
-        printHighlight("Data Statistics:\n");
+        
         for (int col = 0; col < xVarCount; col++) {
             dataHelper.getUsedDoubleDataByName(needXs[col], buffer); 
             tempNormalization.normalizeXVar(needXs[col], col, buffer, MathBase.minimum(buffer), MathBase.maximum(buffer));
@@ -459,6 +459,7 @@ public class ClassifyingSVMFunction extends Function {
             LoadConfigure.writeLog("***svm.421:加载模型出错");
             return;
         }
+        print("SVM:加载模型成功："+oilModelFile.getAbsolutePath()+"\n");
         double[] py = new double[problem.y.length];
         for (int i = 0; i < problem.x.length; i++) {
            
@@ -479,7 +480,14 @@ public class ClassifyingSVMFunction extends Function {
                 mlModel.classifyResultOil[i] = "无效数据";  
             }
         } 
-        tableHelper.saveToTableFromClassifyResOil(OIL_CLASSIFY_BY_SVM);
+        printHighlight("SVM:分类完成！\n");
+        if(mlModel.dataFrom == MLDataModel.FROM_CURVE){
+            tableHelper.saveToTableFromClassifyResOil(OIL_CLASSIFY_BY_SVM);
+        }else{
+            printHighlight("SVM:分类结果没有保存到本地，暂不支持文本数据和表格数据的结果保存");
+            LoadConfigure.writeErrorLog("SVM.486结果没有保存到本地，暂不支持文本数据和表格数据的结果保存");
+        }
+        
         UpdatePanelFlag.DataPanelUpdateFlag = true;
     }
     

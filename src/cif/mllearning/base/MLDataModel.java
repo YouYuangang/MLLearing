@@ -27,6 +27,7 @@ public class MLDataModel {
     public final static int Y_VARIABLE_LITH = 4;
     public final static int X_VARIABLE_ALL = 5;
     public final static int Y_VARIABLE_ALL = 6;
+    public final static String MLMODEL_FILENAME = "mlModelTemp.txt";
     public int dataFrom = -1;
     public DataPath inputDataPath;
 

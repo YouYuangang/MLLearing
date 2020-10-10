@@ -211,13 +211,14 @@ public class TableHelper {
         tableRecords.init(dataHelper.getRealRowCount(), tableFields);
         int indexInClassifyRes = 0;
         //填充数据
+        double depthLevel = dataHelper.getDepthLevel();
         for (int i = 0; i < tableRecords.getRecordsNum(); i++) {
             while(indexInClassifyRes<mlModel.dataRowSelectedFlags.length&&mlModel.dataRowSelectedFlags[indexInClassifyRes]==false){
                 indexInClassifyRes++;
             }
             if(indexInClassifyRes<mlModel.dataRowSelectedFlags.length){
-                tableRecords.setRecordDoubleData(i, 0, mlModel.curveStdep+indexInClassifyRes*dataHelper.getDepthLevel());
-                tableRecords.setRecordDoubleData(i, 1, mlModel.curveStdep+(indexInClassifyRes+1)*dataHelper.getDepthLevel());
+                tableRecords.setRecordDoubleData(i, 0, mlModel.curveStdep+indexInClassifyRes*depthLevel);
+                tableRecords.setRecordDoubleData(i, 1, mlModel.curveStdep+(indexInClassifyRes+1)*depthLevel);
                 tableRecords.setRecordStringData(i, 2, mlModel.classifyResultOil[indexInClassifyRes]);
                 indexInClassifyRes++;
             }
@@ -257,13 +258,14 @@ public class TableHelper {
         int indexInClusterRes = 0;
         
         //填充数据
+        double depthLevel = dataHelper.getDepthLevel();
         for (int i = 0; i < tableRecords.getRecordsNum(); i++) {
             while(indexInClusterRes<mlModel.dataRowSelectedFlags.length&&mlModel.dataRowSelectedFlags[indexInClusterRes]==false){
                 indexInClusterRes++;
             }
             if(indexInClusterRes<mlModel.dataRowSelectedFlags.length){
-                tableRecords.setRecordDoubleData(i, 0, mlModel.curveStdep+indexInClusterRes*dataHelper.getDepthLevel());
-                tableRecords.setRecordDoubleData(i, 1, mlModel.curveStdep+(indexInClusterRes+1)*dataHelper.getDepthLevel());
+                tableRecords.setRecordDoubleData(i, 0, mlModel.curveStdep+indexInClusterRes*depthLevel);
+                tableRecords.setRecordDoubleData(i, 1, mlModel.curveStdep+(indexInClusterRes+1)*depthLevel);
                 tableRecords.setRecordIntData(i, 2, mlModel.clusterResultOil[indexInClusterRes]);
                 indexInClusterRes++;
             }

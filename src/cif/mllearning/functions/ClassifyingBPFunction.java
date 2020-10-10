@@ -161,8 +161,10 @@ public class ClassifyingBPFunction extends Function {
         return 1;
     }
     public void doClassifyOil(String [] needXsOil){  
+            print("bp:开始含油性分类\n");
             DataSet needToClassify = formOilToClassifyDataSet(needXsOil);
             MultiLayerPerceptron neuralNet = (MultiLayerPerceptron)NeuralNetwork.createFromFile(oilModelFile);
+            print("bp:加载含油性模型成功："+oilModelFile.getAbsolutePath()+"\n");
             int[] yByModel = computeY(neuralNet,needToClassify);
             
             mlModel.classifyResultOil = new String[mlModel.dataRowSelectedFlags.length];
@@ -179,9 +181,15 @@ public class ClassifyingBPFunction extends Function {
                     mlModel.classifyResultOil[i] = "无效数据";
                 }
             }
-            printHighlight("数据处理完成！含油性分析完成！");
+            printHighlight("bp:含油性分类完成\n");
             //保存结果到当前井次
-            tableHelper.saveToTableFromClassifyResOil(OIL_CLASSIFY_TABLENAME_BP);
+            if(mlModel.dataFrom == MLDataModel.FROM_CURVE){
+                tableHelper.saveToTableFromClassifyResOil(OIL_CLASSIFY_TABLENAME_BP);
+            }else{
+                printHighlight("bp:结果没有保存到本地，暂不支持文本数据和表格数据的结果保存\n");
+                LoadConfigure.writeErrorLog("bp:结果没有保存到本地，暂不支持文本数据和表格数据的结果保存");
+            }
+            
             UpdatePanelFlag.DataPanelUpdateFlag = true;
             UpdatePanelFlag.HistogramUpdateFlag = true;
             UpdatePanelFlag.CrossPlotUpdateFlag = true;
@@ -189,8 +197,10 @@ public class ClassifyingBPFunction extends Function {
     }
     
     public void doClasifyLith(String[] needXsLith) {
+        print("bp:开始岩性分类\n");
         DataSet needToClassify = formOilToClassifyDataSet(needXsLith);
         MultiLayerPerceptron neuralNet = (MultiLayerPerceptron) NeuralNetwork.createFromFile(lithModelFile);
+        print("bp:加载岩性模型成功："+lithModelFile.getAbsolutePath()+"\n");
         int[] yByModel = computeY(neuralNet, needToClassify);
 
         //转换为整型对文本
@@ -208,9 +218,15 @@ public class ClassifyingBPFunction extends Function {
                 mlModel.classifyResultLith[i] = "无效数据";
             }
         }
-        printHighlight("数据处理完成！含油性分析完成！");
+        printHighlight("bp:岩性分类完成！");
         //保存结果到当前井次
-        tableHelper.saveToTableFromClassifyResOil(LITH_CLASSIFY_TABLENAME_BP);
+        if (mlModel.dataFrom == MLDataModel.FROM_CURVE) {
+            tableHelper.saveToTableFromClassifyResOil(LITH_CLASSIFY_TABLENAME_BP);
+        } else {
+            printHighlight("bp:结果没有保存到本地，暂不支持文本数据和表格数据的结果保存\n");
+            LoadConfigure.writeErrorLog("bp:结果没有保存到本地，暂不支持文本数据和表格数据的结果保存");
+        }
+        
         UpdatePanelFlag.DataPanelUpdateFlag = true;
         UpdatePanelFlag.HistogramUpdateFlag = true;
         UpdatePanelFlag.CrossPlotUpdateFlag = true;
@@ -220,8 +236,8 @@ public class ClassifyingBPFunction extends Function {
     public String[] lithClassifyCanGoOn(){
         String[] neededXs = null;
        BufferedReader bfr = null;
-       File lithModelConfFile = new File(LoadConfigure.trainedModelPath+File.separator+LITH_MODEL_NAME_BP+"Aux");
-       File lithModelFile = new File(LoadConfigure.trainedModelPath+File.separator+LITH_MODEL_NAME_BP);
+       File lithModelConfFile = new File(LoadConfigure.MODEL_SAVED_PATH+File.separator+LITH_MODEL_NAME_BP+"Aux");
+       File lithModelFile = new File(LoadConfigure.MODEL_SAVED_PATH+File.separator+LITH_MODEL_NAME_BP);
        if(!lithModelConfFile.exists()||!lithModelFile.exists()){
            LoadConfigure.writeLog("ClassifyingBPFunction 169:岩性模型或其配置文件不存在");
            return null;
@@ -270,8 +286,8 @@ public class ClassifyingBPFunction extends Function {
     public String[] oilClassifyCanGoOn(){
        String[] neededXs = null;
        BufferedReader bfr = null;
-       File oilModelConfFile = new File(LoadConfigure.trainedModelPath+File.separator+OIL_MODEL_NAME_BP+"Aux");
-       File oilModelFile = new File(LoadConfigure.trainedModelPath+File.separator+OIL_MODEL_NAME_BP);
+       File oilModelConfFile = new File(LoadConfigure.MODEL_SAVED_PATH+File.separator+OIL_MODEL_NAME_BP+"Aux");
+       File oilModelFile = new File(LoadConfigure.MODEL_SAVED_PATH+File.separator+OIL_MODEL_NAME_BP);
        if(!oilModelConfFile.exists()||!oilModelFile.exists()){
            LoadConfigure.writeLog("classifyingBPFuntction 218:含油性模型或其配置文件不存在");
            return null;
@@ -340,7 +356,7 @@ public class ClassifyingBPFunction extends Function {
         neuralNet.learn(dataSet);
         println("完成训练");
         //String filePath = FunTools.getModelPath() + File.separator + FunTools.getModelFileName("Classfy_BP", mlModel);
-        String filePath = LoadConfigure.trainedModelPath+File.separator+OIL_MODEL_NAME_BP;
+        String filePath = LoadConfigure.MODEL_SAVED_PATH+File.separator+OIL_MODEL_NAME_BP;
         neuralNet.save(filePath);
         FunTools.saveModelAuxFile(filePath,normalizationForOil,this);
 
@@ -376,7 +392,7 @@ public class ClassifyingBPFunction extends Function {
         neuralNet.learn(dataSet);
         println("完成训练");
         //String filePath = FunTools.getModelPath() + File.separator + FunTools.getModelFileName("Classfy_BP", mlModel);
-        String filePath = LoadConfigure.trainedModelPath+File.separator+LITH_MODEL_NAME_BP;
+        String filePath = LoadConfigure.MODEL_SAVED_PATH+File.separator+LITH_MODEL_NAME_BP;
         neuralNet.save(filePath);
         FunTools.saveModelAuxFile(filePath,normalizationForLith,this);
 
